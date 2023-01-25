@@ -1,0 +1,9 @@
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    url: jdbc:mysql://sql11.freemysqlhosting.net/sql11593280
+    username: sql11593280
+    password: d3cAa71uwb
