@@ -47,5 +47,6 @@ public class UsersEntity {
     @OneToMany(mappedBy = "usersEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<CollectionEntity> collection = new ArrayList<>();
 
-    List<CollectionEntity> savedCollections = new ArrayList<>();
+    @Column
+    List<Long> savedCollections = new ArrayList<>();
 }
