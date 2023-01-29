@@ -1,6 +1,7 @@
 package com.flashcard.flashback.collection;
 
 import com.flashcard.flashback.card.CardEntity;
+import com.flashcard.flashback.user.UsersEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @RequiredArgsConstructor
-@Table(name = "cards")
+@Table(name = "collection")
 public class CollectionEntity {
 
     @Id
@@ -19,6 +20,11 @@ public class CollectionEntity {
 
     private Long likes;
 
-    @OneToMany(mappedBy = "collection")
+    @OneToMany(mappedBy = "collection", cascade = CascadeType.ALL)
     private List<CardEntity> cards;
+
+    @ManyToOne
+    @JoinColumn(name = "users_entity_id")
+    private UsersEntity usersEntity;
+
 }
