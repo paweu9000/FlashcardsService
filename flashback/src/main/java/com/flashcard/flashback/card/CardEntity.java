@@ -30,6 +30,7 @@ public class CardEntity {
     private String value;
 
     @ManyToOne
-    @JoinColumn(name = "collection_id")
-    private CollectionEntity collection;
+    @JoinColumn(name = "collection_entity_id")
+    private CollectionEntity collectionEntity;
+
 }

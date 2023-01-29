@@ -11,7 +11,6 @@ import java.util.List;
 @Getter
 @Setter
 @RequiredArgsConstructor
-@Table(name = "collection")
 public class CollectionEntity {
 
     @Id
@@ -20,7 +19,7 @@ public class CollectionEntity {
 
     private Long likes;
 
-    @OneToMany(mappedBy = "collection", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "collectionEntity", cascade = CascadeType.ALL)
     private List<CardEntity> cards;
 
     @ManyToOne
