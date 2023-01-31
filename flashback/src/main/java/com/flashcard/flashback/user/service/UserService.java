@@ -20,4 +20,12 @@ public record UserService(UserRepository userRepository) {
             throw new RuntimeException("User does not exist!");
         }
     }
+
+    public void save(UsersEntity usersEntity) {
+        try {
+            userRepository.save(usersEntity);
+        } catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
+    }
 }
