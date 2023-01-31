@@ -1,8 +1,8 @@
 package com.flashcard.flashback.security;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,6 +10,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 
 @Configuration
@@ -29,7 +30,7 @@ public class SecurityConfig {
                 return config;
             }
         }).and().csrf().disable().authorizeHttpRequests()
-                .requestMatchers("*").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
                 .and().formLogin()
                 .and().httpBasic();
         return http.build();

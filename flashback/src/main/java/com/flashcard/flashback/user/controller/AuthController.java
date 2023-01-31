@@ -1,6 +1,6 @@
 package com.flashcard.flashback.user.controller;
 
-import com.flashcard.flashback.user.UsersEntity;
+import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

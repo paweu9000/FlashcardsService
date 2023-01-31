@@ -1,6 +1,6 @@
 package com.flashcard.flashback.user.service;
 
-import com.flashcard.flashback.user.UsersEntity;
+import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
