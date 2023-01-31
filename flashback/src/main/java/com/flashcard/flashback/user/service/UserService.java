@@ -13,7 +13,7 @@ public record UserService(UserRepository userRepository) {
         return unwrapUser(optUser);
     }
 
-    public UsersEntity unwrapUser(UsersEntity user) {
+    private UsersEntity unwrapUser(UsersEntity user) {
         if(user != null) {
             return user;
         } else {
