@@ -1,6 +1,6 @@
 package com.flashcard.flashback.security.authservice;
 
-import com.flashcard.flashback.user.UsersEntity;
+import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.service.UserService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

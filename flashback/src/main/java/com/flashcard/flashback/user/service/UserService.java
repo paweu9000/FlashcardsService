@@ -1,6 +1,6 @@
 package com.flashcard.flashback.user.service;
 
-import com.flashcard.flashback.user.UsersEntity;
+import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +18,14 @@ public record UserService(UserRepository userRepository) {
             return user;
         } else {
             throw new RuntimeException("User does not exist!");
+        }
+    }
+
+    public void save(UsersEntity usersEntity) {
+        try {
+            userRepository.save(usersEntity);
+        } catch (Exception e){
+            throw new RuntimeException(e.getMessage());
         }
     }
 }
