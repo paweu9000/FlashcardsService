@@ -1,5 +1,6 @@
 package com.flashcard.flashback.user.service;
 
+import com.flashcard.flashback.user.data.UserDto;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -27,5 +28,14 @@ public record UserService(UserRepository userRepository) {
         } catch (Exception e){
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    public void register(UserDto userDto) {
+        UsersEntity user = new UsersEntity();
+        user.setPassword(userDto.getPassword());
+        user.setEmail(userDto.getEmail());
+        user.setLogin(userDto.getLogin());
+        user.setUsername(userDto.getUsername());
+        save(user);
     }
 }
