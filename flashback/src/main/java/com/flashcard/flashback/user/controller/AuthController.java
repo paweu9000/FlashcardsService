@@ -1,5 +1,6 @@
 package com.flashcard.flashback.user.controller;
 
+import com.flashcard.flashback.user.data.UserDto;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -16,9 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 public record AuthController (UserService userService, PasswordEncoder passwordEncoder) {
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody @Validated UsersEntity user) {
+    public ResponseEntity<String> registerUser(@RequestBody UserDto user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userService.save(user);
+        userService.register(user);
         return new ResponseEntity<>("User created successfully", HttpStatus.CREATED);
     }
 
