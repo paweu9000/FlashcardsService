@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 public class CollectionDao {
-
+    private Long id;
     private Long likes;
     private List<CardDao> cards = new ArrayList<>();
 
