@@ -1,5 +1,6 @@
 package com.flashcard.flashback.user.service;
 
+import com.flashcard.flashback.user.data.UserDao;
 import com.flashcard.flashback.user.data.UserDto;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.repository.UserRepository;
@@ -37,5 +38,9 @@ public record UserService(UserRepository userRepository) {
         user.setLogin(userDto.getLogin());
         user.setUsername(userDto.getUsername());
         save(user);
+    }
+
+    public UserDao toDao(UsersEntity user) {
+        return new UserDao(user);
     }
 }
