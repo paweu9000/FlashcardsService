@@ -32,15 +32,20 @@ public record UserService(UserRepository userRepository) {
     }
 
     public void register(UserDto userDto) {
-        UsersEntity user = new UsersEntity();
-        user.setPassword(userDto.getPassword());
-        user.setEmail(userDto.getEmail());
-        user.setLogin(userDto.getLogin());
-        user.setUsername(userDto.getUsername());
+        UsersEntity user = mapDto(userDto);
         save(user);
     }
 
     public UserDao toDao(UsersEntity user) {
         return new UserDao(user);
+    }
+
+    public UsersEntity mapDto(UserDto userDto) {
+        UsersEntity user = new UsersEntity();
+        user.setPassword(userDto.getPassword());
+        user.setEmail(userDto.getEmail());
+        user.setLogin(userDto.getLogin());
+        user.setUsername(userDto.getUsername());
+        return user;
     }
 }
