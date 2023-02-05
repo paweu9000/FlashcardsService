@@ -6,13 +6,19 @@ import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public record UserService(UserRepository userRepository) {
 
     public UsersEntity findByEmailOrLogin(String emailOrLogin) {
-        UsersEntity optUser =  userRepository.findAll().stream().filter(usersEntity -> usersEntity.getLogin().equals(emailOrLogin) ||
-                usersEntity.getEmail().equals(emailOrLogin)).findFirst().get();
-        return unwrapUser(optUser);
+        Optional<UsersEntity> user;
+        if(checkEmail(emailOrLogin)) {
+            user = userRepository.findByEmail(emailOrLogin);
+        } else {
+            user = userRepository.findByLogin(emailOrLogin);
+        }
+        return unwrapUser(user.get());
     }
 
     private UsersEntity unwrapUser(UsersEntity user) {
@@ -21,6 +27,15 @@ public record UserService(UserRepository userRepository) {
         } else {
             throw new RuntimeException("User does not exist!");
         }
+    }
+
+    private boolean checkEmail(String email) {
+        String[] endings = new String[]{".pl", ".com", ".net", ".org"};
+        if(!email.contains("@")) return false;
+        for(String s: endings) {
+            if(email.endsWith(s)) return true;
+        }
+        return false;
     }
 
     public void save(UsersEntity usersEntity) {
