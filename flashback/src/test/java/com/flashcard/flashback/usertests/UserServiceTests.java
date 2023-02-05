@@ -1,5 +1,6 @@
 package com.flashcard.flashback.usertests;
 
+import com.flashcard.flashback.user.data.UserDto;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.repository.UserRepository;
 import com.flashcard.flashback.user.service.UserService;
@@ -12,7 +13,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTests {
@@ -35,5 +36,13 @@ public class UserServiceTests {
         assertEquals("username", user.getUsername());
         assertEquals("email@example.com", user.getEmail());
         assertEquals("password", user.getPassword());
+    }
+
+    @Test
+    public void saveUserTest() {
+        UsersEntity userEntity = new UsersEntity("login", "username",
+                "email@example.com", "password");
+        userService.save(userEntity);
+        verify(userRepository, times(1)).save(userEntity);
     }
 }
