@@ -45,4 +45,20 @@ public class UserServiceTests {
         userService.save(userEntity);
         verify(userRepository, times(1)).save(userEntity);
     }
+
+    @Test
+    public void mapDtoTest() {
+        UserDto dto = UserDto.builder()
+                .email("email@example.com")
+                .login("login")
+                .password("password")
+                .username("username")
+                .build();
+        UsersEntity user = userService.mapDto(dto);
+
+        assertEquals(dto.getPassword(), user.getPassword());
+        assertEquals(dto.getEmail(), user.getEmail());
+        assertEquals(dto.getLogin(), user.getLogin());
+        assertEquals(dto.getUsername(), user.getUsername());
+    }
 }
