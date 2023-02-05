@@ -24,12 +24,12 @@ public class UserServiceTests {
     private UserService userService;
 
     @Test
-    public void getUserByEmailOrLoginTest() {
+    public void getUserByLoginTest() {
         UsersEntity toReturn = new UsersEntity("login", "username",
                 "email@example.com", "password");
-        when(userRepository.findByEmailOrLogin("login")).thenReturn(Optional.of(toReturn));
+        when(userRepository.findByLogin("login")).thenReturn(Optional.of(toReturn));
 
-        UsersEntity user = userRepository.findByEmailOrLogin("login").get();
+        UsersEntity user = userRepository.findByLogin("login").get();
 
         assertEquals("login", user.getLogin());
         assertEquals("username", user.getUsername());
