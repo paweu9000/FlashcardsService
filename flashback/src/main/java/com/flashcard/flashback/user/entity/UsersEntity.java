@@ -15,7 +15,6 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "users")
-@AllArgsConstructor
 @NoArgsConstructor
 public class UsersEntity {
 
@@ -39,4 +38,11 @@ public class UsersEntity {
     @Column
     @ElementCollection(targetClass = CollectionEntity.class)
     private List<CollectionEntity> savedCollections = new ArrayList<>();
+
+    public UsersEntity(String login, String username, String email, String password) {
+        this.login = login;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 }
