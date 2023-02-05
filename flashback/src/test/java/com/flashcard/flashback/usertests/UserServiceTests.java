@@ -1,5 +1,6 @@
 package com.flashcard.flashback.usertests;
 
+import com.flashcard.flashback.user.data.UserDao;
 import com.flashcard.flashback.user.data.UserDto;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.repository.UserRepository;
@@ -60,5 +61,16 @@ public class UserServiceTests {
         assertEquals(dto.getEmail(), user.getEmail());
         assertEquals(dto.getLogin(), user.getLogin());
         assertEquals(dto.getUsername(), user.getUsername());
+    }
+
+    @Test
+    public void mapDaoTest() {
+        UsersEntity user = new UsersEntity("login",
+                "username",
+                "email@example.com",
+                "password");
+        UserDao dao = userService.toDao(user);
+
+        assertEquals(dao.getUsername(), user.getUsername());
     }
 }
