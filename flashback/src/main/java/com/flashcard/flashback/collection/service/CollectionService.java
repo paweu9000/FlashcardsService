@@ -11,4 +11,16 @@ public record CollectionService(CollectionRepository collectionRepository) {
     public CollectionDao toDao(CollectionEntity collection) {
         return new CollectionDao(collection);
     }
+
+    public CollectionEntity findById(Long id) {
+        return exists(collectionRepository.findById(id).get());
+    }
+
+    public CollectionEntity exists(CollectionEntity collection) {
+        if(collection != null) {
+            return collection;
+        } else {
+            throw new RuntimeException("This collection does not exist!");
+        }
+    }
 }
