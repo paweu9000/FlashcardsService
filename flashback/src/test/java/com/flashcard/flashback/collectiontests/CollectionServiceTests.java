@@ -11,7 +11,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CollectionServiceTests {
@@ -33,5 +36,16 @@ public class CollectionServiceTests {
 
         assertEquals(collection.getLikes(), collectionDao.getLikes());
         assertEquals(collection.getOwners().getId(), user.getId());
+    }
+
+    @Test
+    public void findByIdTest() {
+        CollectionEntity collection = new CollectionEntity();
+        collection.setId(1L);
+        collection.setLikes(2L);
+        when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
+
+        assertEquals(1L, collectionRepository.findById(1L).get().getId());
+        assertEquals(2L, collectionRepository.findById(1L).get().getLikes());
     }
 }
