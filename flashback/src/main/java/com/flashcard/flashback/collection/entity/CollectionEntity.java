@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,7 +26,7 @@ public class CollectionEntity {
     private Long likes;
 
     @OneToMany(mappedBy = "collector", cascade = CascadeType.ALL)
-    private List<CardEntity> cards;
+    private List<CardEntity> cards = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "users.id")
