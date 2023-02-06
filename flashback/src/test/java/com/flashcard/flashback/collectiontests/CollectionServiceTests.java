@@ -14,6 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -47,5 +48,14 @@ public class CollectionServiceTests {
 
         assertEquals(1L, collectionRepository.findById(1L).get().getId());
         assertEquals(2L, collectionRepository.findById(1L).get().getLikes());
+    }
+
+    @Test
+    public void existsTest() {
+        CollectionEntity collection = new CollectionEntity(1L, 2L, null, null);
+
+        assertEquals(collection.getId(), collectionService.exists(collection).getId());
+        assertEquals(collection.getLikes(), collectionService.exists(collection).getLikes());
+        assertThrows(RuntimeException.class, () -> collectionService.exists(null));
     }
 }
