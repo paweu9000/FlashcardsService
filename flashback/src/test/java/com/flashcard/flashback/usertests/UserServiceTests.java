@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -81,5 +82,24 @@ public class UserServiceTests {
         assertFalse(userService.checkEmail("test@gmail."));
         assertFalse(userService.checkEmail("test@gmail"));
         assertFalse(userService.checkEmail("test.com"));
+    }
+
+    @Test
+    public void registerTest() {
+        String email = "email@example.com";
+        String password = "password";
+        String username = "username";
+        String login = "login";
+        UsersEntity usersEntity = new UsersEntity(login, username, email, password);
+        UserDto userDto = UserDto.builder()
+                .email(email)
+                .login(login)
+                .password(password)
+                .username(username).build();
+        //when(userRepository.findByEmail(email)).thenReturn(Optional.of(usersEntity));
+        //when(userRepository.findByUsername(username)).thenReturn(Optional.of(usersEntity));
+        when(userRepository.findByLogin(login)).thenReturn(Optional.of(usersEntity));
+
+        assertThrows(ResponseStatusException.class, () -> userService.register(userDto));
     }
 }
