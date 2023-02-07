@@ -32,7 +32,7 @@ public record UserService(UserRepository userRepository) {
         }
     }
 
-    private boolean checkEmail(String email) {
+    public boolean checkEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
                 "[a-zA-Z0-9_+&*-]+)*@" +
                 "(?:[a-zA-Z0-9-]+\\.)+[a-z" +

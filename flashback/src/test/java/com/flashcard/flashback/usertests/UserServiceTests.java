@@ -13,7 +13,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -72,5 +72,14 @@ public class UserServiceTests {
         UserDao dao = userService.toDao(user);
 
         assertEquals(dao.getUsername(), user.getUsername());
+    }
+
+    @Test
+    public void checkEmailTest() {
+        assertTrue(userService.checkEmail("test@example.com"));
+        assertFalse(userService.checkEmail("test@.com"));
+        assertFalse(userService.checkEmail("test@gmail."));
+        assertFalse(userService.checkEmail("test@gmail"));
+        assertFalse(userService.checkEmail("test.com"));
     }
 }
