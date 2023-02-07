@@ -51,6 +51,9 @@ public record UserService(UserRepository userRepository) {
     }
 
     public void register(UserDto userDto) {
+        if(exists(userDto)) {
+            throw new RuntimeException("User with this credentials already exist!");
+        }
         UsersEntity user = mapDto(userDto);
         save(user);
     }
@@ -66,5 +69,13 @@ public record UserService(UserRepository userRepository) {
         user.setLogin(userDto.getLogin());
         user.setUsername(userDto.getUsername());
         return user;
+    }
+
+    public boolean exists(UserDto userDto) {
+        if(userRepository.findByLogin(userDto.getLogin()).isPresent()) {
+            return true;
+        } else if(userRepository.findByEmail(userDto.getEmail()).isPresent()) {
+            return true;
+        } else return userRepository.findByUsername(userDto.getUsername()).isPresent();
     }
 }
