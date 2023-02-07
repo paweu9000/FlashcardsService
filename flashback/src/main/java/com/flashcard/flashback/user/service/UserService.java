@@ -7,6 +7,7 @@ import com.flashcard.flashback.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Service
 public record UserService(UserRepository userRepository) {
@@ -30,12 +31,15 @@ public record UserService(UserRepository userRepository) {
     }
 
     private boolean checkEmail(String email) {
-        String[] endings = new String[]{".pl", ".com", ".net", ".org"};
-        if(!email.contains("@")) return false;
-        for(String s: endings) {
-            if(email.endsWith(s)) return true;
-        }
-        return false;
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
+
+        Pattern pat = Pattern.compile(emailRegex);
+        if (email == null)
+            return false;
+        return pat.matcher(email).matches();
     }
 
     public void save(UsersEntity usersEntity) {
