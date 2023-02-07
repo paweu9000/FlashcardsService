@@ -4,7 +4,9 @@ import com.flashcard.flashback.user.data.UserDao;
 import com.flashcard.flashback.user.data.UserDto;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.repository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -30,7 +32,7 @@ public record UserService(UserRepository userRepository) {
         }
     }
 
-    private boolean checkEmail(String email) {
+    public boolean checkEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
                 "[a-zA-Z0-9_+&*-]+)*@" +
                 "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
@@ -52,7 +54,9 @@ public record UserService(UserRepository userRepository) {
 
     public void register(UserDto userDto) {
         if(exists(userDto)) {
-            throw new RuntimeException("User with this credentials already exist!");
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "User with this credentials already exist!"
+            );
         }
         UsersEntity user = mapDto(userDto);
         save(user);
