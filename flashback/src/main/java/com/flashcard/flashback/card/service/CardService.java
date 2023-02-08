@@ -1,5 +1,6 @@
 package com.flashcard.flashback.card.service;
 
+import com.flashcard.flashback.card.data.CardDao;
 import com.flashcard.flashback.card.entity.CardEntity;
 import com.flashcard.flashback.card.repository.CardRepository;
 import org.springframework.stereotype.Service;
@@ -21,5 +22,9 @@ public class CardService {
         } else {
             throw new RuntimeException("There is no such card!");
         }
+    }
+
+    public CardDao toDao(CardEntity card) {
+        return new CardDao(card);
     }
 }
