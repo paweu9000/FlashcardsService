@@ -1,6 +1,7 @@
 package com.flashcard.flashback.cardtests;
 
 import com.flashcard.flashback.card.data.CardDao;
+import com.flashcard.flashback.card.data.CardDto;
 import com.flashcard.flashback.card.entity.CardEntity;
 import com.flashcard.flashback.card.repository.CardRepository;
 import com.flashcard.flashback.card.service.CardService;
@@ -48,5 +49,16 @@ public class CardServiceTests {
         assertEquals(cardDao.getId(), card.getId());
         assertEquals(cardDao.getSide(), card.getSide());
         assertEquals(card.getValue(), card.getValue());
+    }
+
+    @Test
+    public void mapDtoTest() {
+        CardDto cardDto = new CardDto();
+        cardDto.setSide("Side");
+        cardDto.setValue("Value");
+        CardEntity card = cardService.mapDto(cardDto);
+
+        assertEquals(card.getValue(), cardDto.getValue());
+        assertEquals(card.getSide(), cardDto.getSide());
     }
 }
