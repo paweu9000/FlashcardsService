@@ -1,6 +1,7 @@
 package com.flashcard.flashback.card.service;
 
 import com.flashcard.flashback.card.data.CardDao;
+import com.flashcard.flashback.card.data.CardDto;
 import com.flashcard.flashback.card.entity.CardEntity;
 import com.flashcard.flashback.card.repository.CardRepository;
 import org.springframework.stereotype.Service;
@@ -26,5 +27,12 @@ public class CardService {
 
     public CardDao toDao(CardEntity card) {
         return new CardDao(card);
+    }
+
+    public CardEntity mapDto(CardDto cardDto) {
+        CardEntity card = new CardEntity();
+        card.setValue(cardDto.getValue());
+        card.setSide(cardDto.getSide());
+        return card;
     }
 }
