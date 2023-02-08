@@ -17,7 +17,6 @@ public record CardController(CardService cardService) {
     @GetMapping("/{id}")
     public ResponseEntity<CardDao> getCard(@PathVariable Long id) {
         CardEntity card = cardService.getCardById(id);
-        CardDao cardDao = new CardDao(card);
-        return new ResponseEntity<>(cardDao, HttpStatus.OK);
+        return new ResponseEntity<>(cardService.toDao(card), HttpStatus.OK);
     }
 }
