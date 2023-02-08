@@ -1,5 +1,6 @@
 package com.flashcard.flashback.cardtests;
 
+import com.flashcard.flashback.card.data.CardDao;
 import com.flashcard.flashback.card.entity.CardEntity;
 import com.flashcard.flashback.card.repository.CardRepository;
 import com.flashcard.flashback.card.service.CardService;
@@ -9,6 +10,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -23,18 +26,27 @@ public class CardServiceTests {
     private CardService cardService;
 
     @Test
-    private void getCardByIdTest() {
-        CollectionEntity collection = new CollectionEntity();
-        collection.setId(31L);
-        CardEntity toReturn = new CardEntity(2L, "Key", "Value", collection);
-        String errorMessage = "There is no such card!";
-        when(cardService.getCardById(2L)).thenReturn(toReturn);
-        when(cardService.getCardById(3L)).thenThrow(new RuntimeException(errorMessage));
+    public void getCardByIdTest() {
+        CardEntity toReturn = new CardEntity(2L, "Key", "Value", null);
+        when(cardRepository.findById(2L)).thenReturn(Optional.of(toReturn));
 
         assertThrows(RuntimeException.class, () -> cardService.getCardById(3L));
-        assertEquals( 2L, cardService.getCardById(2L).getId());
-        assertEquals("Key", cardService.getCardById(2L).getSide());
-        assertEquals("Value", cardService.getCardById(2L).getValue());
-        assertEquals(31L, cardService.getCardById(2L).getCollector().getId());
+        assertEquals( 2L, cardRepository.findById(2L).get().getId());
+        assertEquals("Key", cardRepository.findById(2L).get().getSide());
+        assertEquals("Value", cardRepository.findById(2L).get().getValue());
+    }
+
+    @Test
+    public void toDaoTest() {
+        CardEntity card = new CardEntity();
+        card.setId(3L);
+        card.setSide("Side");
+        card.setValue("Value");
+        card.setCollector(new CollectionEntity());
+        CardDao cardDao = cardService.toDao(card);
+
+        assertEquals(cardDao.getId(), card.getId());
+        assertEquals(cardDao.getSide(), card.getSide());
+        assertEquals(card.getValue(), card.getValue());
     }
 }
