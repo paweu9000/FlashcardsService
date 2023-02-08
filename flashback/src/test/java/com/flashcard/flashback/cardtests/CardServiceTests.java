@@ -32,9 +32,9 @@ public class CardServiceTests {
         when(cardRepository.findById(2L)).thenReturn(Optional.of(toReturn));
 
         assertThrows(RuntimeException.class, () -> cardService.getCardById(3L));
-        assertEquals( 2L, cardRepository.findById(2L).get().getId());
-        assertEquals("Key", cardRepository.findById(2L).get().getSide());
-        assertEquals("Value", cardRepository.findById(2L).get().getValue());
+        assertEquals( 2L, cardService.getCardById(2L).getId());
+        assertEquals("Key", cardService.getCardById(2L).getSide());
+        assertEquals("Value", cardService.getCardById(2L).getValue());
     }
 
     @Test
