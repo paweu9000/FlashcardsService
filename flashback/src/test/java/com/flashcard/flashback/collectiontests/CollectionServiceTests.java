@@ -15,6 +15,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -57,5 +58,13 @@ public class CollectionServiceTests {
         assertEquals(collection.getId(), collectionService.exists(collection).getId());
         assertEquals(collection.getLikes(), collectionService.exists(collection).getLikes());
         assertThrows(RuntimeException.class, () -> collectionService.exists(null));
+    }
+
+    @Test
+    public void deleteCollectionByIdTest() {
+        Long id = 3L;
+        collectionService.deleteCollectionById(id);
+
+        verify(collectionRepository).deleteById(id);
     }
 }
