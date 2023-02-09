@@ -37,7 +37,6 @@ public class CardService {
     }
 
     public void deleteCard(Long id) {
-        CardEntity card = getCardById(id);
-        cardRepository.delete(card);
+        cardRepository.deleteById(id);
     }
 }

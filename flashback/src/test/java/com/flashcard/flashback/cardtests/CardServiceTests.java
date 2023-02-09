@@ -15,6 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -60,5 +61,12 @@ public class CardServiceTests {
 
         assertEquals(card.getValue(), cardDto.getValue());
         assertEquals(card.getSide(), cardDto.getSide());
+    }
+
+    @Test
+    public void deleteCardTest() {
+        Long id = 3L;
+        cardService.deleteCard(id);
+        verify(cardRepository).deleteById(3L);
     }
 }
