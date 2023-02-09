@@ -27,4 +27,10 @@ public record CollectionService(CollectionRepository collectionRepository) {
     public void deleteCollectionById(Long id) {
         collectionRepository.deleteById(id);
     }
+
+    public void upvoteCollection(Long id) {
+        CollectionEntity collection = findById(id);
+        collection.setLikes(collection.getLikes() + 1);
+        collectionRepository.save(collection);
+    }
 }
