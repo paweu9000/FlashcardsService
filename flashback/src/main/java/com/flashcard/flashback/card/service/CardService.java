@@ -35,4 +35,9 @@ public class CardService {
         card.setSide(cardDto.getSide());
         return card;
     }
+
+    public void deleteCard(Long id) {
+        CardEntity card = getCardById(id);
+        cardRepository.delete(card);
+    }
 }
