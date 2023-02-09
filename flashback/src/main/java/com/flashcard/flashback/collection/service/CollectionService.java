@@ -23,4 +23,8 @@ public record CollectionService(CollectionRepository collectionRepository) {
             throw new RuntimeException("This collection does not exist!");
         }
     }
+
+    public void deleteCollectionById(Long id) {
+        collectionRepository.deleteById(id);
+    }
 }
