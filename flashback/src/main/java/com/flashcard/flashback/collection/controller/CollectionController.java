@@ -23,4 +23,10 @@ public record CollectionController(CollectionService collectionService) {
         collectionService.deleteCollectionById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("/{id}+like")
+    public ResponseEntity<HttpStatus> upvoteCollection(@PathVariable Long id) {
+        collectionService.upvoteCollection(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
