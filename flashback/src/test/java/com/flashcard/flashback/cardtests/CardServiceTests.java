@@ -69,4 +69,18 @@ public class CardServiceTests {
         cardService.deleteCard(id);
         verify(cardRepository).deleteById(3L);
     }
+
+    @Test
+    public void editCardTest() {
+        CollectionEntity collection = new CollectionEntity(11L, 32L, null, null);
+        CardEntity card = new CardEntity(2L, "Side", "Value", collection);
+        when(cardRepository.findById(2L)).thenReturn(Optional.of(card));
+        CardDao cardDao = new CardDao(card);
+        cardDao.setSide("Changed side");
+        cardDao.setValue("Changed value");
+        cardService.editCard(cardDao);
+
+        assertEquals(cardDao.getSide(), cardService.getCardById(2L).getSide());
+        assertEquals(cardDao.getValue(), cardService.getCardById(2L).getValue());
+    }
 }
