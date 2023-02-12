@@ -39,4 +39,11 @@ public class CardService {
     public void deleteCard(Long id) {
         cardRepository.deleteById(id);
     }
+
+    public void editCard(CardDao cardDao) {
+        CardEntity card = getCardById(cardDao.getId());
+        card.setValue(cardDao.getValue());
+        card.setSide(cardDao.getSide());
+        cardRepository.save(card);
+    }
 }
