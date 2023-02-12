@@ -22,4 +22,10 @@ public record CardController(CardService cardService) {
         cardService.deleteCard(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<HttpStatus> editCard(@PathVariable Long id, @RequestBody CardDao cardDao) {
+        cardService.editCard(cardDao);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
