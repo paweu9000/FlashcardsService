@@ -5,6 +5,7 @@ import com.flashcard.flashback.user.data.UserDto;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.repository.UserRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -12,7 +13,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Service
-public record UserService(UserRepository userRepository) {
+public record UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
 
     public UsersEntity findByEmailOrLogin(String emailOrLogin) {
         Optional<UsersEntity> user;
@@ -58,6 +59,7 @@ public record UserService(UserRepository userRepository) {
                     HttpStatus.BAD_REQUEST, "User with this credentials already exist!"
             );
         }
+        userDto.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
         UsersEntity user = mapDto(userDto);
         save(user);
     }
