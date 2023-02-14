@@ -1,4 +1,4 @@
-package com.flashcard.flashback.security;
+package com.flashcard.flashback.security.filters;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
