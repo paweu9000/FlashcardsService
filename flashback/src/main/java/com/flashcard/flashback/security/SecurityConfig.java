@@ -1,5 +1,6 @@
 package com.flashcard.flashback.security;
 
+import com.flashcard.flashback.constants.SecurityConstants;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,8 +9,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -40,7 +39,7 @@ public class SecurityConfig {
                 return config;
             }
         }).and().csrf().disable().authorizeHttpRequests()
-                .antMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
+                .antMatchers(HttpMethod.POST, SecurityConstants.REGISTER_PATH).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(authenticationFilter)
