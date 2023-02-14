@@ -3,6 +3,7 @@ package com.flashcard.flashback.security;
 import com.flashcard.flashback.constants.SecurityConstants;
 import com.flashcard.flashback.security.filters.AuthenticationFilter;
 import com.flashcard.flashback.security.filters.ExceptionHandlerFilter;
+import com.flashcard.flashback.security.filters.JWTAuthorizationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,6 +46,7 @@ public class SecurityConfig {
                 .and()
                 .addFilterBefore(new ExceptionHandlerFilter(), AuthenticationFilter.class)
                 .addFilter(authenticationFilter)
+                .addFilterAfter(new JWTAuthorizationFilter(), AuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         return http.build();
