@@ -1,5 +1,6 @@
 package com.flashcard.flashback.security.managers;
 
+import com.flashcard.flashback.exception.EntityNotFoundException;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.service.UserService;
 import lombok.AllArgsConstructor;
@@ -20,7 +21,8 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        UsersEntity user = userService.findByEmailOrLogin(authentication.getName());
+        UsersEntity user = null;
+        user = userService.findByEmailOrLogin(authentication.getName());
         if(!bCryptPasswordEncoder.matches(authentication.getCredentials().toString(), user.getPassword())) {
             throw new BadCredentialsException("The password is invalid");
         }

@@ -1,5 +1,6 @@
 package com.flashcard.flashback.user.service;
 
+import com.flashcard.flashback.exception.EntityNotFoundException;
 import com.flashcard.flashback.user.data.UserDao;
 import com.flashcard.flashback.user.data.UserDto;
 import com.flashcard.flashback.user.entity.UsersEntity;
@@ -15,22 +16,19 @@ import java.util.regex.Pattern;
 @Service
 public record UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
 
-    public UsersEntity findByEmailOrLogin(String emailOrLogin) {
+    public UsersEntity findByEmailOrLogin(String emailOrLogin) throws EntityNotFoundException {
         Optional<UsersEntity> user;
         if(checkEmail(emailOrLogin)) {
             user = userRepository.findByEmail(emailOrLogin);
         } else {
             user = userRepository.findByLogin(emailOrLogin);
         }
-        return unwrapUser(user.get());
+        return unwrapUser(user);
     }
 
-    private UsersEntity unwrapUser(UsersEntity user) {
-        if(user != null) {
-            return user;
-        } else {
-            throw new RuntimeException("User does not exist!");
-        }
+    private UsersEntity unwrapUser(Optional<UsersEntity> user) {
+        if(user.isPresent()) return user.get();
+        else throw new EntityNotFoundException(UsersEntity.class);
     }
 
     public boolean checkEmail(String email) {
