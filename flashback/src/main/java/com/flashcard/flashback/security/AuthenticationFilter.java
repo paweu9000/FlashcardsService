@@ -2,6 +2,7 @@ package com.flashcard.flashback.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flashcard.flashback.security.managers.CustomAuthenticationManager;
+import com.flashcard.flashback.user.data.UserLoginDto;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,8 +24,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
-            UsersEntity user = new ObjectMapper().readValue(request.getInputStream(), UsersEntity.class);
-            Authentication authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
+            UserLoginDto user = new ObjectMapper().readValue(request.getInputStream(), UserLoginDto.class);
+            Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmailOrLogin(), user.getPassword());
             return authenticationManager.authenticate(authentication);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -32,8 +33,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        System.out.println("Unsuccesfull");
+    }
+
+    @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
-        super.successfulAuthentication(request, response, chain, authResult);
+        System.out.println("Succesfull");
     }
 }
