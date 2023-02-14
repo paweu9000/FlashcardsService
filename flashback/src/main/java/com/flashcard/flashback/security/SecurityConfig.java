@@ -20,6 +20,8 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter();
+        authenticationFilter.setFilterProcessesUrl("/api/authenticate");
 
         http.cors().configurationSource(new CorsConfigurationSource() {
             @Override
@@ -34,7 +36,9 @@ public class SecurityConfig {
             }
         }).and().csrf().disable().authorizeHttpRequests()
                 .antMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
+                .anyRequest().authenticated()
                 .and()
+                .addFilter(authenticationFilter)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         return http.build();
