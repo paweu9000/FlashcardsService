@@ -1,6 +1,8 @@
 package com.flashcard.flashback.security;
 
 import com.flashcard.flashback.constants.SecurityConstants;
+import com.flashcard.flashback.security.filters.AuthenticationFilter;
+import com.flashcard.flashback.security.filters.ExceptionHandlerFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,6 +43,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST, SecurityConstants.REGISTER_PATH).permitAll()
                 .anyRequest().authenticated()
                 .and()
+                .addFilterBefore(new ExceptionHandlerFilter(), AuthenticationFilter.class)
                 .addFilter(authenticationFilter)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
