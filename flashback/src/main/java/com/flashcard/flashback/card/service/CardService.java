@@ -4,6 +4,7 @@ import com.flashcard.flashback.card.data.CardDao;
 import com.flashcard.flashback.card.data.CardDto;
 import com.flashcard.flashback.card.entity.CardEntity;
 import com.flashcard.flashback.card.repository.CardRepository;
+import com.flashcard.flashback.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,12 +17,12 @@ public class CardService {
         this.cardRepository = cardRepository;
     }
 
-    public CardEntity getCardById(Long id) {
+    public CardEntity getCardById(Long id) throws EntityNotFoundException{
         Optional<CardEntity> card = cardRepository.findById(id);
         if (card.isPresent()) {
             return card.get();
         } else {
-            throw new RuntimeException("There is no such card!");
+            throw new EntityNotFoundException(id, CardEntity.class);
         }
     }
 
