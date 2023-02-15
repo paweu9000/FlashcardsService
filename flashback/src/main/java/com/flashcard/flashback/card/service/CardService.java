@@ -5,6 +5,7 @@ import com.flashcard.flashback.card.data.CardDto;
 import com.flashcard.flashback.card.entity.CardEntity;
 import com.flashcard.flashback.card.repository.CardRepository;
 import com.flashcard.flashback.exception.EntityNotFoundException;
+import com.flashcard.flashback.exception.UnauthorizedDataDeleteException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -54,8 +55,7 @@ public class CardService {
         String loginOrEmail = authentication.getName();
         String login = card.getCreatedBy().getLogin();
         String email = card.getCreatedBy().getEmail();
-        if (login.equals(loginOrEmail) || email.equals(loginOrEmail)) {
-            deleteCard(id);
-        }
+        if (login.equals(loginOrEmail) || email.equals(loginOrEmail)) deleteCard(id);
+        else throw new UnauthorizedDataDeleteException(CardEntity.class);
     }
 }

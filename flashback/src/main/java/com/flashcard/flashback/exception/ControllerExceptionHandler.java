@@ -22,6 +22,12 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler({UnauthorizedDataDeleteException.class})
+    public ResponseEntity<Object> handleUnauthorizedDataDeleteException(RuntimeException e) {
+        ErrorResponse errorResponse = new ErrorResponse(Arrays.asList(e.getMessage()));
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers,
