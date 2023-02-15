@@ -1,6 +1,7 @@
 package com.flashcard.flashback.card.entity;
 
 import com.flashcard.flashback.collection.entity.CollectionEntity;
+import com.flashcard.flashback.user.entity.UsersEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -31,5 +32,9 @@ public class CardEntity {
     @ManyToOne
     @JoinColumn(name = "collection.id")
     private CollectionEntity collector;
+
+    @ManyToOne
+    @JoinColumn(name = "users.id")
+    private UsersEntity createdBy;
 
 }
