@@ -100,4 +100,14 @@ public class CardServiceTests {
 
         assertDoesNotThrow(() -> cardService.deleteIfAllowed(authentication, 1L));
     }
+
+    @Test
+    public void deleteIfAllowedThrowExceptionTest() {
+        when(authentication.getName()).thenReturn("invalid login");
+        UsersEntity usersEntity = new UsersEntity("login", null, "email@example.com", null);
+        CardEntity card = new CardEntity(1L, "side", "value", null, usersEntity);
+        when(cardRepository.findById(1L)).thenReturn(Optional.of(card));
+
+        assertThrows(UnauthorizedDataDeleteException.class, () -> cardService.deleteIfAllowed(authentication, 1L));
+    }
 }
