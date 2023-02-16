@@ -1,5 +1,6 @@
 package com.flashcard.flashback.usertests;
 
+import com.flashcard.flashback.exception.EntityNotFoundException;
 import com.flashcard.flashback.user.data.UserDao;
 import com.flashcard.flashback.user.data.UserDto;
 import com.flashcard.flashback.user.entity.UsersEntity;
@@ -82,5 +83,10 @@ public class UserServiceTests {
         assertFalse(userService.checkEmail("test@gmail."));
         assertFalse(userService.checkEmail("test@gmail"));
         assertFalse(userService.checkEmail("test.com"));
+    }
+
+    @Test
+    public void findByEmailOrLoginThrowEntityNotFoundExceptionTest() {
+        assertThrows(EntityNotFoundException.class, () -> userService.findByEmailOrLogin("invalid"));
     }
 }
