@@ -6,17 +6,21 @@ import com.flashcard.flashback.card.entity.CardEntity;
 import com.flashcard.flashback.card.repository.CardRepository;
 import com.flashcard.flashback.card.service.CardService;
 import com.flashcard.flashback.collection.entity.CollectionEntity;
+import com.flashcard.flashback.exception.UnauthorizedDataDeleteException;
+import com.flashcard.flashback.user.entity.UsersEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 
+import java.util.Collection;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CardServiceTests {
@@ -24,12 +28,15 @@ public class CardServiceTests {
     @Mock
     private CardRepository cardRepository;
 
+    @Mock
+    private Authentication authentication;
+
     @InjectMocks
     private CardService cardService;
 
     @Test
     public void getCardByIdTest() {
-        CardEntity toReturn = new CardEntity(2L, "Key", "Value", null);
+        CardEntity toReturn = new CardEntity(2L, "Key", "Value", null, null);
         when(cardRepository.findById(2L)).thenReturn(Optional.of(toReturn));
 
         assertThrows(RuntimeException.class, () -> cardService.getCardById(3L));
@@ -73,7 +80,7 @@ public class CardServiceTests {
     @Test
     public void editCardTest() {
         CollectionEntity collection = new CollectionEntity(11L, 32L, null, null);
-        CardEntity card = new CardEntity(2L, "Side", "Value", collection);
+        CardEntity card = new CardEntity(2L, "Side", "Value", collection, null);
         when(cardRepository.findById(2L)).thenReturn(Optional.of(card));
         CardDao cardDao = new CardDao(card);
         cardDao.setSide("Changed side");
@@ -82,5 +89,15 @@ public class CardServiceTests {
 
         assertEquals(cardDao.getSide(), cardService.getCardById(2L).getSide());
         assertEquals(cardDao.getValue(), cardService.getCardById(2L).getValue());
+    }
+
+    @Test
+    public void deleteIfAllowedValidTest() {
+        when(authentication.getName()).thenReturn("email@example.com");
+        UsersEntity usersEntity = new UsersEntity("login", null, "email@example.com", null);
+        CardEntity card = new CardEntity(1L, "side", "value", null, usersEntity);
+        when(cardRepository.findById(1L)).thenReturn(Optional.of(card));
+
+        assertDoesNotThrow(() -> cardService.deleteIfAllowed(authentication, 1L));
     }
 }
