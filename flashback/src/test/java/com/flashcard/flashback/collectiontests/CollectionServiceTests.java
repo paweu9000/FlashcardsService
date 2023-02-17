@@ -10,11 +10,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.security.core.Authentication;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -23,6 +23,9 @@ public class CollectionServiceTests {
 
     @Mock
     private CollectionRepository collectionRepository;
+
+    @Mock
+    private Authentication authentication;
 
     @InjectMocks
     private CollectionService collectionService;
@@ -76,5 +79,15 @@ public class CollectionServiceTests {
         collectionService.upvoteCollection(2L);
 
         assertEquals(2, collectionService.findById(2L).getLikes());
+    }
+
+    @Test
+    public void deleteIfAllowedValidTest() {
+        when(authentication.getName()).thenReturn("email@example.com");
+        UsersEntity usersEntity = new UsersEntity("login", null, "email@example.com", null);
+        CollectionEntity collection = new CollectionEntity(1L, 30L, null, usersEntity);
+        when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
+
+        assertDoesNotThrow(() -> collectionService.deleteIfAllowed(authentication, 1L));
     }
 }
