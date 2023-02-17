@@ -4,6 +4,7 @@ import com.flashcard.flashback.collection.data.CollectionDao;
 import com.flashcard.flashback.collection.entity.CollectionEntity;
 import com.flashcard.flashback.collection.repository.CollectionRepository;
 import com.flashcard.flashback.collection.service.CollectionService;
+import com.flashcard.flashback.exception.UnauthorizedDataDeleteException;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -89,5 +90,16 @@ public class CollectionServiceTests {
         when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
 
         assertDoesNotThrow(() -> collectionService.deleteIfAllowed(authentication, 1L));
+    }
+
+    @Test
+    public void deleteIfAllowedInvalidTest() {
+        when(authentication.getName()).thenReturn("invalid@email.com");
+        UsersEntity usersEntity = new UsersEntity("login", null, "email@example.com", null);
+        CollectionEntity collection = new CollectionEntity(1L, 30L, null, usersEntity);
+        when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
+
+        assertThrows(UnauthorizedDataDeleteException.class, () -> collectionService
+                .deleteIfAllowed(authentication, 1L));
     }
 }
