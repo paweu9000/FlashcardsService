@@ -5,6 +5,7 @@ import com.flashcard.flashback.collection.entity.CollectionEntity;
 import com.flashcard.flashback.collection.service.CollectionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,8 +20,8 @@ public record CollectionController(CollectionService collectionService) {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteCollection(@PathVariable Long id) {
-        collectionService.deleteCollectionById(id);
+    public ResponseEntity<HttpStatus> deleteCollection(@PathVariable Long id, Authentication authentication) {
+        collectionService.deleteIfAllowed(authentication, id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
