@@ -14,7 +14,15 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Service
-public record UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+public class UserService{
+
+    UserRepository userRepository;
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.userRepository = userRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
 
     public UsersEntity findByEmailOrLogin(String emailOrLogin) throws EntityNotFoundException {
         Optional<UsersEntity> user;
