@@ -4,6 +4,7 @@ import com.flashcard.flashback.collection.data.CollectionDao;
 import com.flashcard.flashback.collection.data.CollectionDto;
 import com.flashcard.flashback.collection.entity.CollectionEntity;
 import com.flashcard.flashback.collection.repository.CollectionRepository;
+import com.flashcard.flashback.exception.UnauthorizedDataCreateException;
 import com.flashcard.flashback.exception.UnauthorizedDataDeleteException;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.service.UserService;
@@ -50,12 +51,14 @@ public record CollectionService(CollectionRepository collectionRepository, UserS
     }
 
     public void createCollection(Authentication authentication, CollectionDto collectionDto) {
-        if(authentication instanceof AnonymousAuthenticationToken) throw new RuntimeException("User is unauthorized");
+        if(authentication instanceof AnonymousAuthenticationToken)
+            throw new UnauthorizedDataCreateException(CollectionEntity.class);
         String loginOrEmail = authentication.getName();
         CollectionEntity collection = new CollectionEntity();
         UsersEntity usersEntity = userService.findByEmailOrLogin(loginOrEmail);
         collection.setLikes(collectionDto.getLikes());
         collection.setOwners(usersEntity);
-        collectionRepository.save(collection);
+        usersEntity.addCollection(collection);
+        userService.save(usersEntity);
     }
 }

@@ -49,4 +49,8 @@ public class UsersEntity {
         this.email = email;
         this.password = password;
     }
+
+    public void addCollection(CollectionEntity collection) {
+        collections.add(collection);
+    }
 }
