@@ -1,14 +1,18 @@
 package com.flashcard.flashback.collection.service;
 
 import com.flashcard.flashback.collection.data.CollectionDao;
+import com.flashcard.flashback.collection.data.CollectionDto;
 import com.flashcard.flashback.collection.entity.CollectionEntity;
 import com.flashcard.flashback.collection.repository.CollectionRepository;
 import com.flashcard.flashback.exception.UnauthorizedDataDeleteException;
+import com.flashcard.flashback.user.entity.UsersEntity;
+import com.flashcard.flashback.user.service.UserService;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
-public record CollectionService(CollectionRepository collectionRepository) {
+public record CollectionService(CollectionRepository collectionRepository, UserService userService) {
 
     public CollectionDao toDao(CollectionEntity collection) {
         return new CollectionDao(collection);
@@ -43,5 +47,15 @@ public record CollectionService(CollectionRepository collectionRepository) {
         String login = collection.getOwners().getLogin();
         if(email.equals(emailOrLogin) || login.equals(emailOrLogin)) deleteCollectionById(id);
         else throw new UnauthorizedDataDeleteException(CollectionEntity.class);
+    }
+
+    public void createCollection(Authentication authentication, CollectionDto collectionDto) {
+        if(authentication instanceof AnonymousAuthenticationToken) throw new RuntimeException("User is unauthorized");
+        String loginOrEmail = authentication.getName();
+        CollectionEntity collection = new CollectionEntity();
+        UsersEntity usersEntity = userService.findByEmailOrLogin(loginOrEmail);
+        collection.setLikes(collectionDto.getLikes());
+        collection.setOwners(usersEntity);
+        collectionRepository.save(collection);
     }
 }

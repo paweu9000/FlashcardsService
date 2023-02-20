@@ -1,6 +1,7 @@
 package com.flashcard.flashback.collection.controller;
 
 import com.flashcard.flashback.collection.data.CollectionDao;
+import com.flashcard.flashback.collection.data.CollectionDto;
 import com.flashcard.flashback.collection.entity.CollectionEntity;
 import com.flashcard.flashback.collection.service.CollectionService;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,13 @@ public record CollectionController(CollectionService collectionService) {
         CollectionEntity collection = collectionService.findById(id);
         CollectionDao collectionDao = new CollectionDao(collection);
         return new ResponseEntity<>(collectionDao, HttpStatus.OK);
+    }
+
+    @PostMapping("")
+    public ResponseEntity<HttpStatus> createCollection(@RequestBody CollectionDto collectionDto,
+                                                       Authentication authentication) {
+        collectionService.createCollection(authentication, collectionDto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
