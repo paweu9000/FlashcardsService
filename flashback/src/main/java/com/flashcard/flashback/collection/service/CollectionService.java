@@ -13,7 +13,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
-public record CollectionService(CollectionRepository collectionRepository, UserService userService) {
+public class CollectionService{
+
+    CollectionRepository collectionRepository;
+    UserService userService;
+
+    public CollectionService(CollectionRepository collectionRepository, UserService userService) {
+        this.collectionRepository = collectionRepository;
+        this.userService = userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
     public CollectionDao toDao(CollectionEntity collection) {
         return new CollectionDao(collection);
