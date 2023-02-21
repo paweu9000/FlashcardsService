@@ -32,4 +32,7 @@ public class CollectionEntity {
     @JoinColumn(name = "users.id")
     private UsersEntity owners;
 
+    public void addCard(CardEntity card) {
+        cards.add(card);
+    }
 }
