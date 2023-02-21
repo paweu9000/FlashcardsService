@@ -16,11 +16,15 @@ import java.util.Optional;
 
 @Service
 public class CardService {
-    final CardRepository cardRepository;
-    final CollectionService collectionService;
+    private final CardRepository cardRepository;
+    private CollectionService collectionService;
 
     public CardService(CardRepository cardRepository, CollectionService collectionService) {
         this.cardRepository = cardRepository;
+        this.collectionService = collectionService;
+    }
+
+    public void setCollectionService(CollectionService collectionService) {
         this.collectionService = collectionService;
     }
 
@@ -69,7 +73,7 @@ public class CardService {
             throw new UnauthorizedDataCreateException(CardEntity.class);
         CollectionEntity collection = collectionService.findById(collectionId);
         if(!collection.getOwners().getEmail()
-                .equals(loginOrEmail) &&  collection
+                .equals(loginOrEmail) &&  !collection
                 .getOwners().getLogin().equals(loginOrEmail))
             throw new UnauthorizedDataCreateException(CardEntity.class);
         return collection;
