@@ -4,7 +4,10 @@ import com.flashcard.flashback.card.data.CardDao;
 import com.flashcard.flashback.card.data.CardDto;
 import com.flashcard.flashback.card.entity.CardEntity;
 import com.flashcard.flashback.card.repository.CardRepository;
+import com.flashcard.flashback.collection.entity.CollectionEntity;
+import com.flashcard.flashback.collection.service.CollectionService;
 import com.flashcard.flashback.exception.EntityNotFoundException;
+import com.flashcard.flashback.exception.UnauthorizedDataCreateException;
 import com.flashcard.flashback.exception.UnauthorizedDataDeleteException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -14,9 +17,11 @@ import java.util.Optional;
 @Service
 public class CardService {
     final CardRepository cardRepository;
+    final CollectionService collectionService;
 
-    public CardService(CardRepository cardRepository) {
+    public CardService(CardRepository cardRepository, CollectionService collectionService) {
         this.cardRepository = cardRepository;
+        this.collectionService = collectionService;
     }
 
     public CardEntity getCardById(Long id) throws EntityNotFoundException{
@@ -57,5 +62,15 @@ public class CardService {
         String email = card.getCreatedBy().getEmail();
         if (login.equals(loginOrEmail) || email.equals(loginOrEmail)) deleteCard(id);
         else throw new UnauthorizedDataDeleteException(CardEntity.class);
+    }
+
+    public void checkIfActionIsAllowed(String loginOrEmail, Long collectionId, CardDto cardDto) {
+        if(loginOrEmail == null)
+            throw new UnauthorizedDataCreateException(CardEntity.class);
+        CollectionEntity collection = collectionService.findById(collectionId);
+        if(!collection.getOwners().getEmail()
+                .equals(loginOrEmail) &&  collection
+                .getOwners().getLogin().equals(loginOrEmail))
+            throw new UnauthorizedDataCreateException(CardEntity.class);
     }
 }
