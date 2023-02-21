@@ -62,10 +62,9 @@ public class CollectionService{
         else throw new UnauthorizedDataDeleteException(CollectionEntity.class);
     }
 
-    public void createCollection(Authentication authentication, CollectionDto collectionDto) {
-        if(authentication instanceof AnonymousAuthenticationToken)
+    public void createCollection(String loginOrEmail, CollectionDto collectionDto) {
+        if(loginOrEmail == null)
             throw new UnauthorizedDataCreateException(CollectionEntity.class);
-        String loginOrEmail = authentication.getName();
         CollectionEntity collection = new CollectionEntity();
         UsersEntity usersEntity = userService.findByEmailOrLogin(loginOrEmail);
         collection.setLikes(collectionDto.getLikes());

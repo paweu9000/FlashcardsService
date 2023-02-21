@@ -7,6 +7,8 @@ import com.flashcard.flashback.collection.service.CollectionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,15 +23,15 @@ public record CollectionController(CollectionService collectionService) {
     }
 
     @PostMapping("")
-    public ResponseEntity<HttpStatus> createCollection(@RequestBody CollectionDto collectionDto,
-                                                       Authentication authentication) {
-        collectionService.createCollection(authentication, collectionDto);
+    public ResponseEntity<HttpStatus> createCollection(@RequestBody CollectionDto collectionDto, @CurrentSecurityContext
+            (expression = "authentication?.name") String username) {
+        collectionService.createCollection(username, collectionDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteCollection(@PathVariable Long id, Authentication authentication) {
-        collectionService.deleteIfAllowed(authentication, id);
+    public ResponseEntity<HttpStatus> deleteCollection(@PathVariable Long id, @CurrentSecurityContext SecurityContext context) {
+        collectionService.deleteIfAllowed(context.getAuthentication(), id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
