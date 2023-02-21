@@ -5,6 +5,7 @@ import com.flashcard.flashback.collection.data.CollectionDto;
 import com.flashcard.flashback.collection.entity.CollectionEntity;
 import com.flashcard.flashback.collection.repository.CollectionRepository;
 import com.flashcard.flashback.collection.service.CollectionService;
+import com.flashcard.flashback.exception.UnauthorizedDataCreateException;
 import com.flashcard.flashback.exception.UnauthorizedDataDeleteException;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.repository.UserRepository;
@@ -14,11 +15,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 
 import java.util.Optional;
 
@@ -125,8 +125,18 @@ public class CollectionServiceTests {
         CollectionDto collectionDto = new CollectionDto();
         collectionDto.setLikes(21L);
         when(userRepository.findByEmail("email@example.com")).thenReturn(Optional.of(usersEntity));
-        collectionService.createCollection(authentication, collectionDto);
+        collectionService.createCollection(authentication.getName(), collectionDto);
 
         assertEquals(userService.findByEmailOrLogin("email@example.com").getCollections().get(0).getLikes(), 21L);
+    }
+
+    @Test
+    @WithAnonymousUser
+    public void createIfAllowedInvalidTest() {
+        CollectionDto collectionDto = new CollectionDto();
+        collectionDto.setLikes(21L);
+
+        assertThrows(UnauthorizedDataCreateException.class,
+                () -> collectionService.createCollection(null, collectionDto));
     }
 }
