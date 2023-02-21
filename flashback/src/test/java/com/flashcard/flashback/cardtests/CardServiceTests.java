@@ -133,7 +133,6 @@ public class CardServiceTests {
         collection.setOwners(user);
         collection.setId(1L);
         when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
-
         CollectionEntity returned = cardService.checkIfActionIsAllowed("login", 1L);
 
         assertEquals(returned.getOwners(), collection.getOwners());
