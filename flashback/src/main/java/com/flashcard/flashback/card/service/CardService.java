@@ -64,7 +64,7 @@ public class CardService {
         else throw new UnauthorizedDataDeleteException(CardEntity.class);
     }
 
-    public void checkIfActionIsAllowed(String loginOrEmail, Long collectionId, CardDto cardDto) {
+    public CollectionEntity checkIfActionIsAllowed(String loginOrEmail, Long collectionId) {
         if(loginOrEmail == null)
             throw new UnauthorizedDataCreateException(CardEntity.class);
         CollectionEntity collection = collectionService.findById(collectionId);
@@ -72,5 +72,14 @@ public class CardService {
                 .equals(loginOrEmail) &&  collection
                 .getOwners().getLogin().equals(loginOrEmail))
             throw new UnauthorizedDataCreateException(CardEntity.class);
+        return collection;
+    }
+
+    public void createCard(String loginOrEmail, Long collectionId, CardDto cardDto) {
+        CollectionEntity collection = checkIfActionIsAllowed(loginOrEmail, collectionId);
+        CardEntity card = mapDto(cardDto);
+        card.setCollector(collection);
+        collection.addCard(card);
+        collectionService.save(collection);
     }
 }

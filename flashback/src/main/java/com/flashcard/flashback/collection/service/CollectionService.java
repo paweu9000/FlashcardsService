@@ -72,4 +72,8 @@ public class CollectionService{
         usersEntity.addCollection(collection);
         userService.save(usersEntity);
     }
+
+    public void save(CollectionEntity collection) {
+        collectionRepository.save(collection);
+    }
 }
