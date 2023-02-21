@@ -79,6 +79,7 @@ public class CardService {
         CollectionEntity collection = checkIfActionIsAllowed(loginOrEmail, collectionId);
         CardEntity card = mapDto(cardDto);
         card.setCollector(collection);
+        card.setCreatedBy(collection.getOwners());
         collection.addCard(card);
         collectionService.save(collection);
     }
