@@ -65,7 +65,8 @@ public class CardService {
     }
 
     public void checkIfActionIsAllowed(String loginOrEmail, Long collectionId, CardDto cardDto) {
-        if(loginOrEmail == null) throw new UnauthorizedDataCreateException(CardEntity.class);
+        if(loginOrEmail == null)
+            throw new UnauthorizedDataCreateException(CardEntity.class);
         CollectionEntity collection = collectionService.findById(collectionId);
         if(!collection.getOwners().getEmail()
                 .equals(loginOrEmail) &&  collection
