@@ -6,21 +6,25 @@ import com.flashcard.flashback.card.entity.CardEntity;
 import com.flashcard.flashback.card.repository.CardRepository;
 import com.flashcard.flashback.card.service.CardService;
 import com.flashcard.flashback.collection.entity.CollectionEntity;
+import com.flashcard.flashback.collection.repository.CollectionRepository;
+import com.flashcard.flashback.collection.service.CollectionService;
+import com.flashcard.flashback.exception.UnauthorizedDataCreateException;
 import com.flashcard.flashback.exception.UnauthorizedDataDeleteException;
 import com.flashcard.flashback.user.entity.UsersEntity;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 
-import java.util.Collection;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CardServiceTests {
@@ -31,8 +35,20 @@ public class CardServiceTests {
     @Mock
     private Authentication authentication;
 
+    @Mock
+    private CollectionRepository collectionRepository;
+
+    @InjectMocks
+    @Spy
+    private CollectionService collectionService;
+
     @InjectMocks
     private CardService cardService;
+
+    @Before
+    public void inject() {
+        cardService.setCollectionService(collectionService);
+    }
 
     @Test
     public void getCardByIdTest() {
@@ -109,5 +125,29 @@ public class CardServiceTests {
         when(cardRepository.findById(1L)).thenReturn(Optional.of(card));
 
         assertThrows(UnauthorizedDataDeleteException.class, () -> cardService.deleteIfAllowed(authentication, 1L));
+    }
+
+    @Test
+    public void checkIfActionIsAllowedValidTest() {
+        UsersEntity user = new UsersEntity("login", "username", "email@example.com", "password");
+        CollectionEntity collection = new CollectionEntity();
+        collection.setOwners(user);
+        collection.setId(1L);
+        when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
+        CollectionEntity returned = cardService.checkIfActionIsAllowed("login", 1L);
+
+        assertEquals(returned.getOwners(), collection.getOwners());
+    }
+
+    @Test
+    public void checkIfActionIsAllowedInvalidTest() {
+        UsersEntity user = new UsersEntity("login", "username", "email@example.com", "password");
+        CollectionEntity collection = new CollectionEntity();
+        collection.setOwners(user);
+        collection.setId(1L);
+        when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
+
+        assertThrows(UnauthorizedDataCreateException.class, () ->
+                cardService.checkIfActionIsAllowed("invalid_login", 1L));
     }
 }
