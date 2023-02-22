@@ -74,11 +74,7 @@ public class CardServiceTests {
 
     @Test
     public void toDaoTest() {
-        CardEntity card = new CardEntity();
-        card.setId(3L);
-        card.setSide("Side");
-        card.setValue("Value");
-        card.setCollector(new CollectionEntity());
+        card.setCollector(collection);
         CardDao cardDao = cardService.toDao(card);
 
         assertEquals(cardDao.getId(), card.getId());
@@ -106,23 +102,20 @@ public class CardServiceTests {
 
     @Test
     public void editCardTest() {
-        CollectionEntity collection = new CollectionEntity(11L, 32L, null, null);
-        CardEntity card = new CardEntity(2L, "Side", "Value", collection, null);
-        when(cardRepository.findById(2L)).thenReturn(Optional.of(card));
+        card.setCollector(collection);
+        when(cardRepository.findById(1L)).thenReturn(Optional.of(card));
         CardDao cardDao = new CardDao(card);
         cardDao.setSide("Changed side");
         cardDao.setValue("Changed value");
         cardService.editCard(cardDao);
 
-        assertEquals(cardDao.getSide(), cardService.getCardById(2L).getSide());
-        assertEquals(cardDao.getValue(), cardService.getCardById(2L).getValue());
+        assertEquals(cardDao.getSide(), cardService.getCardById(1L).getSide());
+        assertEquals(cardDao.getValue(), cardService.getCardById(1L).getValue());
     }
 
     @Test
     public void deleteIfAllowedValidTest() {
         when(authentication.getName()).thenReturn("email@example.com");
-        UsersEntity usersEntity = new UsersEntity("login", null, "email@example.com", null);
-        CardEntity card = new CardEntity(1L, "side", "value", null, usersEntity);
         when(cardRepository.findById(1L)).thenReturn(Optional.of(card));
 
         assertDoesNotThrow(() -> cardService.deleteIfAllowed(authentication, 1L));
@@ -131,8 +124,6 @@ public class CardServiceTests {
     @Test
     public void deleteIfAllowedThrowExceptionTest() {
         when(authentication.getName()).thenReturn("invalid login");
-        UsersEntity usersEntity = new UsersEntity("login", null, "email@example.com", null);
-        CardEntity card = new CardEntity(1L, "side", "value", null, usersEntity);
         when(cardRepository.findById(1L)).thenReturn(Optional.of(card));
 
         assertThrows(UnauthorizedDataDeleteException.class, () -> cardService.deleteIfAllowed(authentication, 1L));
@@ -140,10 +131,6 @@ public class CardServiceTests {
 
     @Test
     public void checkIfActionIsAllowedValidTest() {
-        UsersEntity user = new UsersEntity("login", "username", "email@example.com", "password");
-        CollectionEntity collection = new CollectionEntity();
-        collection.setOwners(user);
-        collection.setId(1L);
         when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
         CollectionEntity returned = cardService.checkIfActionIsAllowed("login", 1L);
 
@@ -152,10 +139,6 @@ public class CardServiceTests {
 
     @Test
     public void checkIfActionIsAllowedInvalidTest() {
-        UsersEntity user = new UsersEntity("login", "username", "email@example.com", "password");
-        CollectionEntity collection = new CollectionEntity();
-        collection.setOwners(user);
-        collection.setId(1L);
         when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
 
         assertThrows(UnauthorizedDataCreateException.class, () ->
