@@ -8,6 +8,7 @@ import com.flashcard.flashback.card.service.CardService;
 import com.flashcard.flashback.collection.entity.CollectionEntity;
 import com.flashcard.flashback.collection.repository.CollectionRepository;
 import com.flashcard.flashback.collection.service.CollectionService;
+import com.flashcard.flashback.exception.UnauthorizedDataCreateException;
 import com.flashcard.flashback.exception.UnauthorizedDataDeleteException;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import org.junit.Before;
@@ -136,5 +137,17 @@ public class CardServiceTests {
         CollectionEntity returned = cardService.checkIfActionIsAllowed("login", 1L);
 
         assertEquals(returned.getOwners(), collection.getOwners());
+    }
+
+    @Test
+    public void checkIfActionIsAllowedInvalidTest() {
+        UsersEntity user = new UsersEntity("login", "username", "email@example.com", "password");
+        CollectionEntity collection = new CollectionEntity();
+        collection.setOwners(user);
+        collection.setId(1L);
+        when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
+
+        assertThrows(UnauthorizedDataCreateException.class, () ->
+                cardService.checkIfActionIsAllowed("invalid_login", 1L));
     }
 }
