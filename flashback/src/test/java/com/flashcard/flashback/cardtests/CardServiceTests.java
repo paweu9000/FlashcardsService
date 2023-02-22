@@ -8,6 +8,7 @@ import com.flashcard.flashback.card.service.CardService;
 import com.flashcard.flashback.collection.entity.CollectionEntity;
 import com.flashcard.flashback.collection.repository.CollectionRepository;
 import com.flashcard.flashback.collection.service.CollectionService;
+import com.flashcard.flashback.exception.EntityNotFoundException;
 import com.flashcard.flashback.exception.UnauthorizedDataCreateException;
 import com.flashcard.flashback.exception.UnauthorizedDataDeleteException;
 import com.flashcard.flashback.user.entity.UsersEntity;
@@ -20,6 +21,7 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.core.Authentication;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -44,21 +46,30 @@ public class CardServiceTests {
 
     @InjectMocks
     private CardService cardService;
+    private UsersEntity user;
+    private CardEntity card;
+    private CollectionEntity collection;
 
     @Before
-    public void inject() {
+    public void setUp() {
         cardService.setCollectionService(collectionService);
+        user = new UsersEntity("login", "username", "email@example.com", "password");
+        collection = new CollectionEntity(1L, 0L, new ArrayList<>(), user);
+        card = new CardEntity();
+        card.setId(1L);
+        card.setValue("Value");
+        card.setSide("Side");
+        card.setCreatedBy(user);
     }
 
     @Test
     public void getCardByIdTest() {
-        CardEntity toReturn = new CardEntity(2L, "Key", "Value", null, null);
-        when(cardRepository.findById(2L)).thenReturn(Optional.of(toReturn));
+        when(cardRepository.findById(1L)).thenReturn(Optional.of(card));
 
-        assertThrows(RuntimeException.class, () -> cardService.getCardById(3L));
-        assertEquals( 2L, cardService.getCardById(2L).getId());
-        assertEquals("Key", cardService.getCardById(2L).getSide());
-        assertEquals("Value", cardService.getCardById(2L).getValue());
+        assertThrows(EntityNotFoundException.class, () -> cardService.getCardById(3L));
+        assertEquals( 1L, cardService.getCardById(1L).getId());
+        assertEquals("Side", cardService.getCardById(1L).getSide());
+        assertEquals("Value", cardService.getCardById(1L).getValue());
     }
 
     @Test
