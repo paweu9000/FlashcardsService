@@ -130,18 +130,28 @@ public class CardServiceTests {
     }
 
     @Test
-    public void checkIfActionIsAllowedValidTest() {
+    public void getCollectionIfActionIsAllowedValidTest() {
         when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
-        CollectionEntity returned = cardService.checkIfActionIsAllowed("login", 1L);
+        CollectionEntity returned = cardService.getCollectionIfActionIsAllowed("login", 1L);
 
         assertEquals(returned.getOwners(), collection.getOwners());
     }
 
     @Test
-    public void checkIfActionIsAllowedInvalidTest() {
+    public void getCollectionIfActionIsAllowedInvalidTest() {
         when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
 
         assertThrows(UnauthorizedDataCreateException.class, () ->
-                cardService.checkIfActionIsAllowed("invalid_login", 1L));
+                cardService.getCollectionIfActionIsAllowed("invalid_login", 1L));
+    }
+
+    @Test
+    public void createCardTest() {
+        when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
+        CardDto cardDto = new CardDto();
+        cardDto.setValue("Value");
+        cardService.createCard("login", 1L, new CardDto());
+
+        verify(collectionRepository).save(collection);
     }
 }
