@@ -8,9 +8,10 @@ import com.flashcard.flashback.exception.UnauthorizedDataCreateException;
 import com.flashcard.flashback.exception.UnauthorizedDataDeleteException;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.service.UserService;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 public class CollectionService{
@@ -47,10 +48,17 @@ public class CollectionService{
         collectionRepository.deleteById(id);
     }
 
-    public void upvoteCollection(Long id) {
+    public void upvoteCollection(Long id, String emailOrLogin) {
+        UsersEntity usersEntity = userService.findByEmailOrLogin(emailOrLogin);
+        usersEntity.getSavedCollections().forEach(collection -> isUnique(id, collection));
         CollectionEntity collection = findById(id);
         collection.setLikes(collection.getLikes() + 1);
-        collectionRepository.save(collection);
+        usersEntity.saveCollection(collection);
+        userService.save(usersEntity);
+    }
+
+    public void isUnique(Long id, CollectionEntity collection) {
+        if(Objects.equals(id, collection.getId())) throw new RuntimeException();
     }
 
     public void deleteIfAllowed(Authentication authentication, Long id) {

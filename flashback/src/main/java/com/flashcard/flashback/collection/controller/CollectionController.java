@@ -35,9 +35,10 @@ public record CollectionController(CollectionService collectionService) {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/{id}+like")
-    public ResponseEntity<HttpStatus> upvoteCollection(@PathVariable Long id) {
-        collectionService.upvoteCollection(id);
+    @GetMapping("/{id}/like")
+    public ResponseEntity<HttpStatus> upvoteCollection(@PathVariable Long id, @CurrentSecurityContext
+            (expression = "authentication?.name") String username) {
+        collectionService.upvoteCollection(id, username);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
