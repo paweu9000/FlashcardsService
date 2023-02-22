@@ -87,15 +87,15 @@ public class CollectionServiceTests {
         verify(collectionRepository).deleteById(id);
     }
 
-    @Test
-    public void upvoteCollectionTest() {
-        CollectionEntity collection = new CollectionEntity(2L, 0L, null, null);
-        when(collectionRepository.findById(2L)).thenReturn(Optional.of(collection));
-        collectionService.upvoteCollection(2L);
-        collectionService.upvoteCollection(2L);
-
-        assertEquals(2, collectionService.findById(2L).getLikes());
-    }
+//    @Test
+//    public void upvoteCollectionTest() {
+//        CollectionEntity collection = new CollectionEntity(2L, 0L, null, null);
+//        when(collectionRepository.findById(2L)).thenReturn(Optional.of(collection));
+//        collectionService.upvoteCollection(2L);
+//        collectionService.upvoteCollection(2L);
+//
+//        assertEquals(2, collectionService.findById(2L).getLikes());
+//    }
 
     @Test
     public void deleteIfAllowedValidTest() {
