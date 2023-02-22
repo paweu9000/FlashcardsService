@@ -3,6 +3,7 @@ package com.flashcard.flashback.exception;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNullApi;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,10 +23,16 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({UnauthorizedDataDeleteException.class})
-    public ResponseEntity<Object> handleUnauthorizedDataDeleteException(RuntimeException e) {
+    @ExceptionHandler({UnauthorizedDataDeleteException.class, UnauthorizedDataCreateException.class})
+    public ResponseEntity<Object> handleUnauthorizedDataActionException(RuntimeException e) {
         ErrorResponse errorResponse = new ErrorResponse(Arrays.asList(e.getMessage()));
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler({SavedCollectionDuplicateException.class})
+    public ResponseEntity<Object> handleSavedCollectionDuplicateException(RuntimeException e) {
+        ErrorResponse errorResponse = new ErrorResponse(Arrays.asList(e.getMessage()));
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @Override
