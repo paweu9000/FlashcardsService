@@ -4,6 +4,7 @@ import com.flashcard.flashback.collection.data.CollectionDao;
 import com.flashcard.flashback.collection.data.CollectionDto;
 import com.flashcard.flashback.collection.entity.CollectionEntity;
 import com.flashcard.flashback.collection.repository.CollectionRepository;
+import com.flashcard.flashback.exception.SavedCollectionDuplicateException;
 import com.flashcard.flashback.exception.UnauthorizedDataCreateException;
 import com.flashcard.flashback.exception.UnauthorizedDataDeleteException;
 import com.flashcard.flashback.user.entity.UsersEntity;
@@ -58,7 +59,7 @@ public class CollectionService{
     }
 
     public void isUnique(Long id, CollectionEntity collection) {
-        if(Objects.equals(id, collection.getId())) throw new RuntimeException();
+        if(Objects.equals(collection.getId(), id)) throw new SavedCollectionDuplicateException(id);
     }
 
     public void deleteIfAllowed(Authentication authentication, Long id) {

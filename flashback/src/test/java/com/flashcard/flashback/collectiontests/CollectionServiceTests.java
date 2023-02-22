@@ -5,6 +5,7 @@ import com.flashcard.flashback.collection.data.CollectionDto;
 import com.flashcard.flashback.collection.entity.CollectionEntity;
 import com.flashcard.flashback.collection.repository.CollectionRepository;
 import com.flashcard.flashback.collection.service.CollectionService;
+import com.flashcard.flashback.exception.SavedCollectionDuplicateException;
 import com.flashcard.flashback.exception.UnauthorizedDataCreateException;
 import com.flashcard.flashback.exception.UnauthorizedDataDeleteException;
 import com.flashcard.flashback.user.entity.UsersEntity;
@@ -87,15 +88,29 @@ public class CollectionServiceTests {
         verify(collectionRepository).deleteById(id);
     }
 
-//    @Test
-//    public void upvoteCollectionTest() {
-//        CollectionEntity collection = new CollectionEntity(2L, 0L, null, null);
-//        when(collectionRepository.findById(2L)).thenReturn(Optional.of(collection));
-//        collectionService.upvoteCollection(2L);
-//        collectionService.upvoteCollection(2L);
-//
-//        assertEquals(2, collectionService.findById(2L).getLikes());
-//    }
+    @Test
+    public void upvoteCollectionTest() {
+        UsersEntity usersEntity = new UsersEntity("login", null, "email@example.com", null);
+        when(userRepository.findByEmail("email@example.com")).thenReturn(Optional.of(usersEntity));
+        CollectionEntity collection = new CollectionEntity(2L, 0L, null, null);
+        when(collectionRepository.findById(2L)).thenReturn(Optional.of(collection));
+        collectionService.upvoteCollection(2L, "email@example.com");
+
+        assertEquals(1, collectionService.findById(2L).getLikes());
+    }
+
+    @Test
+    public void invalidUpvoteCollectionTest() {
+        UsersEntity usersEntity = new UsersEntity("login", null, "email@example.com", null);
+        when(userRepository.findByEmail("email@example.com")).thenReturn(Optional.of(usersEntity));
+        CollectionEntity collection = new CollectionEntity(2L, 0L, null, null);
+        when(collectionRepository.findById(2L)).thenReturn(Optional.of(collection));
+        collectionService.upvoteCollection(2L, "email@example.com");
+
+        assertThrows(SavedCollectionDuplicateException.class, () ->
+                collectionService.upvoteCollection(2L, "email@example.com"));
+        assertEquals(1, usersEntity.getSavedCollections().get(0).getLikes());
+    }
 
     @Test
     public void deleteIfAllowedValidTest() {
