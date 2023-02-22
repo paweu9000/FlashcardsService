@@ -53,4 +53,7 @@ public class UsersEntity {
     public void addCollection(CollectionEntity collection) {
         collections.add(collection);
     }
+    public void saveCollection(CollectionEntity collection) {
+        savedCollections.add(collection);
+    }
 }
