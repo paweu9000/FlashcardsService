@@ -42,6 +42,9 @@ public class SecurityConfig {
             }
         }).and().csrf().disable().authorizeHttpRequests()
                 .antMatchers(HttpMethod.POST, SecurityConstants.REGISTER_PATH).permitAll()
+                .antMatchers(HttpMethod.GET, SecurityConstants.CARDS_PATH).permitAll()
+                .antMatchers(HttpMethod.DELETE, SecurityConstants.CARDS_PATH).authenticated()
+                .antMatchers(HttpMethod.POST, SecurityConstants.CARDS_PATH).authenticated()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new ExceptionHandlerFilter(), AuthenticationFilter.class)
