@@ -4,6 +4,7 @@ import com.flashcard.flashback.collection.data.CollectionDao;
 import com.flashcard.flashback.collection.data.CollectionDto;
 import com.flashcard.flashback.collection.entity.CollectionEntity;
 import com.flashcard.flashback.collection.repository.CollectionRepository;
+import com.flashcard.flashback.exception.EntityNotFoundException;
 import com.flashcard.flashback.exception.SavedCollectionDuplicateException;
 import com.flashcard.flashback.exception.UnauthorizedDataCreateException;
 import com.flashcard.flashback.exception.UnauthorizedDataDeleteException;
@@ -12,7 +13,9 @@ import com.flashcard.flashback.user.service.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class CollectionService{
@@ -41,7 +44,7 @@ public class CollectionService{
         if(collection != null) {
             return collection;
         } else {
-            throw new RuntimeException("This collection does not exist!");
+            throw new EntityNotFoundException(CollectionEntity.class);
         }
     }
 
@@ -84,5 +87,10 @@ public class CollectionService{
 
     public void save(CollectionEntity collection) {
         collectionRepository.save(collection);
+    }
+
+    public List<CollectionDao> findCollections(String title) {
+        List<CollectionEntity> collectionEntities = collectionRepository.findByTitleContaining(title);
+        return collectionEntities.stream().map(this::toDao).toList();
     }
 }
