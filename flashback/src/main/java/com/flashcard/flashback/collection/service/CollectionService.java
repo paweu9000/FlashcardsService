@@ -91,6 +91,7 @@ public class CollectionService{
 
     public List<CollectionDao> findCollections(String title) {
         List<CollectionEntity> collectionEntities = collectionRepository.findByTitleContaining(title);
+        if(collectionEntities.isEmpty()) throw new EntityNotFoundException(List.class);
         return collectionEntities.stream().map(this::toDao).toList();
     }
 }
