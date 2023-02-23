@@ -7,5 +7,9 @@ public record SecurityConstants (){
     public static final String BEARER = "Bearer ";
     public static final String AUTHORIZATION = "Authorization";
     public static final String REGISTER_PATH = "/api/auth/register";
+    public static final String CARDS_PATH = "/api/cards/*";
+    public static final String COLLECTION_PATH = "/api/collection/*";
+    public static final String USER_PATH = "/api/user/*";
     public static final String SECRET_KEY = System.getenv("SECRET_KEY");
+
 }
