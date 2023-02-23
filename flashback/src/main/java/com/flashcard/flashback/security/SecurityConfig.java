@@ -48,6 +48,8 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET, SecurityConstants.COLLECTION_PATH).permitAll()
                 .antMatchers(HttpMethod.POST, SecurityConstants.COLLECTION_PATH).authenticated()
                 .antMatchers(HttpMethod.DELETE, SecurityConstants.COLLECTION_PATH).authenticated()
+                .antMatchers(HttpMethod.DELETE, SecurityConstants.USER_PATH).authenticated()
+                .antMatchers(HttpMethod.POST, SecurityConstants.USER_PATH).authenticated()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new ExceptionHandlerFilter(), AuthenticationFilter.class)
