@@ -21,6 +21,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -153,5 +155,23 @@ public class CollectionServiceTests {
 
         assertThrows(UnauthorizedDataCreateException.class,
                 () -> collectionService.createCollection(null, collectionDto));
+    }
+
+    @Test
+    public void findByTitleTest() {
+        CollectionEntity collection1 = new CollectionEntity();
+        collection1.setTitle("title");
+        CollectionEntity collection2 = new CollectionEntity();
+        collection2.setTitle("title");
+
+        List<CollectionEntity> collectionEntities = new ArrayList<>();
+        collectionEntities.add(collection1);
+        collectionEntities.add(collection2);
+        when(collectionRepository.findByTitleContaining("title")).thenReturn(collectionEntities);
+        List<CollectionDao> collectionDaos = collectionService.findCollections("title");
+
+        assertEquals(2, collectionDaos.size());
+        assertEquals("title", collectionDaos.get(0).getTitle());
+        assertEquals("title", collectionDaos.get(1).getTitle());
     }
 }
