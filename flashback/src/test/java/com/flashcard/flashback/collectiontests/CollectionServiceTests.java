@@ -5,6 +5,7 @@ import com.flashcard.flashback.collection.data.CollectionDto;
 import com.flashcard.flashback.collection.entity.CollectionEntity;
 import com.flashcard.flashback.collection.repository.CollectionRepository;
 import com.flashcard.flashback.collection.service.CollectionService;
+import com.flashcard.flashback.exception.EntityNotFoundException;
 import com.flashcard.flashback.exception.SavedCollectionDuplicateException;
 import com.flashcard.flashback.exception.UnauthorizedDataCreateException;
 import com.flashcard.flashback.exception.UnauthorizedDataDeleteException;
@@ -158,7 +159,7 @@ public class CollectionServiceTests {
     }
 
     @Test
-    public void findByTitleTest() {
+    public void findCollectionsTest() {
         CollectionEntity collection1 = new CollectionEntity();
         collection1.setTitle("title");
         CollectionEntity collection2 = new CollectionEntity();
@@ -173,5 +174,10 @@ public class CollectionServiceTests {
         assertEquals(2, collectionDaos.size());
         assertEquals("title", collectionDaos.get(0).getTitle());
         assertEquals("title", collectionDaos.get(1).getTitle());
+    }
+
+    @Test
+    public void findCollectionsEmptyTest() {
+        assertThrows(EntityNotFoundException.class, () -> collectionService.findCollections("title"));
     }
 }
