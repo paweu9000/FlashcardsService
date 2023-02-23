@@ -73,7 +73,7 @@ public class CollectionServiceTests {
 
     @Test
     public void existsTest() {
-        CollectionEntity collection = new CollectionEntity(1L, 2L, null, null);
+        CollectionEntity collection = new CollectionEntity(1L, "title", 2L, null, null);
 
         assertEquals(collection.getId(), collectionService.exists(collection).getId());
         assertEquals(collection.getLikes(), collectionService.exists(collection).getLikes());
@@ -92,7 +92,7 @@ public class CollectionServiceTests {
     public void upvoteCollectionTest() {
         UsersEntity usersEntity = new UsersEntity("login", null, "email@example.com", null);
         when(userRepository.findByEmail("email@example.com")).thenReturn(Optional.of(usersEntity));
-        CollectionEntity collection = new CollectionEntity(2L, 0L, null, null);
+        CollectionEntity collection = new CollectionEntity(2L, "title", 0L, null, null);
         when(collectionRepository.findById(2L)).thenReturn(Optional.of(collection));
         collectionService.upvoteCollection(2L, "email@example.com");
 
@@ -103,7 +103,7 @@ public class CollectionServiceTests {
     public void invalidUpvoteCollectionTest() {
         UsersEntity usersEntity = new UsersEntity("login", null, "email@example.com", null);
         when(userRepository.findByEmail("email@example.com")).thenReturn(Optional.of(usersEntity));
-        CollectionEntity collection = new CollectionEntity(2L, 0L, null, null);
+        CollectionEntity collection = new CollectionEntity(2L, "title", 0L, null, null);
         when(collectionRepository.findById(2L)).thenReturn(Optional.of(collection));
         collectionService.upvoteCollection(2L, "email@example.com");
 
@@ -116,7 +116,7 @@ public class CollectionServiceTests {
     public void deleteIfAllowedValidTest() {
         when(authentication.getName()).thenReturn("email@example.com");
         UsersEntity usersEntity = new UsersEntity("login", null, "email@example.com", null);
-        CollectionEntity collection = new CollectionEntity(1L, 30L, null, usersEntity);
+        CollectionEntity collection = new CollectionEntity(1L, "title", 30L, null, usersEntity);
         when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
 
         assertDoesNotThrow(() -> collectionService.deleteIfAllowed(authentication, 1L));
@@ -126,7 +126,7 @@ public class CollectionServiceTests {
     public void deleteIfAllowedInvalidTest() {
         when(authentication.getName()).thenReturn("invalid@email.com");
         UsersEntity usersEntity = new UsersEntity("login", null, "email@example.com", null);
-        CollectionEntity collection = new CollectionEntity(1L, 30L, null, usersEntity);
+        CollectionEntity collection = new CollectionEntity(1L, "title", 30L, null, usersEntity);
         when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
 
         assertThrows(UnauthorizedDataDeleteException.class, () -> collectionService

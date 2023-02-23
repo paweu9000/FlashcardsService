@@ -46,15 +46,14 @@ public class CardServiceTests {
 
     @InjectMocks
     private CardService cardService;
-    private UsersEntity user;
     private CardEntity card;
     private CollectionEntity collection;
 
     @Before
     public void setUp() {
         cardService.setCollectionService(collectionService);
-        user = new UsersEntity("login", "username", "email@example.com", "password");
-        collection = new CollectionEntity(1L, 0L, new ArrayList<>(), user);
+        UsersEntity user = new UsersEntity("login", "username", "email@example.com", "password");
+        collection = new CollectionEntity(1L, "title", 0L, new ArrayList<>(), user);
         card = new CardEntity();
         card.setId(1L);
         card.setValue("Value");

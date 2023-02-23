@@ -11,10 +11,12 @@ import java.util.List;
 @Data
 public class CollectionDao {
     private Long id;
+    private String title;
     private Long likes;
     private List<CardDao> cards = new ArrayList<>();
 
     public CollectionDao(CollectionEntity collection) {
+        this.title = collection.getTitle();
         this.id = collection.getId();
         this.likes = collection.getLikes();
         collection.getCards().forEach(card -> this.cards.add(new CardDao(card)));

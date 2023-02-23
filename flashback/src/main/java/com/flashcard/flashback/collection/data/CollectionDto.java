@@ -4,5 +4,6 @@ import lombok.Data;
 
 @Data
 public class CollectionDto {
+    private String title;
     private Long likes = 0L;
 }
