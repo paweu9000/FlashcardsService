@@ -10,6 +10,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/cards")
 public record CardController(CardService cardService) {
@@ -38,5 +40,11 @@ public record CardController(CardService cardService) {
     public ResponseEntity<HttpStatus> editCard(@PathVariable Long id, @RequestBody CardDao cardDao) {
         cardService.editCard(cardDao);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/all?={collectionId}")
+    public ResponseEntity<List<CardDao>> getAllCardsFromCollection(@PathVariable Long collectionId) {
+        List<CardDao> cards = cardService.getAllCards(collectionId);
+        return new ResponseEntity<>(cards, HttpStatus.OK);
     }
 }
