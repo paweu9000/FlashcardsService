@@ -11,6 +11,8 @@ import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/collection")
 public record CollectionController(CollectionService collectionService) {
@@ -40,5 +42,11 @@ public record CollectionController(CollectionService collectionService) {
             (expression = "authentication?.name") String username) {
         collectionService.upvoteCollection(id, username);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/search?title={title}")
+    public ResponseEntity<List<CollectionDao>> findCollectionsByTitle(@PathVariable String title) {
+        List<CollectionDao> collections = collectionService.findCollections(title);
+        return new ResponseEntity<>(collections, HttpStatus.OK);
     }
 }
