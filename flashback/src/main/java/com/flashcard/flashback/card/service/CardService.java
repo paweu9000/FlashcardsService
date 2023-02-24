@@ -12,7 +12,9 @@ import com.flashcard.flashback.exception.UnauthorizedDataDeleteException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CardService {
@@ -86,5 +88,10 @@ public class CardService {
         card.setCreatedBy(collection.getOwners());
         collection.addCard(card);
         collectionService.save(collection);
+    }
+
+    public List<CardDao> getAllCards(Long id) {
+        CollectionEntity collection = collectionService.findById(id);
+        return collection.getCards().stream().map(this::toDao).toList();
     }
 }
