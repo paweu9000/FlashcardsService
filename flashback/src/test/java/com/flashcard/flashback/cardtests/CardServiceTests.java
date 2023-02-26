@@ -12,6 +12,8 @@ import com.flashcard.flashback.exception.EntityNotFoundException;
 import com.flashcard.flashback.exception.UnauthorizedDataCreateException;
 import com.flashcard.flashback.exception.UnauthorizedDataDeleteException;
 import com.flashcard.flashback.user.entity.UsersEntity;
+import com.flashcard.flashback.user.repository.UserRepository;
+import com.flashcard.flashback.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,6 +47,12 @@ public class CardServiceTests {
     @Spy
     private CollectionService collectionService;
 
+    @Mock
+    private UserRepository userRepository;
+    @InjectMocks
+    @Spy
+    private UserService userService;
+
     @InjectMocks
     private CardService cardService;
     private CardEntity card;
@@ -53,7 +61,9 @@ public class CardServiceTests {
 
     @Before
     public void setUp() {
+        userService = new UserService(userRepository, null);
         cardService.setCollectionService(collectionService);
+        cardService.setUserService(userService);
         user = new UsersEntity("login", "username", "email@example.com", "password");
         collection = new CollectionEntity(1L, "title", 0L, new ArrayList<>(), user);
         card = new CardEntity();
@@ -88,6 +98,10 @@ public class CardServiceTests {
         CardDto cardDto = new CardDto();
         cardDto.setSide("Side");
         cardDto.setValue("Value");
+        cardDto.setCollectionId(1L);
+        cardDto.setCreatorId(1L);
+        when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         CardEntity card = cardService.mapDto(cardDto);
 
         assertEquals(card.getValue(), cardDto.getValue());
@@ -150,8 +164,12 @@ public class CardServiceTests {
     public void createCardTest() {
         when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
         CardDto cardDto = new CardDto();
+        cardDto.setSide("Side");
         cardDto.setValue("Value");
-        cardService.createCard("login", 1L, new CardDto());
+        cardDto.setCollectionId(1L);
+        cardDto.setCreatorId(1L);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        cardService.createCard("login", 1L, cardDto);
 
         verify(collectionRepository).save(collection);
     }

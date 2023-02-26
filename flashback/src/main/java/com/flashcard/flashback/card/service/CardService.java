@@ -26,6 +26,11 @@ public class CardService {
     public CardService(CardRepository cardRepository, CollectionService collectionService, UserService userService) {
         this.cardRepository = cardRepository;
         this.collectionService = collectionService;
+        this.userService = userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 
     public void setCollectionService(CollectionService collectionService) {
