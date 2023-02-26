@@ -34,6 +34,10 @@ public class UserService{
         return unwrapUser(user);
     }
 
+    public UsersEntity findById(Long id) {
+        return unwrapUser(userRepository.findById(id));
+    }
+
     private UsersEntity unwrapUser(Optional<UsersEntity> user) {
         if(user.isPresent()) return user.get();
         else throw new EntityNotFoundException(UsersEntity.class);
