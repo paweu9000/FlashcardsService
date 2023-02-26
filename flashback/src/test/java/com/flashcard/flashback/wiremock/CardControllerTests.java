@@ -23,6 +23,7 @@ import java.net.http.HttpResponse;
 import java.util.Optional;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 public class CardControllerTests {
@@ -63,6 +64,20 @@ public class CardControllerTests {
         HttpGet request = new HttpGet("http://localhost:8080/api/cards/1");
         CloseableHttpResponse response = client.execute(request);
 
-        System.out.println(response.getEntity());
+        assertEquals(200, response.getCode());
     }
+
+    @Test
+    public void testGetCardErrorRequest() throws IOException {
+        stubFor(get(urlEqualTo("/api/cards/1"))
+                .willReturn(aResponse()
+                        .withStatus(404)));
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+        HttpGet request = new HttpGet("http://localhost:8080/api/cards/1");
+        CloseableHttpResponse response = client.execute(request);
+
+        assertEquals(404, response.getCode());
+    }
+
+
 }
