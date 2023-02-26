@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,12 +38,12 @@ public class CollectionService{
     }
 
     public CollectionEntity findById(Long id) {
-        return exists(collectionRepository.findById(id).get());
+        return exists(collectionRepository.findById(id));
     }
 
-    public CollectionEntity exists(CollectionEntity collection) {
-        if(collection != null) {
-            return collection;
+    public CollectionEntity exists(Optional<CollectionEntity> collection) {
+        if(collection.isPresent()) {
+            return collection.get();
         } else {
             throw new EntityNotFoundException(CollectionEntity.class);
         }
