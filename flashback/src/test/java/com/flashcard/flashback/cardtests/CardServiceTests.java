@@ -173,4 +173,9 @@ public class CardServiceTests {
         assertEquals(anotherCard.getValue(), cards.get(1).getValue());
         assertEquals(anotherCard.getSide(), cards.get(1).getSide());
     }
+
+    @Test
+    public void getAllCardsEntityNotFoundTest() {
+        assertThrows(EntityNotFoundException.class, () -> cardService.getAllCards(1L));
+    }
 }

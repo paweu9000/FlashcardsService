@@ -78,8 +78,8 @@ public class CollectionServiceTests {
     public void existsTest() {
         CollectionEntity collection = new CollectionEntity(1L, "title", 2L, null, null);
 
-        assertEquals(collection.getId(), collectionService.exists(collection).getId());
-        assertEquals(collection.getLikes(), collectionService.exists(collection).getLikes());
+        assertEquals(collection.getId(), collectionService.exists(Optional.of(collection)).getId());
+        assertEquals(collection.getLikes(), collectionService.exists(Optional.of(collection)).getLikes());
         assertThrows(RuntimeException.class, () -> collectionService.exists(null));
     }
 
