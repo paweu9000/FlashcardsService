@@ -9,6 +9,7 @@ import com.flashcard.flashback.collection.service.CollectionService;
 import com.flashcard.flashback.exception.EntityNotFoundException;
 import com.flashcard.flashback.exception.UnauthorizedDataCreateException;
 import com.flashcard.flashback.exception.UnauthorizedDataDeleteException;
+import com.flashcard.flashback.user.service.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +21,9 @@ import java.util.stream.Collectors;
 public class CardService {
     private final CardRepository cardRepository;
     private CollectionService collectionService;
+    private UserService userService;
 
-    public CardService(CardRepository cardRepository, CollectionService collectionService) {
+    public CardService(CardRepository cardRepository, CollectionService collectionService, UserService userService) {
         this.cardRepository = cardRepository;
         this.collectionService = collectionService;
     }
@@ -47,6 +49,8 @@ public class CardService {
         CardEntity card = new CardEntity();
         card.setValue(cardDto.getValue());
         card.setSide(cardDto.getSide());
+        card.setCollector(collectionService.findById(cardDto.getCollectionId()));
+        card.setCreatedBy(userService.findById(cardDto.getCreatorId()));
         return card;
     }
 
