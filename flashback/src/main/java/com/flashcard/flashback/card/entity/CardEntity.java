@@ -20,19 +20,11 @@ public class CardEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotNull
-    @NotBlank
     private String side;
-
-    @NotBlank
-    @NotNull
     private String value;
-
     @ManyToOne
     @JoinColumn(name = "collection.id")
     private CollectionEntity collector;
-
     @ManyToOne
     @JoinColumn(name = "users.id")
     private UsersEntity createdBy;
