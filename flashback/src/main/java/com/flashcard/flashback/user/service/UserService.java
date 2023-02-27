@@ -1,6 +1,7 @@
 package com.flashcard.flashback.user.service;
 
 import com.flashcard.flashback.exception.EntityNotFoundException;
+import com.flashcard.flashback.exception.UnauthorizedDataAccessException;
 import com.flashcard.flashback.user.data.UserDao;
 import com.flashcard.flashback.user.data.UserDto;
 import com.flashcard.flashback.user.entity.UsersEntity;
@@ -98,6 +99,6 @@ public class UserService{
     public UserDao mapUserData(Long id, String loginOrEmail) {
         UsersEntity user = findById(id);
         if (user.getLogin().equals(loginOrEmail) || user.getEmail().equals(loginOrEmail)) return new UserDao(user);
-        else throw new RuntimeException();
+        else throw new UnauthorizedDataAccessException(UserDao.class);
     }
 }

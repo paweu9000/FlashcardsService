@@ -21,7 +21,8 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({UnauthorizedDataDeleteException.class, UnauthorizedDataCreateException.class})
+    @ExceptionHandler({UnauthorizedDataDeleteException.class, UnauthorizedDataCreateException.class,
+            UnauthorizedDataAccessException.class})
     public ResponseEntity<Object> handleUnauthorizedDataActionException(RuntimeException e) {
         ErrorResponse errorResponse = new ErrorResponse(List.of(e.getMessage()));
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
