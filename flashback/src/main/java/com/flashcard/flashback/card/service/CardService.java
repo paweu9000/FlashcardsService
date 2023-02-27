@@ -7,8 +7,10 @@ import com.flashcard.flashback.card.repository.CardRepository;
 import com.flashcard.flashback.collection.entity.CollectionEntity;
 import com.flashcard.flashback.collection.service.CollectionService;
 import com.flashcard.flashback.exception.EntityNotFoundException;
+import com.flashcard.flashback.exception.UnauthorizedDataAccessException;
 import com.flashcard.flashback.exception.UnauthorizedDataCreateException;
 import com.flashcard.flashback.exception.UnauthorizedDataDeleteException;
+import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.service.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -63,11 +65,18 @@ public class CardService {
         cardRepository.deleteById(id);
     }
 
-    public void editCard(CardDao cardDao) {
+    private boolean editIfAllowed(String loginOrEmail, UsersEntity user) {
+        return user.getEmail().equals(loginOrEmail) || user.getLogin().equals(loginOrEmail);
+    }
+    public void editCard(CardDao cardDao, String loginOrEmail) {
         CardEntity card = getCardById(cardDao.getId());
-        card.setValue(cardDao.getValue());
-        card.setSide(cardDao.getSide());
-        cardRepository.save(card);
+        if(editIfAllowed(loginOrEmail, card.getCreatedBy())) {
+            card.setValue(cardDao.getValue());
+            card.setSide(cardDao.getSide());
+            cardRepository.save(card);
+        } else {
+            throw new UnauthorizedDataAccessException(CardEntity.class);
+        }
     }
 
     public void deleteIfAllowed(Authentication authentication, Long id) {

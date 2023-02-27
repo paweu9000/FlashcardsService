@@ -122,7 +122,7 @@ public class CardServiceTests {
         CardDao cardDao = new CardDao(card);
         cardDao.setSide("Changed side");
         cardDao.setValue("Changed value");
-        cardService.editCard(cardDao);
+        cardService.editCard(cardDao, "login");
 
         assertEquals(cardDao.getSide(), cardService.getCardById(1L).getSide());
         assertEquals(cardDao.getValue(), cardService.getCardById(1L).getValue());
