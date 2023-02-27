@@ -94,4 +94,10 @@ public class UserService{
             return true;
         } else return userRepository.findByUsername(userDto.getUsername()).isPresent();
     }
+
+    public UserDao mapUserData(Long id, String loginOrEmail) {
+        UsersEntity user = findById(id);
+        if (user.getLogin().equals(loginOrEmail) || user.getEmail().equals(loginOrEmail)) return new UserDao(user);
+        else throw new RuntimeException();
+    }
 }
