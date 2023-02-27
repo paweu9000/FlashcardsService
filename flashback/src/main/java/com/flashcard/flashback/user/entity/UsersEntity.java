@@ -2,8 +2,6 @@ package com.flashcard.flashback.user.entity;
 
 import com.flashcard.flashback.card.entity.CardEntity;
 import com.flashcard.flashback.collection.entity.CollectionEntity;
-import com.flashcard.flashback.user.role.Role;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,8 +29,6 @@ public class UsersEntity {
     private String email;
     @Column
     private String password;
-    @Column
-    private Role role = Role.USER;
     @Column
     @OneToMany(mappedBy = "owners", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CollectionEntity> collections = new ArrayList<>();
