@@ -38,8 +38,10 @@ public record CardController(CardService cardService) {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<HttpStatus> editCard(@PathVariable Long id, @RequestBody CardDao cardDao) {
-        cardService.editCard(cardDao);
+    public ResponseEntity<HttpStatus> editCard(@PathVariable Long id,
+                                               @RequestBody CardDao cardDao,
+                                               @CurrentSecurityContext(expression = "authentication?.name") String name) {
+        cardService.editCard(cardDao, name);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
