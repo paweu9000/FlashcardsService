@@ -9,12 +9,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("api/auth")
 public record AuthController (UserService userService) {
 
     @PostMapping("/register")
-    public ResponseEntity<HttpStatus> registerUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<HttpStatus> registerUser(@Valid @RequestBody UserDto userDto) {
         userService.register(userDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

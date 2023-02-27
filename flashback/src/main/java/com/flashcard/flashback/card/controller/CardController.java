@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -24,7 +25,7 @@ public record CardController(CardService cardService) {
 
     @PostMapping("/{collectionId}")
     public ResponseEntity<HttpStatus> postCard(@PathVariable(name = "collectionId") Long collectionId,
-                                               @RequestBody CardDto cardDto,
+                                               @Valid @RequestBody CardDto cardDto,
                                                @CurrentSecurityContext(expression = "authentication?.name") String name) {
         cardService.createCard(name, collectionId, cardDto);
         return new ResponseEntity<>(HttpStatus.OK);
