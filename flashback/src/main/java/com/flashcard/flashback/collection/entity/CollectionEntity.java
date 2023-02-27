@@ -23,12 +23,9 @@ public class CollectionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-
     private Long likes;
-
     @OneToMany(mappedBy = "collector", cascade = CascadeType.ALL)
     private List<CardEntity> cards = new ArrayList<>();
-
     @ManyToOne
     @JoinColumn(name = "users.id")
     private UsersEntity owners;
