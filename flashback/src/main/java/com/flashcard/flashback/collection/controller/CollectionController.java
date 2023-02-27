@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -25,8 +26,9 @@ public record CollectionController(CollectionService collectionService) {
     }
 
     @PostMapping("")
-    public ResponseEntity<HttpStatus> createCollection(@RequestBody CollectionDto collectionDto, @CurrentSecurityContext
-            (expression = "authentication?.name") String username) {
+    public ResponseEntity<HttpStatus> createCollection(@Valid @RequestBody CollectionDto collectionDto,
+                                                       @CurrentSecurityContext(expression = "authentication?.name")
+                                                       String username) {
         collectionService.createCollection(username, collectionDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
