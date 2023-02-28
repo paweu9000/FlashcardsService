@@ -2,6 +2,7 @@ package com.flashcard.flashback.card.service;
 
 import com.flashcard.flashback.card.data.CardDao;
 import com.flashcard.flashback.card.data.CardDto;
+import com.flashcard.flashback.card.data.mapper.CardMapper;
 import com.flashcard.flashback.card.entity.CardEntity;
 import com.flashcard.flashback.card.repository.CardRepository;
 import com.flashcard.flashback.collection.entity.CollectionEntity;
@@ -49,7 +50,7 @@ public class CardService {
     }
 
     public CardDao toDao(CardEntity card) {
-        return new CardDao(card);
+        return CardMapper.INSTANCE.entityToDao(card);
     }
 
     public CardEntity mapDto(CardDto cardDto) {

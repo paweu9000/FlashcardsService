@@ -119,7 +119,7 @@ public class CardServiceTests {
     public void editCardTest() {
         card.setCollector(collection);
         when(cardRepository.findById(1L)).thenReturn(Optional.of(card));
-        CardDao cardDao = new CardDao(card);
+        CardDao cardDao = cardService.toDao(card);
         cardDao.setSide("Changed side");
         cardDao.setValue("Changed value");
         cardService.editCard(cardDao, "login");
