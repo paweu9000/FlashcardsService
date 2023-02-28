@@ -22,6 +22,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -129,5 +131,21 @@ public class CardControllerTests {
         CloseableHttpResponse response = client.execute(request);
 
         assertEquals(401, response.getCode());
+    }
+
+    @Test
+    @WithMockUser(username = "login")
+    public void testDeleteCardWithValidUser() throws IOException {
+        CardEntity card = new CardEntity(1L, "Side", "Value", collection, user);
+        when(cardRepository.findById(1L)).thenReturn(Optional.of(card));
+
+        stubFor(delete(urlEqualTo("/api/cards/1"))
+                .willReturn(aResponse()
+                        .withStatus(200)));
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+        HttpDelete request = new HttpDelete("http://localhost:8080/api/cards/1");
+        CloseableHttpResponse response = client.execute(request);
+
+        assertEquals(200, response.getCode());
     }
 }
