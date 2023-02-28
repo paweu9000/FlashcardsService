@@ -54,12 +54,7 @@ public class CardService {
     }
 
     public CardEntity mapDto(CardDto cardDto) {
-        CardEntity card = new CardEntity();
-        card.setValue(cardDto.getValue());
-        card.setSide(cardDto.getSide());
-        card.setCollector(collectionService.findById(cardDto.getCollectionId()));
-        card.setCreatedBy(userService.findById(cardDto.getCreatorId()));
-        return card;
+        return CardMapper.INSTANCE.toCardEntity(cardDto);
     }
 
     public void deleteCard(Long id) {
