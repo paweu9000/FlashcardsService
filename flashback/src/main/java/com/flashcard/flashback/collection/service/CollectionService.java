@@ -2,6 +2,7 @@ package com.flashcard.flashback.collection.service;
 
 import com.flashcard.flashback.collection.data.CollectionDao;
 import com.flashcard.flashback.collection.data.CollectionDto;
+import com.flashcard.flashback.collection.data.mapper.CollectionMapper;
 import com.flashcard.flashback.collection.entity.CollectionEntity;
 import com.flashcard.flashback.collection.repository.CollectionRepository;
 import com.flashcard.flashback.exception.EntityNotFoundException;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class CollectionService{
@@ -84,6 +84,10 @@ public class CollectionService{
         collection.setOwners(usersEntity);
         usersEntity.addCollection(collection);
         userService.save(usersEntity);
+    }
+
+    public CollectionEntity mapDto(CollectionDto collectionDto) {
+        return CollectionMapper.INSTANCE.dtoToEntity(collectionDto);
     }
 
     public void save(CollectionEntity collection) {
