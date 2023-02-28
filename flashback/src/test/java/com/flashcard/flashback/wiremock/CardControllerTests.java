@@ -6,8 +6,10 @@ import com.flashcard.flashback.card.service.CardService;
 import com.flashcard.flashback.collection.entity.CollectionEntity;
 import com.flashcard.flashback.collection.repository.CollectionRepository;
 import com.flashcard.flashback.collection.service.CollectionService;
+import com.flashcard.flashback.exception.UnauthorizedDataDeleteException;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import com.github.tomakehurst.wiremock.WireMockServer;
+import org.apache.hc.client5.http.classic.methods.HttpDelete;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
@@ -19,12 +21,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 
 import java.io.IOException;
 import java.util.Optional;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 public class CardControllerTests {
@@ -111,5 +115,19 @@ public class CardControllerTests {
         assertEquals(200, response.getCode());
     }
 
+    @Test
+    @WithAnonymousUser
+    public void testDeleteCardWithAnonymousUser() throws IOException {
+        CardEntity card = new CardEntity(1L, "Side", "Value", collection, user);
+        when(cardRepository.findById(1L)).thenReturn(Optional.of(card));
 
+        stubFor(delete(urlEqualTo("/api/cards/1"))
+                .willReturn(aResponse()
+                        .withStatus(401)));
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+        HttpDelete request = new HttpDelete("http://localhost:8080/api/cards/1");
+        CloseableHttpResponse response = client.execute(request);
+
+        assertEquals(401, response.getCode());
+    }
 }
