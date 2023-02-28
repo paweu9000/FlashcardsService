@@ -160,10 +160,14 @@ public class CollectionServiceTests {
 
     @Test
     public void findCollectionsTest() {
+        UsersEntity user = new UsersEntity();
+        user.setId(1L);
         CollectionEntity collection1 = new CollectionEntity();
         collection1.setTitle("title");
+        collection1.setOwners(user);
         CollectionEntity collection2 = new CollectionEntity();
         collection2.setTitle("title");
+        collection2.setOwners(user);
 
         List<CollectionEntity> collectionEntities = new ArrayList<>();
         collectionEntities.add(collection1);

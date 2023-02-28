@@ -21,7 +21,7 @@ public record CollectionController(CollectionService collectionService) {
     @GetMapping("/{id}")
     public ResponseEntity<CollectionDao> getCollection(@PathVariable Long id) {
         CollectionEntity collection = collectionService.findById(id);
-        CollectionDao collectionDao = new CollectionDao(collection);
+        CollectionDao collectionDao = collectionService.toDao(collection);
         return new ResponseEntity<>(collectionDao, HttpStatus.OK);
     }
 

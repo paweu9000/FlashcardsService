@@ -34,7 +34,7 @@ public class CollectionService{
     }
 
     public CollectionDao toDao(CollectionEntity collection) {
-        return new CollectionDao(collection);
+        return CollectionMapper.INSTANCE.entityToDao(collection);
     }
 
     public CollectionEntity findById(Long id) {
