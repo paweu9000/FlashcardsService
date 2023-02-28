@@ -10,13 +10,6 @@ import java.util.List;
 public class UserDao {
     Long id;
     String username;
-    List<Long> collections = new ArrayList<>();
-    List<Long> savedCollections = new ArrayList<>();
-
-    public UserDao(UsersEntity user) {
-        this.id = user.getId();
-        this.username = user.getUsername();
-        user.getCollections().forEach(collectionEntity -> collections.add(collectionEntity.getId()));
-        user.getSavedCollections().forEach(collectionEntity -> collections.add(collectionEntity.getId()));
-    }
+    List<Long> collections;
+    List<Long> savedCollections;
 }

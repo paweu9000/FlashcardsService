@@ -4,6 +4,7 @@ import com.flashcard.flashback.exception.EntityNotFoundException;
 import com.flashcard.flashback.exception.UnauthorizedDataAccessException;
 import com.flashcard.flashback.user.data.UserDao;
 import com.flashcard.flashback.user.data.UserDto;
+import com.flashcard.flashback.user.data.mapper.UserMapper;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.repository.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -76,7 +77,7 @@ public class UserService{
     }
 
     public UserDao toDao(UsersEntity user) {
-        return new UserDao(user);
+        return UserMapper.INSTANCE.entityToDao(user);
     }
 
     public UsersEntity mapDto(UserDto userDto) {
@@ -98,7 +99,7 @@ public class UserService{
 
     public UserDao mapUserData(Long id, String loginOrEmail) {
         UsersEntity user = findById(id);
-        if (user.getLogin().equals(loginOrEmail) || user.getEmail().equals(loginOrEmail)) return new UserDao(user);
+        if (user.getLogin().equals(loginOrEmail) || user.getEmail().equals(loginOrEmail)) return toDao(user);
         else throw new UnauthorizedDataAccessException(UserDao.class);
     }
 }
