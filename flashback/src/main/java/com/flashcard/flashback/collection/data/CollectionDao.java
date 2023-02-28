@@ -1,6 +1,7 @@
 package com.flashcard.flashback.collection.data;
 
 import com.flashcard.flashback.card.data.CardDao;
+import com.flashcard.flashback.card.data.mapper.CardMapper;
 import com.flashcard.flashback.card.entity.CardEntity;
 import com.flashcard.flashback.collection.entity.CollectionEntity;
 import lombok.Data;
@@ -19,6 +20,6 @@ public class CollectionDao {
         this.title = collection.getTitle();
         this.id = collection.getId();
         this.likes = collection.getLikes();
-        collection.getCards().forEach(card -> this.cards.add(new CardDao(card)));
+        collection.getCards().forEach(card -> this.cards.add(CardMapper.INSTANCE.entityToDao(card)));
     }
 }
