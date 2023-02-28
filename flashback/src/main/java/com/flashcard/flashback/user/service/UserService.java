@@ -81,12 +81,7 @@ public class UserService{
     }
 
     public UsersEntity mapDto(UserDto userDto) {
-        UsersEntity user = new UsersEntity();
-        user.setPassword(userDto.getPassword());
-        user.setEmail(userDto.getEmail());
-        user.setLogin(userDto.getLogin());
-        user.setUsername(userDto.getUsername());
-        return user;
+        return UserMapper.INSTANCE.dtoToEntity(userDto);
     }
 
     public boolean exists(UserDto userDto) {

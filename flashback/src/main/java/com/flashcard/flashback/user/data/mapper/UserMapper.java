@@ -2,6 +2,7 @@ package com.flashcard.flashback.user.data.mapper;
 
 import com.flashcard.flashback.collection.entity.CollectionEntity;
 import com.flashcard.flashback.user.data.UserDao;
+import com.flashcard.flashback.user.data.UserDto;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -23,4 +24,6 @@ public interface UserMapper {
     default Long collectionEntityToId(CollectionEntity entity) {
         return entity.getId();
     }
+
+    UsersEntity dtoToEntity(UserDto userDto);
 }
