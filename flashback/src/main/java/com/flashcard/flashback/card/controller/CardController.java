@@ -28,7 +28,7 @@ public record CardController(CardService cardService) {
                                                @Valid @RequestBody CardDto cardDto,
                                                @CurrentSecurityContext(expression = "authentication?.name") String name) {
         cardService.createCard(name, collectionId, cardDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")

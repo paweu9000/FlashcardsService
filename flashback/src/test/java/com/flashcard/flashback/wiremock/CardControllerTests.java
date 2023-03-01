@@ -1,6 +1,5 @@
 package com.flashcard.flashback.wiremock;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flashcard.flashback.card.data.CardDto;
 import com.flashcard.flashback.card.entity.CardEntity;
@@ -9,7 +8,6 @@ import com.flashcard.flashback.card.service.CardService;
 import com.flashcard.flashback.collection.entity.CollectionEntity;
 import com.flashcard.flashback.collection.repository.CollectionRepository;
 import com.flashcard.flashback.collection.service.CollectionService;
-import com.flashcard.flashback.exception.UnauthorizedDataDeleteException;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import org.apache.hc.client5.http.classic.methods.HttpDelete;
@@ -20,10 +18,12 @@ import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
 
 import java.io.IOException;
 import java.net.URI;
@@ -34,8 +34,6 @@ import java.util.Optional;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 public class CardControllerTests {
@@ -173,7 +171,7 @@ public class CardControllerTests {
 
         stubFor(post(urlEqualTo("/api/cards/1"))
                 .willReturn(aResponse()
-                        .withStatus(200)
+                        .withStatus(201)
                         .withBody("Response body")));
 
         String body = objectMapper.writeValueAsString(cardDto);
@@ -184,7 +182,33 @@ public class CardControllerTests {
                 .build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-        assertEquals(200, response.statusCode());
+        assertEquals(201, response.statusCode());
+        verify(postRequestedFor(urlEqualTo("/api/cards/1")));
+    }
+
+    @Test
+    @WithAnonymousUser
+    public void testPostCardWithInvalidUser() throws IOException, InterruptedException {
+        CardDto cardDto = new CardDto();
+        cardDto.setCollectionId(1L);
+        cardDto.setCreatorId(1L);
+        cardDto.setValue("Value");
+        cardDto.setSide("Side");
+
+        stubFor(post(urlEqualTo("/api/cards/1"))
+                .willReturn(aResponse()
+                        .withStatus(401)
+                        .withBody("Response body")));
+
+        String body = objectMapper.writeValueAsString(cardDto);
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/cards/1"))
+                .POST(HttpRequest.BodyPublishers.ofString(body))
+                .build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(401, response.statusCode());
         verify(postRequestedFor(urlEqualTo("/api/cards/1")));
     }
 }
