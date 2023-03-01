@@ -66,12 +66,11 @@ public class CollectionService{
         if(Objects.equals(collection.getId(), id)) throw new SavedCollectionDuplicateException(id);
     }
 
-    public void deleteIfAllowed(Authentication authentication, Long id) {
+    public void deleteIfAllowed(String name, Long id) {
         CollectionEntity collection = findById(id);
-        String emailOrLogin = authentication.getName();
         String email = collection.getOwners().getEmail();
         String login = collection.getOwners().getLogin();
-        if(email.equals(emailOrLogin) || login.equals(emailOrLogin)) deleteCollectionById(id);
+        if(email.equals(name) || login.equals(name)) deleteCollectionById(id);
         else throw new UnauthorizedDataDeleteException(CollectionEntity.class);
     }
 

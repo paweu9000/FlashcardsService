@@ -34,8 +34,10 @@ public record CollectionController(CollectionService collectionService) {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteCollection(@PathVariable Long id, @CurrentSecurityContext SecurityContext context) {
-        collectionService.deleteIfAllowed(context.getAuthentication(), id);
+    public ResponseEntity<HttpStatus> deleteCollection(@PathVariable Long id,
+                                                       @CurrentSecurityContext(expression = "authentication?.name")
+                                                       String name) {
+        collectionService.deleteIfAllowed(name, id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
