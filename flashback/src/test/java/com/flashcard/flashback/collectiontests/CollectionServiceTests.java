@@ -117,23 +117,21 @@ public class CollectionServiceTests {
 
     @Test
     public void deleteIfAllowedValidTest() {
-        when(authentication.getName()).thenReturn("email@example.com");
         UsersEntity usersEntity = new UsersEntity("login", null, "email@example.com", null);
         CollectionEntity collection = new CollectionEntity(1L, "title", 30L, null, usersEntity);
         when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
 
-        assertDoesNotThrow(() -> collectionService.deleteIfAllowed(authentication, 1L));
+        assertDoesNotThrow(() -> collectionService.deleteIfAllowed("email@example.com", 1L));
     }
 
     @Test
     public void deleteIfAllowedInvalidTest() {
-        when(authentication.getName()).thenReturn("invalid@email.com");
         UsersEntity usersEntity = new UsersEntity("login", null, "email@example.com", null);
         CollectionEntity collection = new CollectionEntity(1L, "title", 30L, null, usersEntity);
         when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
 
         assertThrows(UnauthorizedDataDeleteException.class, () -> collectionService
-                .deleteIfAllowed(authentication, 1L));
+                .deleteIfAllowed("invalid@email.com", 1L));
     }
 
     @Test
