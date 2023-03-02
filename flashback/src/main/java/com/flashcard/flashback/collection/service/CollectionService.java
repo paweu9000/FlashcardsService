@@ -77,16 +77,14 @@ public class CollectionService{
     public void createCollection(String loginOrEmail, CollectionDto collectionDto) {
         if(loginOrEmail == null)
             throw new UnauthorizedDataCreateException(CollectionEntity.class);
-        CollectionEntity collection = new CollectionEntity();
         UsersEntity usersEntity = userService.findByEmailOrLogin(loginOrEmail);
-        collection.setLikes(collectionDto.getLikes());
-        collection.setOwners(usersEntity);
+        CollectionEntity collection = mapDto(collectionDto, usersEntity);
         usersEntity.addCollection(collection);
         userService.save(usersEntity);
     }
 
-    public CollectionEntity mapDto(CollectionDto collectionDto) {
-        return CollectionMapper.INSTANCE.dtoToEntity(collectionDto);
+    public CollectionEntity mapDto(CollectionDto collectionDto, UsersEntity user) {
+        return CollectionMapper.INSTANCE.dtoToEntity(collectionDto, user);
     }
 
     public void save(CollectionEntity collection) {

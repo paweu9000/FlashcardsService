@@ -172,7 +172,7 @@ public class CardControllerTests {
         stubFor(post(urlEqualTo("/api/cards/1"))
                 .willReturn(aResponse()
                         .withStatus(201)
-                        .withBody("Response body")));
+                        .withBody("")));
 
         String body = objectMapper.writeValueAsString(cardDto);
         HttpClient httpClient = HttpClient.newHttpClient();
@@ -198,7 +198,7 @@ public class CardControllerTests {
         stubFor(post(urlEqualTo("/api/cards/1"))
                 .willReturn(aResponse()
                         .withStatus(401)
-                        .withBody("Response body")));
+                        .withBody("")));
 
         String body = objectMapper.writeValueAsString(cardDto);
         HttpClient httpClient = HttpClient.newHttpClient();

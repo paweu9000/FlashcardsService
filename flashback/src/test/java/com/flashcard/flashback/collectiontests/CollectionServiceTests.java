@@ -188,7 +188,7 @@ public class CollectionServiceTests {
         CollectionDto collectionDto = new CollectionDto();
         collectionDto.setTitle("Title");
         collectionDto.setLikes(200L);
-        CollectionEntity entity = collectionService.mapDto(collectionDto);
+        CollectionEntity entity = collectionService.mapDto(collectionDto, new UsersEntity());
 
         assertEquals(entity.getLikes(), collectionDto.getLikes());
         assertEquals(entity.getTitle(), collectionDto.getTitle());

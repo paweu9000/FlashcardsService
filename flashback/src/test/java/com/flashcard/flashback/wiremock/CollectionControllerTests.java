@@ -2,10 +2,13 @@ package com.flashcard.flashback.wiremock;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flashcard.flashback.card.entity.CardEntity;
+import com.flashcard.flashback.collection.data.CollectionDto;
 import com.flashcard.flashback.collection.entity.CollectionEntity;
 import com.flashcard.flashback.collection.repository.CollectionRepository;
 import com.flashcard.flashback.collection.service.CollectionService;
 import com.flashcard.flashback.user.entity.UsersEntity;
+import com.flashcard.flashback.user.repository.UserRepository;
+import com.flashcard.flashback.user.service.UserService;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -17,8 +20,14 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Optional;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -31,6 +40,13 @@ public class CollectionControllerTests {
 
     @Mock
     CollectionRepository collectionRepository;
+
+    @Mock
+    UserRepository userRepository;
+
+    @InjectMocks
+    @Spy
+    UserService userService;
 
     @InjectMocks
     CollectionService collectionService;
@@ -72,5 +88,28 @@ public class CollectionControllerTests {
 
         assertEquals(200, response.getCode());
         verify(getRequestedFor(urlEqualTo("/api/collection/1")));
+    }
+
+    @Test
+    @WithMockUser(username = "email@example.com")
+    public void testPostCollectionRequestWithValidUser() throws IOException, InterruptedException {
+        CollectionDto collectionDto = new CollectionDto();
+        collectionDto.setTitle("Title");
+
+        stubFor(post(urlEqualTo("/api/collection"))
+                .willReturn(aResponse()
+                        .withStatus(201)
+                        .withBody("")));
+
+        String body = objectMapper.writeValueAsString(collectionDto);
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/collection"))
+                .POST(HttpRequest.BodyPublishers.ofString(body))
+                .build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(201, response.statusCode());
+        verify(postRequestedFor(urlEqualTo("/api/collection")));
     }
 }
