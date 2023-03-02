@@ -2,6 +2,7 @@ package com.flashcard.flashback.cardtests;
 
 import com.flashcard.flashback.card.data.CardDao;
 import com.flashcard.flashback.card.data.CardDto;
+import com.flashcard.flashback.card.data.mapper.CardMapper;
 import com.flashcard.flashback.card.entity.CardEntity;
 import com.flashcard.flashback.card.repository.CardRepository;
 import com.flashcard.flashback.card.service.CardService;
@@ -19,8 +20,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
@@ -44,13 +45,12 @@ public class CardServiceTests {
     private CollectionRepository collectionRepository;
 
     @InjectMocks
-    @Spy
+    @MockBean
     private CollectionService collectionService;
 
     @Mock
     private UserRepository userRepository;
     @InjectMocks
-    @Spy
     private UserService userService;
 
     @InjectMocks

@@ -54,7 +54,7 @@ public class CardService {
     }
 
     public CardEntity mapDto(CardDto cardDto) {
-        return CardMapper.INSTANCE.toCardEntity(cardDto);
+        return CardMapper.INSTANCE.toCardEntity(cardDto, this.userService, this.collectionService);
     }
 
     public void deleteCard(Long id) {

@@ -7,27 +7,21 @@ import com.flashcard.flashback.collection.entity.CollectionEntity;
 import com.flashcard.flashback.collection.service.CollectionService;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.service.UserService;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
-import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper
+@Mapper(componentModel="spring")
 public interface CardMapper {
-
-    @Autowired
-    UserService userService = null;
-    @Autowired
-    CollectionService collectionService = null;
-
     CardMapper INSTANCE = Mappers.getMapper(CardMapper.class);
 
     @Mapping(target = "side", source = "side")
     @Mapping(target = "value", source = "value")
     @Mapping(target = "createdBy", expression = "java(userService.findById(cardDto.getCreatorId()))")
     @Mapping(target = "collector", expression = "java(collectionService.findById(cardDto.getCollectionId()))")
-    CardEntity toCardEntity(CardDto cardDto);
+    CardEntity toCardEntity(CardDto cardDto, @Context UserService userService, @Context CollectionService collectionService);
 
     @Mapping(target = "collector", source = "collector", qualifiedByName = "collectionEntityToId")
     @Mapping(target = "createdBy", source = "createdBy", qualifiedByName = "userEntityToId")
