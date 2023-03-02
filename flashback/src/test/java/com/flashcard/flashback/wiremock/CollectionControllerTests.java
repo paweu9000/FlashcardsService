@@ -156,4 +156,24 @@ public class CollectionControllerTests {
         assertEquals(200, response.statusCode());
         verify(deleteRequestedFor(urlEqualTo("/api/collection")));
     }
+
+    @Test
+    @WithAnonymousUser
+    public void testDeleteCollectionRequestWithAnonymousUser() throws IOException, InterruptedException {
+
+        stubFor(delete(urlEqualTo("/api/collection"))
+                .willReturn(aResponse()
+                        .withStatus(401)
+                        .withBody("")));
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/collection"))
+                .DELETE()
+                .build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(401, response.statusCode());
+        verify(deleteRequestedFor(urlEqualTo("/api/collection")));
+    }
 }
