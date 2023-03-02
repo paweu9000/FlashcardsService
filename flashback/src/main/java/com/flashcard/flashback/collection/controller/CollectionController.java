@@ -6,9 +6,7 @@ import com.flashcard.flashback.collection.entity.CollectionEntity;
 import com.flashcard.flashback.collection.service.CollectionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -30,7 +28,7 @@ public record CollectionController(CollectionService collectionService) {
                                                        @CurrentSecurityContext(expression = "authentication?.name")
                                                        String username) {
         collectionService.createCollection(username, collectionDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
