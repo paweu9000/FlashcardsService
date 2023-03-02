@@ -21,6 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import java.io.IOException;
@@ -110,6 +111,29 @@ public class CollectionControllerTests {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertEquals(201, response.statusCode());
+        verify(postRequestedFor(urlEqualTo("/api/collection")));
+    }
+
+    @Test
+    @WithAnonymousUser
+    public void testPostCollectionRequestWithAnonymousUser() throws IOException, InterruptedException {
+        CollectionDto collectionDto = new CollectionDto();
+        collectionDto.setTitle("Title");
+
+        stubFor(post(urlEqualTo("/api/collection"))
+                .willReturn(aResponse()
+                        .withStatus(401)
+                        .withBody("")));
+
+        String body = objectMapper.writeValueAsString(collectionDto);
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/collection"))
+                .POST(HttpRequest.BodyPublishers.ofString(body))
+                .build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(401, response.statusCode());
         verify(postRequestedFor(urlEqualTo("/api/collection")));
     }
 }
