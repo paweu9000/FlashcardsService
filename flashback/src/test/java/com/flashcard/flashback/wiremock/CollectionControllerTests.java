@@ -1,7 +1,6 @@
 package com.flashcard.flashback.wiremock;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.flashcard.flashback.card.entity.CardEntity;
 import com.flashcard.flashback.collection.data.CollectionDto;
 import com.flashcard.flashback.collection.entity.CollectionEntity;
 import com.flashcard.flashback.collection.repository.CollectionRepository;
@@ -194,6 +193,25 @@ public class CollectionControllerTests {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertEquals(401, response.statusCode());
+        verify(deleteRequestedFor(urlEqualTo("/api/collection/1/like")));
+    }
+
+    @Test
+    @WithMockUser(username = "login")
+    public void testUpvoteCollectionRequestWithValidUser() throws IOException, InterruptedException {
+        stubFor(delete(urlEqualTo("/api/collection/1/like"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withBody("")));
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/collection/1/like"))
+                .DELETE()
+                .build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(200, response.statusCode());
         verify(deleteRequestedFor(urlEqualTo("/api/collection/1/like")));
     }
 }
