@@ -141,39 +141,59 @@ public class CollectionControllerTests {
     @WithMockUser(username = "email@example.com")
     public void testDeleteCollectionRequestWithValidUser() throws IOException, InterruptedException {
 
-        stubFor(delete(urlEqualTo("/api/collection"))
+        stubFor(delete(urlEqualTo("/api/collection/1"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withBody("")));
 
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/api/collection"))
+                .uri(URI.create("http://localhost:8080/api/collection/1"))
                 .DELETE()
                 .build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertEquals(200, response.statusCode());
-        verify(deleteRequestedFor(urlEqualTo("/api/collection")));
+        verify(deleteRequestedFor(urlEqualTo("/api/collection/1")));
     }
 
     @Test
     @WithAnonymousUser
     public void testDeleteCollectionRequestWithAnonymousUser() throws IOException, InterruptedException {
 
-        stubFor(delete(urlEqualTo("/api/collection"))
+        stubFor(delete(urlEqualTo("/api/collection/1"))
                 .willReturn(aResponse()
                         .withStatus(401)
                         .withBody("")));
 
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/api/collection"))
+                .uri(URI.create("http://localhost:8080/api/collection/1"))
                 .DELETE()
                 .build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertEquals(401, response.statusCode());
-        verify(deleteRequestedFor(urlEqualTo("/api/collection")));
+        verify(deleteRequestedFor(urlEqualTo("/api/collection/1")));
+    }
+
+    @Test
+    @WithAnonymousUser
+    public void testUpvoteCollectionRequestWithAnonymousUser() throws IOException, InterruptedException {
+
+        stubFor(delete(urlEqualTo("/api/collection/1/like"))
+                .willReturn(aResponse()
+                        .withStatus(401)
+                        .withBody("")));
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/collection/1/like"))
+                .DELETE()
+                .build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(401, response.statusCode());
+        verify(deleteRequestedFor(urlEqualTo("/api/collection/1/like")));
     }
 }
