@@ -106,4 +106,23 @@ public class AuthControllerTests {
         assertEquals(200, response.statusCode());
         verify(postRequestedFor(urlEqualTo("/api/authenticate")));
     }
+
+    @Test
+    public void loginUserWithInvalidCredentialsTest() throws IOException, InterruptedException {
+        stubFor(post(urlEqualTo("/api/authenticate"))
+                .willReturn(aResponse()
+                        .withStatus(400)
+                        .withBody("")));
+
+        String body = objectMapper.writeValueAsString(userLoginDto);
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/authenticate"))
+                .POST(HttpRequest.BodyPublishers.ofString(body))
+                .build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(400, response.statusCode());
+        verify(postRequestedFor(urlEqualTo("/api/authenticate")));
+    }
 }
