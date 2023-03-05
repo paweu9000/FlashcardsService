@@ -1,6 +1,8 @@
 package com.flashcard.flashback.wiremock;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.flashcard.flashback.card.data.CardDao;
+import com.flashcard.flashback.collection.data.CollectionDao;
 import com.flashcard.flashback.collection.data.CollectionDto;
 import com.flashcard.flashback.collection.entity.CollectionEntity;
 import com.flashcard.flashback.collection.repository.CollectionRepository;
@@ -28,6 +30,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -66,7 +70,7 @@ public class CollectionControllerTests {
         user.setEmail("email@example.com");
         collection = new CollectionEntity();
         collection.setId(1L);
-        collection.setTitle("Test");
+        collection.setTitle("title");
         user.addCollection(collection);
         collection.setOwners(user);
     }
@@ -180,7 +184,7 @@ public class CollectionControllerTests {
     @WithAnonymousUser
     public void testUpvoteCollectionRequestWithAnonymousUser() throws IOException, InterruptedException {
 
-        stubFor(delete(urlEqualTo("/api/collection/1/like"))
+        stubFor(get(urlEqualTo("/api/collection/1/like"))
                 .willReturn(aResponse()
                         .withStatus(401)
                         .withBody("")));
@@ -188,18 +192,18 @@ public class CollectionControllerTests {
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/api/collection/1/like"))
-                .DELETE()
+                .GET()
                 .build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertEquals(401, response.statusCode());
-        verify(deleteRequestedFor(urlEqualTo("/api/collection/1/like")));
+        verify(getRequestedFor(urlEqualTo("/api/collection/1/like")));
     }
 
     @Test
     @WithMockUser(username = "login")
     public void testUpvoteCollectionRequestWithValidUser() throws IOException, InterruptedException {
-        stubFor(delete(urlEqualTo("/api/collection/1/like"))
+        stubFor(get(urlEqualTo("/api/collection/1/like"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withBody("")));
@@ -207,11 +211,37 @@ public class CollectionControllerTests {
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/api/collection/1/like"))
-                .DELETE()
+                .GET()
                 .build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertEquals(200, response.statusCode());
-        verify(deleteRequestedFor(urlEqualTo("/api/collection/1/like")));
+        verify(getRequestedFor(urlEqualTo("/api/collection/1/like")));
     }
+
+    @Test
+    public void testFindByTitleTest() throws IOException, InterruptedException {
+        CollectionEntity collection1 = new CollectionEntity(2L, "tttitle", 12L, new ArrayList<>(), user);
+        List<CollectionEntity> collectionEntities = new ArrayList<>();
+        collectionEntities.add(collection);
+        collectionEntities.add(collection1);
+        when(collectionRepository.findAll()).thenReturn(collectionEntities);
+        String body = objectMapper.writeValueAsString(collectionService.findCollections("title"));
+        stubFor(get(urlEqualTo("/api/collection/search/title"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withBody(body)));
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/collection/search/title"))
+                .GET()
+                .build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(200, response.statusCode());
+        assertEquals(body, response.body());
+        verify(getRequestedFor(urlEqualTo("/api/collection/search/title")));
+    }
+
 }

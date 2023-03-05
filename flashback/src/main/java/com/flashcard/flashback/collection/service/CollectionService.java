@@ -11,12 +11,12 @@ import com.flashcard.flashback.exception.UnauthorizedDataCreateException;
 import com.flashcard.flashback.exception.UnauthorizedDataDeleteException;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.service.UserService;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CollectionService{
@@ -92,8 +92,8 @@ public class CollectionService{
     }
 
     public List<CollectionDao> findCollections(String title) {
-        List<CollectionEntity> collectionEntities = collectionRepository.findByTitleContaining(title);
+        List<CollectionEntity> collectionEntities = collectionRepository.findAll();
         if(collectionEntities.isEmpty()) throw new EntityNotFoundException(List.class);
-        return collectionEntities.stream().map(this::toDao).toList();
+        return collectionEntities.stream().filter(collection -> collection.getTitle().contains(title)).map(this::toDao).toList();
     }
 }

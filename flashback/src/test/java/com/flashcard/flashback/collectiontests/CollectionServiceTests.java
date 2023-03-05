@@ -170,7 +170,7 @@ public class CollectionServiceTests {
         List<CollectionEntity> collectionEntities = new ArrayList<>();
         collectionEntities.add(collection1);
         collectionEntities.add(collection2);
-        when(collectionRepository.findByTitleContaining("title")).thenReturn(collectionEntities);
+        when(collectionRepository.findAll()).thenReturn(collectionEntities);
         List<CollectionDao> collectionDaos = collectionService.findCollections("title");
 
         assertEquals(2, collectionDaos.size());
