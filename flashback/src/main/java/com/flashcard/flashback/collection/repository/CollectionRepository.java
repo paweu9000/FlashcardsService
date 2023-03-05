@@ -8,5 +8,4 @@ import java.util.List;
 
 @Repository
 public interface CollectionRepository extends JpaRepository<CollectionEntity, Long> {
-    List<CollectionEntity> findByTitleContaining(String infix);
 }
