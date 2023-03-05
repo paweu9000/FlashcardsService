@@ -220,7 +220,7 @@ public class CollectionControllerTests {
     }
 
     @Test
-    public void testFindByTitleTest() throws IOException, InterruptedException {
+    public void findByTitleTest() throws IOException, InterruptedException {
         CollectionEntity collection1 = new CollectionEntity(2L, "tttitle", 12L, new ArrayList<>(), user);
         List<CollectionEntity> collectionEntities = new ArrayList<>();
         collectionEntities.add(collection);
@@ -241,6 +241,23 @@ public class CollectionControllerTests {
 
         assertEquals(200, response.statusCode());
         assertEquals(body, response.body());
+        verify(getRequestedFor(urlEqualTo("/api/collection/search/title")));
+    }
+
+    @Test
+    public void findByTitleNotFoundTest() throws IOException, InterruptedException {
+        stubFor(get(urlEqualTo("/api/collection/search/title"))
+                .willReturn(aResponse()
+                        .withStatus(404)));
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/collection/search/title"))
+                .GET()
+                .build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(404, response.statusCode());
         verify(getRequestedFor(urlEqualTo("/api/collection/search/title")));
     }
 
