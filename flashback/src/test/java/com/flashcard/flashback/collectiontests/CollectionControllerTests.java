@@ -1,4 +1,4 @@
-package com.flashcard.flashback.wiremock;
+package com.flashcard.flashback.collectiontests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flashcard.flashback.card.data.CardDao;

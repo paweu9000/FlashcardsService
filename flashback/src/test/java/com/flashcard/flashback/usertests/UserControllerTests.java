@@ -1,4 +1,4 @@
-package com.flashcard.flashback.wiremock;
+package com.flashcard.flashback.usertests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
