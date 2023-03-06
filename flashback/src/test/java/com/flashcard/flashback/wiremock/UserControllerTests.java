@@ -7,6 +7,7 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import java.io.IOException;
@@ -60,6 +61,26 @@ public class UserControllerTests {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertEquals(200, response.statusCode());
+        assertEquals(body, response.body());
+    }
+
+    @Test
+    @WithAnonymousUser
+    public void getUserDataInvalidTest() throws IOException, InterruptedException {
+        String body = "You are not authorized to view entity: " + UserDao.class.getSimpleName();
+        stubFor(get(urlEqualTo("/api/user/1"))
+                .willReturn(aResponse()
+                        .withStatus(401)
+                        .withBody(body)));
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/user/1"))
+                .GET()
+                .build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(401, response.statusCode());
         assertEquals(body, response.body());
     }
 }
