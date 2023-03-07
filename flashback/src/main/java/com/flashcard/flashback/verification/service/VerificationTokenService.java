@@ -23,4 +23,8 @@ public class VerificationTokenService {
         verificationToken.setUsersEntity(user);
         return repository.save(verificationToken);
     }
+
+    public VerificationToken getVerificationToken(String token) {
+        return repository.findByToken(token).get();
+    }
 }
