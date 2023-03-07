@@ -11,5 +11,6 @@ public record SecurityConstants (){
     public static final String COLLECTION_PATH = "/api/collection/*";
     public static final String USER_PATH = "/api/user/*";
     public static final String SECRET_KEY = System.getenv("SECRET_KEY");
+    public static final String VERIFY_PATH = "/api/verify";
 
 }

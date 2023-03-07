@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 @RestController
@@ -16,7 +17,7 @@ import javax.validation.Valid;
 public record AuthController (UserService userService) {
 
     @PostMapping("/register")
-    public ResponseEntity<HttpStatus> registerUser(@Valid @RequestBody UserDto userDto) {
+    public ResponseEntity<HttpStatus> registerUser(@Valid @RequestBody UserDto userDto) throws MessagingException {
         userService.register(userDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

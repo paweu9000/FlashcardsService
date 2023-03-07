@@ -7,11 +7,15 @@ import com.flashcard.flashback.user.data.UserDto;
 import com.flashcard.flashback.user.data.mapper.UserMapper;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.repository.UserRepository;
+import com.flashcard.flashback.verification.entity.VerificationToken;
+import com.flashcard.flashback.verification.service.EmailService;
+import com.flashcard.flashback.verification.service.VerificationTokenService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.mail.MessagingException;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -20,10 +24,15 @@ public class UserService{
 
     UserRepository userRepository;
     BCryptPasswordEncoder bCryptPasswordEncoder;
+    VerificationTokenService tokenService;
+    EmailService emailService;
 
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
+                       VerificationTokenService tokenService, EmailService emailService) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.tokenService = tokenService;
+        this.emailService = emailService;
     }
 
     public UsersEntity findByEmailOrLogin(String emailOrLogin) throws EntityNotFoundException {
@@ -65,7 +74,7 @@ public class UserService{
         }
     }
 
-    public void register(UserDto userDto) {
+    public void register(UserDto userDto) throws MessagingException {
         if(exists(userDto)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "User with this credentials already exist!"
@@ -74,6 +83,8 @@ public class UserService{
         userDto.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
         UsersEntity user = mapDto(userDto);
         save(user);
+        VerificationToken token = tokenService.generateVerificationToken(user);
+        emailService.sendVerificationEmail(userDto.getEmail(), token.getToken());
     }
 
     public UserDao toDao(UsersEntity user) {

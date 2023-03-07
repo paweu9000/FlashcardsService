@@ -1,5 +1,6 @@
 package com.flashcard.flashback.verification.controller;
 
+import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.service.UserService;
 import com.flashcard.flashback.verification.entity.VerificationToken;
 import com.flashcard.flashback.verification.service.VerificationTokenService;
@@ -17,7 +18,10 @@ public record VerificationController(VerificationTokenService tokenService, User
     @PostMapping
     public ResponseEntity<?> verifyEmail(@RequestParam String token) {
         VerificationToken verificationToken = tokenService.getVerificationToken(token);
-        tokenService.generateVerificationToken(verificationToken.getUsersEntity());
+        UsersEntity user = verificationToken.getUsersEntity();
+        user.setVerified(true);
+        userService.save(user);
+//        tokenService.generateVerificationToken(verificationToken.getUsersEntity());
         return new ResponseEntity<>("Email verified successfully", HttpStatus.OK);
     }
 }
