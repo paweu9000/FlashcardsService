@@ -46,6 +46,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET, SecurityConstants.CARDS_PATH).permitAll()
                 .antMatchers(HttpMethod.DELETE, SecurityConstants.CARDS_PATH).authenticated()
                 .antMatchers(HttpMethod.POST, SecurityConstants.CARDS_PATH).authenticated()
+                .antMatchers(HttpMethod.POST, SecurityConstants.VERIFY_MAIL_PATH).permitAll()
                 .antMatchers(HttpMethod.GET, SecurityConstants.COLLECTION_PATH).permitAll()
                 .antMatchers(HttpMethod.POST, SecurityConstants.COLLECTION_PATH).authenticated()
                 .antMatchers(HttpMethod.DELETE, SecurityConstants.COLLECTION_PATH).authenticated()

@@ -38,6 +38,8 @@ public class UsersEntity {
     @Column
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CardEntity> cards = new ArrayList<>();
+    @Column
+    boolean isVerified = false;
 
     public UsersEntity(String login, String username, String email, String password) {
         this.login = login;
