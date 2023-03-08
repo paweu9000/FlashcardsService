@@ -3,7 +3,6 @@ package com.flashcard.flashback.verification.entity;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
