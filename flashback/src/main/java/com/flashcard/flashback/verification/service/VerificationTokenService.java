@@ -1,11 +1,13 @@
 package com.flashcard.flashback.verification.service;
 
+import com.flashcard.flashback.exception.EntityNotFoundException;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.service.UserService;
 import com.flashcard.flashback.verification.entity.VerificationToken;
 import com.flashcard.flashback.verification.repository.VerificationTokenRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -26,7 +28,12 @@ public class VerificationTokenService {
     }
 
     public VerificationToken getVerificationToken(String token) {
-        return repository.findByToken(token).get();
+        return unwrapVerificationToken(repository.findByToken(token));
+    }
+
+    public VerificationToken unwrapVerificationToken(Optional<VerificationToken> token) {
+        if (token.isPresent()) return token.get();
+        else throw new EntityNotFoundException(VerificationToken.class);
     }
 
     public VerificationToken mapToken(String token, UsersEntity usersEntity) {
