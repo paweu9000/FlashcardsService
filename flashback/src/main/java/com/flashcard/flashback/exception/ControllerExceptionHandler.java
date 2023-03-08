@@ -22,7 +22,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({UnauthorizedDataDeleteException.class, UnauthorizedDataCreateException.class,
-            UnauthorizedDataAccessException.class})
+            UnauthorizedDataAccessException.class, UnverifiedEmailException.class})
     public ResponseEntity<Object> handleUnauthorizedDataActionException(RuntimeException e) {
         ErrorResponse errorResponse = new ErrorResponse(List.of(e.getMessage()));
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
