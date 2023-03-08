@@ -21,15 +21,18 @@ public class VerificationTokenService {
 
     public VerificationToken generateVerificationToken(UsersEntity user) {
         String token = UUID.randomUUID().toString();
-        VerificationToken verificationToken = new VerificationToken();
-        verificationToken.setToken(token);
-        verificationToken.setUsersEntity(user);
-        user.setVerified(true);
-        userService.save(user);
+        VerificationToken verificationToken = mapToken(token, user);
         return repository.save(verificationToken);
     }
 
     public VerificationToken getVerificationToken(String token) {
         return repository.findByToken(token).get();
+    }
+
+    public VerificationToken mapToken(String token, UsersEntity usersEntity) {
+        VerificationToken verificationToken = new VerificationToken();
+        verificationToken.setToken(token);
+        verificationToken.setUsersEntity(usersEntity);
+        return verificationToken;
     }
 }
