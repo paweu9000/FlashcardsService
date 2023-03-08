@@ -1,8 +1,6 @@
 package com.flashcard.flashback.verification.controller;
 
-import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.service.UserService;
-import com.flashcard.flashback.verification.entity.VerificationToken;
 import com.flashcard.flashback.verification.service.VerificationTokenService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +15,7 @@ public record VerificationController(VerificationTokenService tokenService, User
 
     @PostMapping
     public ResponseEntity<?> verifyEmail(@RequestParam String token) {
-        VerificationToken verificationToken = tokenService.getVerificationToken(token);
-        UsersEntity user = verificationToken.getUsersEntity();
-        user.setVerified(true);
-        userService.save(user);
-//        tokenService.generateVerificationToken(verificationToken.getUsersEntity());
+        userService.confirmEmail(tokenService.getVerificationToken(token));
         return new ResponseEntity<>("Email verified successfully", HttpStatus.OK);
     }
 }
