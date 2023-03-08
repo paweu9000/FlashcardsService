@@ -108,4 +108,10 @@ public class UserService{
         if (user.getLogin().equals(loginOrEmail) || user.getEmail().equals(loginOrEmail)) return toDao(user);
         else throw new UnauthorizedDataAccessException(UserDao.class);
     }
+
+    public void confirmEmail(VerificationToken verificationToken) {
+        UsersEntity user = verificationToken.getUsersEntity();
+        user.setVerified(true);
+        save(user);
+    }
 }
