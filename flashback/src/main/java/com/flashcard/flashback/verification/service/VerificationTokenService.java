@@ -4,6 +4,7 @@ import com.flashcard.flashback.exception.EntityNotFoundException;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.service.UserService;
 import com.flashcard.flashback.verification.entity.VerificationToken;
+import com.flashcard.flashback.verification.mapper.TokenMapper;
 import com.flashcard.flashback.verification.repository.VerificationTokenRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ import java.util.UUID;
 public class VerificationTokenService {
 
     private final VerificationTokenRepository repository;
-    private final UserService userService;
+    private final TokenMapper tokenMapper = TokenMapper.INSTANCE;
 
     public VerificationTokenService(VerificationTokenRepository repository, UserService userService) {
         this.repository = repository;
@@ -37,9 +38,6 @@ public class VerificationTokenService {
     }
 
     public VerificationToken mapToken(String token, UsersEntity usersEntity) {
-        VerificationToken verificationToken = new VerificationToken();
-        verificationToken.setToken(token);
-        verificationToken.setUsersEntity(usersEntity);
-        return verificationToken;
+        return tokenMapper.mapToken(token, usersEntity);
     }
 }
