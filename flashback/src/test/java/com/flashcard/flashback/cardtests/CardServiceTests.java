@@ -15,6 +15,8 @@ import com.flashcard.flashback.exception.UnauthorizedDataDeleteException;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.repository.UserRepository;
 import com.flashcard.flashback.user.service.UserService;
+import com.flashcard.flashback.verification.service.EmailService;
+import com.flashcard.flashback.verification.service.VerificationTokenService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,6 +49,10 @@ public class CardServiceTests {
     @InjectMocks
     @MockBean
     private CollectionService collectionService;
+    @Mock
+    VerificationTokenService verificationTokenService;
+    @Mock
+    EmailService emailService;
 
     @Mock
     private UserRepository userRepository;
@@ -61,7 +67,7 @@ public class CardServiceTests {
 
     @Before
     public void setUp() {
-        userService = new UserService(userRepository, null);
+        userService = new UserService(userRepository, null, verificationTokenService, emailService);
         cardService.setCollectionService(collectionService);
         cardService.setUserService(userService);
         user = new UsersEntity("login", "username", "email@example.com", "password");
