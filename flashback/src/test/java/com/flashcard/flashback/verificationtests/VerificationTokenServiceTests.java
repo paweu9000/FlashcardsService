@@ -1,5 +1,6 @@
 package com.flashcard.flashback.verificationtests;
 
+import com.flashcard.flashback.exception.EntityNotFoundException;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.verification.entity.VerificationToken;
 import com.flashcard.flashback.verification.repository.VerificationTokenRepository;
@@ -11,8 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -61,5 +63,19 @@ public class VerificationTokenServiceTests {
         assertNotNull(token);
         assertEquals(token.getToken(), verificationToken.getToken());
         assertEquals(token.getUsersEntity(), verificationToken.getUsersEntity());
+    }
+
+    @Test
+    public void unwrapVerificationTokenValidTest() {
+        VerificationToken token = service.unwrapVerificationToken(Optional.of(verificationToken));
+
+        assertNotNull(token);
+        assertEquals(token.getToken(), verificationToken.getToken());
+        assertEquals(token.getUsersEntity(), verificationToken.getUsersEntity());
+    }
+
+    @Test
+    public void unwrapVerificationTokenInvalidTest() {
+        assertThrows(EntityNotFoundException.class, () -> service.unwrapVerificationToken(Optional.empty()));
     }
 }
