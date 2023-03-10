@@ -78,4 +78,20 @@ public class VerificationTokenServiceTests {
     public void unwrapVerificationTokenInvalidTest() {
         assertThrows(EntityNotFoundException.class, () -> service.unwrapVerificationToken(Optional.empty()));
     }
+
+    @Test
+    public void getVerificationTokenValidTest() {
+        when(repository.findByToken(verificationToken.getToken())).thenReturn(Optional.of(verificationToken));
+        VerificationToken token = service.getVerificationToken(verificationToken.getToken());
+
+        assertNotNull(token);
+        assertEquals(token.getToken(), verificationToken.getToken());
+        assertEquals(token.getUsersEntity(), verificationToken.getUsersEntity());
+    }
+
+    @Test
+    public void getVerificationTokenInvalidTest() {
+        when(repository.findByToken(verificationToken.getToken())).thenReturn(Optional.empty());
+        assertThrows(EntityNotFoundException.class, () -> service.getVerificationToken(verificationToken.getToken()));
+    }
 }
