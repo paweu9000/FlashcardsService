@@ -28,6 +28,12 @@ public class UserServiceTests {
     private UserService userService;
 
     @Test
+    public void mockNotNull() {
+        assertNotNull(userService);
+        assertNotNull(userRepository);
+    }
+
+    @Test
     public void getUserByLoginTest() {
         UsersEntity toReturn = new UsersEntity("login", "username",
                 "email@example.com", "password");
