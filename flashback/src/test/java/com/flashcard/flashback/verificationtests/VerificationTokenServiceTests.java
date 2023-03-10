@@ -11,10 +11,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -33,7 +31,7 @@ public class VerificationTokenServiceTests {
     @Before
     public void setup() {
         verificationToken = new VerificationToken();
-        verificationToken.setToken(UUID.randomUUID().toString());
+        verificationToken.setToken("mapping-test-uuid-1234");
         usersEntity = new UsersEntity("login", "username", "email@example.com", "password");
         verificationToken.setUsersEntity(usersEntity);
     }
@@ -42,6 +40,8 @@ public class VerificationTokenServiceTests {
     public void notNull() {
         assertNotNull(repository);
         assertNotNull(service);
+        assertNotNull(verificationToken);
+        assertNotNull(usersEntity);
     }
 
     @Test
@@ -52,5 +52,14 @@ public class VerificationTokenServiceTests {
         assertNotNull(token);
         assertEquals(token.getUsersEntity(), usersEntity);
         assertEquals(token.getToken(), verificationToken.getToken());
+    }
+
+    @Test
+    public void mapTokenTest() {
+        VerificationToken token = service.mapToken(verificationToken.getToken(), usersEntity);
+
+        assertNotNull(token);
+        assertEquals(token.getToken(), verificationToken.getToken());
+        assertEquals(token.getUsersEntity(), verificationToken.getUsersEntity());
     }
 }
