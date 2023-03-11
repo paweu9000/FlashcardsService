@@ -23,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.mail.MessagingException;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -50,6 +51,16 @@ public class RegisterTests {
     public void setUp() {
         user = new UsersEntity("login", "username",
                 "email@example.com", "password");
+    }
+
+    @Test
+    public void mockNotNull() {
+        assertNotNull(userRepository);
+        assertNotNull(passwordEncoder);
+        assertNotNull(repository);
+        assertNotNull(tokenService);
+        assertNotNull(emailService);
+        assertNotNull(userService);
     }
 
     @Test

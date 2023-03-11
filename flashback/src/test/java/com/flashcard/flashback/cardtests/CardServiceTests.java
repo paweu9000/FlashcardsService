@@ -80,6 +80,18 @@ public class CardServiceTests {
     }
 
     @Test
+    public void mockNotNull() {
+        assertNotNull(userRepository);
+        assertNotNull(emailService);
+        assertNotNull(userService);
+        assertNotNull(cardService);
+        assertNotNull(cardRepository);
+        assertNotNull(authentication);
+        assertNotNull(collectionRepository);
+        assertNotNull(collectionService);
+    }
+
+    @Test
     public void getCardByIdTest() {
         when(cardRepository.findById(1L)).thenReturn(Optional.of(card));
 

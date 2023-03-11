@@ -51,6 +51,15 @@ public class CollectionServiceTests {
     }
 
     @Test
+    public void mockNotNull() {
+        assertNotNull(userService);
+        assertNotNull(collectionService);
+        assertNotNull(userRepository);
+        assertNotNull(authentication);
+        assertNotNull(collectionRepository);
+    }
+
+    @Test
     public void toDaoTest() {
         CollectionEntity collection = new CollectionEntity();
         collection.setLikes(5L);
