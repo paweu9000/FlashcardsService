@@ -6,6 +6,7 @@ import com.flashcard.flashback.user.data.UserDto;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.repository.UserRepository;
 import com.flashcard.flashback.user.service.UserService;
+import com.flashcard.flashback.verification.entity.VerificationToken;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -94,5 +95,18 @@ public class UserServiceTests {
     @Test
     public void findByEmailOrLoginThrowEntityNotFoundExceptionTest() {
         assertThrows(EntityNotFoundException.class, () -> userService.findByEmailOrLogin("invalid"));
+    }
+
+    @Test
+    public void confirmEmailTest() {
+        UsersEntity user = new UsersEntity("login",
+                "username",
+                "email@example.com",
+                "password");
+        VerificationToken verificationToken = new VerificationToken();
+        verificationToken.setUsersEntity(user);
+        userService.confirmEmail(verificationToken);
+
+        assertTrue(user.isVerified());
     }
 }
