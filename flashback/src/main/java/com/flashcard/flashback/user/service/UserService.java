@@ -35,6 +35,10 @@ public class UserService{
         this.emailService = emailService;
     }
 
+    public void setTokenService(VerificationTokenService tokenService) {
+        this.tokenService = tokenService;
+    }
+
     public UsersEntity findByEmailOrLogin(String emailOrLogin) throws EntityNotFoundException {
         Optional<UsersEntity> user;
         if(checkEmail(emailOrLogin)) {

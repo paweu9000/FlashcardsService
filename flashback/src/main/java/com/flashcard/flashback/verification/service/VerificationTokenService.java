@@ -13,10 +13,13 @@ import java.util.UUID;
 @Service
 public class VerificationTokenService {
 
-    private final VerificationTokenRepository repository;
-    private final TokenMapper tokenMapper = TokenMapper.INSTANCE;
+    private VerificationTokenRepository repository;
 
     public VerificationTokenService(VerificationTokenRepository repository) {
+        this.repository = repository;
+    }
+
+    public void setRepository(VerificationTokenRepository repository) {
         this.repository = repository;
     }
 
@@ -36,6 +39,6 @@ public class VerificationTokenService {
     }
 
     public VerificationToken mapToken(String token, UsersEntity usersEntity) {
-        return tokenMapper.mapToken(token, usersEntity);
+        return TokenMapper.INSTANCE.mapToken(token, usersEntity);
     }
 }
