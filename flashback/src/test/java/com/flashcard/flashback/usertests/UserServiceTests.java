@@ -7,12 +7,12 @@ import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.repository.UserRepository;
 import com.flashcard.flashback.user.service.UserService;
 import com.flashcard.flashback.verification.entity.VerificationToken;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -28,6 +28,14 @@ public class UserServiceTests {
     @InjectMocks
     private UserService userService;
 
+    private UsersEntity testUser;
+
+    @Before
+    public void setup() {
+        testUser = new UsersEntity("login", "username",
+                "email@example.com", "password");
+    }
+
     @Test
     public void mockNotNull() {
         assertNotNull(userService);
@@ -36,9 +44,7 @@ public class UserServiceTests {
 
     @Test
     public void getUserByLoginTest() {
-        UsersEntity toReturn = new UsersEntity("login", "username",
-                "email@example.com", "password");
-        when(userRepository.findByLogin("login")).thenReturn(Optional.of(toReturn));
+        when(userRepository.findByLogin("login")).thenReturn(Optional.of(testUser));
 
         UsersEntity user = userRepository.findByLogin("login").get();
 
@@ -50,10 +56,8 @@ public class UserServiceTests {
 
     @Test
     public void saveUserTest() {
-        UsersEntity userEntity = new UsersEntity("login", "username",
-                "email@example.com", "password");
-        userService.save(userEntity);
-        verify(userRepository, times(1)).save(userEntity);
+        userService.save(testUser);
+        verify(userRepository, times(1)).save(testUser);
     }
 
     @Test
@@ -74,13 +78,9 @@ public class UserServiceTests {
 
     @Test
     public void mapDaoTest() {
-        UsersEntity user = new UsersEntity("login",
-                "username",
-                "email@example.com",
-                "password");
-        UserDao dao = userService.toDao(user);
+        UserDao dao = userService.toDao(testUser);
 
-        assertEquals(dao.getUsername(), user.getUsername());
+        assertEquals(dao.getUsername(), testUser.getUsername());
     }
 
     @Test
@@ -99,14 +99,10 @@ public class UserServiceTests {
 
     @Test
     public void confirmEmailTest() {
-        UsersEntity user = new UsersEntity("login",
-                "username",
-                "email@example.com",
-                "password");
         VerificationToken verificationToken = new VerificationToken();
-        verificationToken.setUsersEntity(user);
+        verificationToken.setUsersEntity(testUser);
         userService.confirmEmail(verificationToken);
 
-        assertTrue(user.isVerified());
+        assertTrue(testUser.isVerified());
     }
 }
