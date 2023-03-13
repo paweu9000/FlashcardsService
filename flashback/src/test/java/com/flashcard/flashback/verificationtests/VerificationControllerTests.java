@@ -51,4 +51,26 @@ public class VerificationControllerTests {
         assertEquals(200, response.statusCode());
         assertEquals(body, response.body());
     }
+
+    @Test
+    public void invalidTokenVerifyTest() throws IOException, InterruptedException {
+        String token = "test-uuid-invalid-token";
+        String body = "verificationToken does not exist";
+
+        stubFor(post("/api/verify?token=" + token)
+                .willReturn(aResponse()
+                        .withStatus(404)
+                        .withBody(body)));
+
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/verify?token=" + token))
+                .POST(HttpRequest.BodyPublishers.noBody())
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(404, response.statusCode());
+        assertEquals(body, response.body());
+    }
 }
