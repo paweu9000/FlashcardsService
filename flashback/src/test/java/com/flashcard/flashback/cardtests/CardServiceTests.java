@@ -95,6 +95,7 @@ public class CardServiceTests {
     public void getCardByIdTest() {
         when(cardRepository.findById(1L)).thenReturn(Optional.of(card));
 
+        assertNotNull(cardService.getCardById(1L));
         assertThrows(EntityNotFoundException.class, () -> cardService.getCardById(3L));
         assertEquals( 1L, cardService.getCardById(1L).getId());
         assertEquals("Side", cardService.getCardById(1L).getSide());
@@ -106,6 +107,7 @@ public class CardServiceTests {
         card.setCollector(collection);
         CardDao cardDao = cardService.toDao(card);
 
+        assertNotNull(cardDao);
         assertEquals(cardDao.getId(), card.getId());
         assertEquals(cardDao.getSide(), card.getSide());
         assertEquals(card.getValue(), card.getValue());
@@ -122,6 +124,9 @@ public class CardServiceTests {
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         CardEntity card = cardService.mapDto(cardDto);
 
+        assertNotNull(card);
+        assertDoesNotThrow(() -> userRepository.findById(1L));
+        assertDoesNotThrow(() -> collectionRepository.findById(1L));
         assertEquals(card.getValue(), cardDto.getValue());
         assertEquals(card.getSide(), cardDto.getSide());
     }
@@ -130,6 +135,7 @@ public class CardServiceTests {
     public void deleteCardTest() {
         Long id = 3L;
         cardService.deleteCard(id);
+
         verify(cardRepository).deleteById(3L);
     }
 
@@ -142,6 +148,8 @@ public class CardServiceTests {
         cardDao.setValue("Changed value");
         cardService.editCard(cardDao, "login");
 
+        assertDoesNotThrow(() -> cardRepository.findById(1L));
+        assertNotNull(cardDao);
         assertEquals(cardDao.getSide(), cardService.getCardById(1L).getSide());
         assertEquals(cardDao.getValue(), cardService.getCardById(1L).getValue());
     }
@@ -151,6 +159,7 @@ public class CardServiceTests {
         when(authentication.getName()).thenReturn("email@example.com");
         when(cardRepository.findById(1L)).thenReturn(Optional.of(card));
 
+        assertEquals("email@example.com", authentication.getName());
         assertDoesNotThrow(() -> cardService.deleteIfAllowed(authentication, 1L));
     }
 
@@ -159,6 +168,7 @@ public class CardServiceTests {
         when(authentication.getName()).thenReturn("invalid login");
         when(cardRepository.findById(1L)).thenReturn(Optional.of(card));
 
+        assertEquals("invalid login", authentication.getName());
         assertThrows(UnauthorizedDataDeleteException.class, () -> cardService.deleteIfAllowed(authentication, 1L));
     }
 
@@ -167,6 +177,8 @@ public class CardServiceTests {
         when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
         CollectionEntity returned = cardService.getCollectionIfActionIsAllowed("login", 1L);
 
+        assertDoesNotThrow(() -> collectionRepository.findById(1L));
+        assertNotNull(returned);
         assertEquals(returned.getOwners(), collection.getOwners());
     }
 
@@ -202,6 +214,7 @@ public class CardServiceTests {
 
         List<CardDao> cards = cardService.getAllCards(1L);
 
+        assertNotNull(cards);
         assertEquals(card.getId(), cards.get(0).getId());
         assertEquals(card.getValue(), cards.get(0).getValue());
         assertEquals(card.getSide(), cards.get(0).getSide());
