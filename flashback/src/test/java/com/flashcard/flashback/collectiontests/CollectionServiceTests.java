@@ -68,6 +68,8 @@ public class CollectionServiceTests {
         collection.setOwners(user);
         CollectionDao collectionDao = collectionService.toDao(collection);
 
+        assertNotNull(collection);
+        assertNotNull(collectionDao);
         assertEquals(collection.getLikes(), collectionDao.getLikes());
         assertEquals(collection.getOwners().getId(), user.getId());
     }
@@ -108,6 +110,10 @@ public class CollectionServiceTests {
         when(collectionRepository.findById(2L)).thenReturn(Optional.of(collection));
         collectionService.upvoteCollection(2L, "email@example.com");
 
+        assertNotNull(usersEntity);
+        assertNotNull(collection);
+        verify(userRepository).findByEmail("email@example.com");
+        verify(collectionRepository).findById(2L);
         assertEquals(1, collectionService.findById(2L).getLikes());
     }
 
@@ -170,10 +176,10 @@ public class CollectionServiceTests {
         UsersEntity user = new UsersEntity();
         user.setId(1L);
         CollectionEntity collection1 = new CollectionEntity();
-        collection1.setTitle("title");
+        collection1.setTitle("title1");
         collection1.setOwners(user);
         CollectionEntity collection2 = new CollectionEntity();
-        collection2.setTitle("title");
+        collection2.setTitle("title2");
         collection2.setOwners(user);
 
         List<CollectionEntity> collectionEntities = new ArrayList<>();
@@ -182,9 +188,10 @@ public class CollectionServiceTests {
         when(collectionRepository.findAll()).thenReturn(collectionEntities);
         List<CollectionDao> collectionDaos = collectionService.findCollections("title");
 
+        assertNotNull(collectionDaos);
         assertEquals(2, collectionDaos.size());
-        assertEquals("title", collectionDaos.get(0).getTitle());
-        assertEquals("title", collectionDaos.get(1).getTitle());
+        assertEquals("title1", collectionDaos.get(0).getTitle());
+        assertEquals("title2", collectionDaos.get(1).getTitle());
     }
 
     @Test
