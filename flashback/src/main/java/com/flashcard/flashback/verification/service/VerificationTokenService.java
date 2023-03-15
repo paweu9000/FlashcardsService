@@ -2,6 +2,7 @@ package com.flashcard.flashback.verification.service;
 
 import com.flashcard.flashback.exception.EntityNotFoundException;
 import com.flashcard.flashback.user.entity.UsersEntity;
+import com.flashcard.flashback.user.service.UserService;
 import com.flashcard.flashback.verification.entity.VerificationToken;
 import com.flashcard.flashback.verification.mapper.TokenMapper;
 import com.flashcard.flashback.verification.repository.VerificationTokenRepository;
@@ -15,8 +16,9 @@ public class VerificationTokenService {
 
     private VerificationTokenRepository repository;
 
-    public VerificationTokenService(VerificationTokenRepository repository) {
+    public VerificationTokenService(VerificationTokenRepository repository, UserService userService) {
         this.repository = repository;
+        this.userService = userService;
     }
 
     public void setRepository(VerificationTokenRepository repository) {
