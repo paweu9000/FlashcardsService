@@ -70,6 +70,7 @@ public class UserServiceTests {
                 .build();
         UsersEntity user = userService.mapDto(dto);
 
+        assertNotNull(user);
         assertEquals(dto.getPassword(), user.getPassword());
         assertEquals(dto.getEmail(), user.getEmail());
         assertEquals(dto.getLogin(), user.getLogin());
@@ -103,6 +104,8 @@ public class UserServiceTests {
         verificationToken.setUsersEntity(testUser);
         userService.confirmEmail(verificationToken);
 
+        assertNotNull(verificationToken);
+        assertEquals(verificationToken.getUsersEntity(), testUser);
         assertTrue(testUser.isVerified());
     }
 }
