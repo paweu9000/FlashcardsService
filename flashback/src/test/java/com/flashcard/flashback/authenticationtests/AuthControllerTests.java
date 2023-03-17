@@ -1,6 +1,5 @@
 package com.flashcard.flashback.authenticationtests;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flashcard.flashback.user.data.UserDto;
 import com.flashcard.flashback.user.data.UserLoginDto;

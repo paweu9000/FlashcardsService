@@ -2,7 +2,6 @@ package com.flashcard.flashback.cardtests;
 
 import com.flashcard.flashback.card.data.CardDao;
 import com.flashcard.flashback.card.data.CardDto;
-import com.flashcard.flashback.card.data.mapper.CardMapper;
 import com.flashcard.flashback.card.entity.CardEntity;
 import com.flashcard.flashback.card.repository.CardRepository;
 import com.flashcard.flashback.card.service.CardService;

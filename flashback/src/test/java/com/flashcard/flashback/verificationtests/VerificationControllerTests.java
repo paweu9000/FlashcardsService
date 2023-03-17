@@ -13,7 +13,6 @@ import java.net.http.HttpResponse;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
 public class VerificationControllerTests {
 
