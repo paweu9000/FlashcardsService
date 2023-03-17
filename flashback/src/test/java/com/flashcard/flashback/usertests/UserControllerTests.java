@@ -1,6 +1,5 @@
 package com.flashcard.flashback.usertests;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flashcard.flashback.user.data.UserDao;
 import com.github.tomakehurst.wiremock.WireMockServer;
