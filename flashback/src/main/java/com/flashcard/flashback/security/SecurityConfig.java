@@ -17,7 +17,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @AllArgsConstructor
@@ -33,8 +36,8 @@ public class SecurityConfig {
             @Override
             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                 CorsConfiguration config = new CorsConfiguration();
-                config.setAllowedOrigins(Collections.singletonList("*"));
-                config.setAllowedMethods(Collections.singletonList("*"));
+                config.setAllowedOrigins(Collections.singletonList("http://localhost:8080"));
+                config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
                 config.setMaxAge(3600L);
                 config.setAllowCredentials(true);
                 config.setAllowedHeaders(Collections.singletonList("*"));

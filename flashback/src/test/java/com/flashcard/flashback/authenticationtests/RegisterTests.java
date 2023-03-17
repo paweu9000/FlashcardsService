@@ -44,6 +44,7 @@ public class RegisterTests {
     @InjectMocks
     private UserService userService;
     UsersEntity user;
+    UserDto userDto;
     @Before
     public void setUp() {
         user = new UsersEntity("login", "username",
@@ -51,6 +52,7 @@ public class RegisterTests {
         MockitoAnnotations.openMocks(this);
         tokenService = new VerificationTokenService(tokenRepository);
         userService.setTokenService(tokenService);
+        userDto = UserMapper.INSTANCE.entityToDto(user);
     }
 
     @Test
@@ -61,6 +63,8 @@ public class RegisterTests {
         assertNotNull(tokenService);
         assertNotNull(emailService);
         assertNotNull(userService);
+        assertNotNull(user);
+        assertNotNull(userDto);
     }
 
     @Test
@@ -94,6 +98,7 @@ public class RegisterTests {
         UserDto userDto = UserMapper.INSTANCE.entityToDto(user);
         userService.register(userDto);
 
+        assertNotNull(verificationToken);
         verify(userRepository).save(any(UsersEntity.class));
         verify(tokenRepository).save(any(VerificationToken.class));
     }
