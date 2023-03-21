@@ -31,6 +31,14 @@ public record CardController(CardService cardService) {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @PostMapping("/{collectionId}")
+    public ResponseEntity<HttpStatus> postCards(@PathVariable(name = "collectionId") Long collectionId,
+                                               @Valid @RequestBody List<CardDto> cardDto,
+                                               @CurrentSecurityContext(expression = "authentication?.name") String name) {
+        cardService.createCards(name, collectionId, cardDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteCard(@PathVariable Long id, Authentication authentication) {
         cardService.deleteIfAllowed(authentication, id);

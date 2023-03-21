@@ -103,6 +103,10 @@ public class CardService {
         collectionService.save(collection);
     }
 
+    public void createCards(String loginOrEmail, Long collectionId, List<CardDto> cards) {
+        cards.forEach(cardDto -> createCard(loginOrEmail, collectionId, cardDto));
+    }
+
     public List<CardDao> getAllCards(Long id) {
         CollectionEntity collection = collectionService.findById(id);
         return collection.getCards().stream().map(this::toDao).toList();
