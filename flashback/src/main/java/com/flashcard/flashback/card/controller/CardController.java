@@ -31,7 +31,7 @@ public record CardController(CardService cardService) {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping("/{collectionId}")
+    @PostMapping("/{collectionId}/all")
     public ResponseEntity<HttpStatus> postCards(@PathVariable(name = "collectionId") Long collectionId,
                                                @Valid @RequestBody List<CardDto> cardDto,
                                                @CurrentSecurityContext(expression = "authentication?.name") String name) {
