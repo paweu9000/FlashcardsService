@@ -24,11 +24,11 @@ public record CollectionController(CollectionService collectionService) {
     }
 
     @PostMapping("")
-    public ResponseEntity<HttpStatus> createCollection(@Valid @RequestBody CollectionDto collectionDto,
+    public ResponseEntity<CollectionDao> createCollection(@Valid @RequestBody CollectionDto collectionDto,
                                                        @CurrentSecurityContext(expression = "authentication?.name")
                                                        String username) {
-        collectionService.createCollection(username, collectionDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        CollectionDao collectionDao = collectionService.createCollection(username, collectionDto);
+        return new ResponseEntity<>(collectionDao, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")

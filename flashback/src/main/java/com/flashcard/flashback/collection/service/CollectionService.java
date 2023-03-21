@@ -73,13 +73,14 @@ public class CollectionService{
         else throw new UnauthorizedDataDeleteException(CollectionEntity.class);
     }
 
-    public void createCollection(String loginOrEmail, CollectionDto collectionDto) {
+    public CollectionDao createCollection(String loginOrEmail, CollectionDto collectionDto) {
         if(loginOrEmail == null)
             throw new UnauthorizedDataCreateException(CollectionEntity.class);
         UsersEntity usersEntity = userService.findByEmailOrLogin(loginOrEmail);
         CollectionEntity collection = mapDto(collectionDto, usersEntity);
         usersEntity.addCollection(collection);
         userService.save(usersEntity);
+        return toDao(collection);
     }
 
     public CollectionEntity mapDto(CollectionDto collectionDto, UsersEntity user) {
