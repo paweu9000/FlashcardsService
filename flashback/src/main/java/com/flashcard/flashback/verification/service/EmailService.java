@@ -22,7 +22,7 @@ public class EmailService {
         helper.setTo(to);
         helper.setSubject("Please verify your email address");
         helper.setText("Click the link to verify your email address: "
-                + "http://localhost:8080/api/verify?token=" + token);
+                + "http://localhost:8080/verify/" + token);
         mailSender.send(message);
     }
 }
