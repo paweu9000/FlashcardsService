@@ -17,7 +17,7 @@ public interface CollectionMapper {
 
     CollectionMapper INSTANCE = Mappers.getMapper(CollectionMapper.class);
 
-    CollectionEntity dtoToEntity(CollectionDto collectionDto, UsersEntity user);
+    CollectionEntity dtoToEntity(CollectionDto collectionDto);
 
     @Mapping(source = "owners", target = "owners", qualifiedByName = "userEntityToId")
     @Mapping(source = "cards", target = "cards", qualifiedByName = "cardEntityToDao")
