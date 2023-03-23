@@ -23,6 +23,13 @@ public record CollectionController(CollectionService collectionService) {
         return new ResponseEntity<>(collectionDao, HttpStatus.OK);
     }
 
+    @GetMapping("/myCollections")
+    public ResponseEntity<List<CollectionDao>> getPersonalCollections(@CurrentSecurityContext(expression = "authentication?.name")
+                                                                          String username) {
+        List<CollectionDao> collections = collectionService.findPersonalCollections(username);
+        return new ResponseEntity<>(collections, HttpStatus.OK);
+    }
+
     @PostMapping("")
     public ResponseEntity<String> createCollection(@Valid @RequestBody CollectionDto collectionDto,
                                                        @CurrentSecurityContext(expression = "authentication?.name")
