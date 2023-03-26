@@ -20,4 +20,10 @@ public record UserController(UserService userService) {
                                                        (expression = "authentication?.name") String nameOrEmail) {
         return new ResponseEntity<>(userService.mapUserData(id, nameOrEmail), HttpStatus.OK);
     }
+
+    @GetMapping
+    public ResponseEntity<UserDao> getCurrentUser(@CurrentSecurityContext
+                                                              (expression = "authentication?.name") String nameOrEmail) {
+        return new ResponseEntity<>(userService.getCurrentUser(nameOrEmail), HttpStatus.OK);
+    }
 }
