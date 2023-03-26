@@ -1,6 +1,7 @@
 package com.flashcard.flashback.usertests;
 
 import com.flashcard.flashback.exception.EntityNotFoundException;
+import com.flashcard.flashback.exception.UnauthorizedDataAccessException;
 import com.flashcard.flashback.user.data.UserDao;
 import com.flashcard.flashback.user.data.UserDto;
 import com.flashcard.flashback.user.entity.UsersEntity;
@@ -118,5 +119,10 @@ public class UserServiceTests {
         assertNotNull(userDao);
         assertEquals(userDao.getUsername(), testUser.getUsername());
         assertEquals(userDao.getId(), testUser.getId());
+    }
+
+    @Test
+    public void getCurrentUserInvalidTest() {
+        assertThrows(EntityNotFoundException.class, () -> userService.getCurrentUser("invalidUser"));
     }
 }
