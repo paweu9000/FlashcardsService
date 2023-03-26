@@ -108,4 +108,15 @@ public class UserServiceTests {
         assertEquals(verificationToken.getUsersEntity(), testUser);
         assertTrue(testUser.isVerified());
     }
+
+    @Test
+    public void getCurrentUserValidTest() {
+        when(userRepository.findByEmail("email@example.com")).thenReturn(Optional.of(testUser));
+
+        UserDao userDao = userService.getCurrentUser("email@example.com");
+
+        assertNotNull(userDao);
+        assertEquals(userDao.getUsername(), testUser.getUsername());
+        assertEquals(userDao.getId(), testUser.getId());
+    }
 }
