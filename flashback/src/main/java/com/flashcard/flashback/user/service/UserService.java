@@ -109,7 +109,7 @@ public class UserService{
 
     public UserDao mapUserData(Long id, String loginOrEmail) {
         UsersEntity user = findById(id);
-        if (user.getLogin().equals(loginOrEmail) || user.getEmail().equals(loginOrEmail)) return toDao(user);
+        if (loginOrEmail != null) return toDao(user);
         else throw new UnauthorizedDataAccessException(UserDao.class);
     }
 
