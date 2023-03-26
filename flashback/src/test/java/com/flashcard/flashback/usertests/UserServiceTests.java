@@ -125,4 +125,21 @@ public class UserServiceTests {
     public void getCurrentUserInvalidTest() {
         assertThrows(EntityNotFoundException.class, () -> userService.getCurrentUser("invalidUser"));
     }
+
+    @Test
+    public void mapUserDataValidTest() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
+        UserDao userDao = userService.mapUserData(1L, "login");
+
+        assertNotNull(userDao);
+        assertEquals(userDao.getUsername(), testUser.getUsername());
+        assertEquals(userDao.getId(), testUser.getId());
+    }
+
+    @Test
+    public void mapUserDataInvalidTest() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
+
+        assertThrows(UnauthorizedDataAccessException.class, () -> userService.mapUserData(1L, null));
+    }
 }
