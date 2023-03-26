@@ -115,8 +115,7 @@ public class UserService{
 
     public UserDao getCurrentUser(String loginOrEmail) {
         UsersEntity user = findByEmailOrLogin(loginOrEmail);
-        if (user != null) return toDao(user);
-        else throw new UnauthorizedDataAccessException(UserDao.class);
+        return toDao(user);
     }
 
     public void confirmEmail(VerificationToken verificationToken) {
