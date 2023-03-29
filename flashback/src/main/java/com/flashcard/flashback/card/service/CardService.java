@@ -94,13 +94,14 @@ public class CardService {
         return collection;
     }
 
-    public void createCard(String loginOrEmail, Long collectionId, CardDto cardDto) {
+    public CardDao createCard(String loginOrEmail, Long collectionId, CardDto cardDto) {
         CollectionEntity collection = getCollectionIfActionIsAllowed(loginOrEmail, collectionId);
         CardEntity card = mapDto(cardDto);
         card.setCollector(collection);
         card.setCreatedBy(collection.getOwners());
         collection.addCard(card);
         collectionService.save(collection);
+        return toDao(card);
     }
 
     public void createCards(String loginOrEmail, Long collectionId, List<CardDto> cards) {
