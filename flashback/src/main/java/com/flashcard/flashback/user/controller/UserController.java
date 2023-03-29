@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/user")
 public record UserController(UserService userService) {
@@ -25,5 +27,10 @@ public record UserController(UserService userService) {
     public ResponseEntity<UserDao> getCurrentUser(@CurrentSecurityContext
                                                               (expression = "authentication?.name") String nameOrEmail) {
         return new ResponseEntity<>(userService.getCurrentUser(nameOrEmail), HttpStatus.OK);
+    }
+
+    @GetMapping("/search/{username}")
+    public ResponseEntity<List<UserDao>> findUsers(@PathVariable String username) {
+        return new ResponseEntity<>(userService.searchByUsername(username), HttpStatus.OK);
     }
 }
