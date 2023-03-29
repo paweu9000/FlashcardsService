@@ -10,17 +10,27 @@ import com.flashcard.flashback.user.repository.UserRepository;
 import com.flashcard.flashback.verification.entity.VerificationToken;
 import com.flashcard.flashback.verification.service.EmailService;
 import com.flashcard.flashback.verification.service.VerificationTokenService;
+import org.apache.lucene.search.Query;
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.Search;
+import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.mail.MessagingException;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Service
 public class UserService{
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     UserRepository userRepository;
     BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -122,5 +132,25 @@ public class UserService{
         UsersEntity user = verificationToken.getUsersEntity();
         user.setVerified(true);
         save(user);
+    }
+
+    public List<UserDao> searchByUsername(String username) {
+        FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
+        QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory()
+                .buildQueryBuilder()
+                .forEntity(UsersEntity.class)
+                .get();
+
+        Query luceneQuery = queryBuilder
+                .keyword()
+                .fuzzy()
+                .onField("username")
+                .matching(username)
+                .createQuery();
+
+        javax.persistence.Query jpaQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, UsersEntity.class);
+        List<UsersEntity> users = jpaQuery.getResultList();
+
+        return users.stream().map(this::toDao).toList();
     }
 }
