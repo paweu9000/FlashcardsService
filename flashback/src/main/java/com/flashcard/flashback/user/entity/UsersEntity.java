@@ -5,6 +5,8 @@ import com.flashcard.flashback.collection.entity.CollectionEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Index;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@Indexed
 @Table(name = "users")
 @NoArgsConstructor
 public class UsersEntity {
@@ -23,6 +26,7 @@ public class UsersEntity {
     private Long id;
     @Column
     private String login;
+    @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
     @Column
     private String username;
     @Column
