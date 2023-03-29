@@ -24,11 +24,10 @@ public record CardController(CardService cardService) {
     }
 
     @PostMapping("/{collectionId}")
-    public ResponseEntity<HttpStatus> postCard(@PathVariable(name = "collectionId") Long collectionId,
+    public ResponseEntity<CardDao> postCard(@PathVariable(name = "collectionId") Long collectionId,
                                                @Valid @RequestBody CardDto cardDto,
                                                @CurrentSecurityContext(expression = "authentication?.name") String name) {
-        cardService.createCard(name, collectionId, cardDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(cardService.createCard(name, collectionId, cardDto), HttpStatus.CREATED);
     }
 
     @PostMapping("/{collectionId}/all")
