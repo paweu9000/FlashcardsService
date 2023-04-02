@@ -141,16 +141,22 @@ public class UserService{
                 .forEntity(UsersEntity.class)
                 .get();
 
-        Query luceneQuery = queryBuilder
+        Query luceneQuery = buildLuceneQuery(username, queryBuilder);
+        List<UsersEntity> users = getUserListFromQuery(luceneQuery, fullTextEntityManager);
+
+        return users.stream().map(this::toDao).toList();
+    }
+
+    private List<UsersEntity> getUserListFromQuery(Query query, FullTextEntityManager entityManager) {
+        return entityManager.createFullTextQuery(query, UsersEntity.class).getResultList();
+    }
+
+    private Query buildLuceneQuery(String username, QueryBuilder queryBuilder) {
+        return queryBuilder
                 .keyword()
                 .fuzzy()
                 .onField("username")
                 .matching(username)
                 .createQuery();
-
-        javax.persistence.Query jpaQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, UsersEntity.class);
-        List<UsersEntity> users = jpaQuery.getResultList();
-
-        return users.stream().map(this::toDao).toList();
     }
 }
