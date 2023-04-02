@@ -102,12 +102,6 @@ public class CollectionService{
         collectionRepository.save(collection);
     }
 
-    public List<CollectionDao> findCollections(String title) {
-        List<CollectionEntity> collectionEntities = collectionRepository.findAll();
-        if(collectionEntities.isEmpty()) throw new EntityNotFoundException(List.class);
-        return collectionEntities.stream().filter(collection -> collection.getTitle().contains(title)).map(this::toDao).toList();
-    }
-
     public List<CollectionDao> findPersonalCollections(String username) {
         UsersEntity user = userService.findByEmailOrLogin(username);
         return user.getCollections().stream().map(this::toDao).toList();
