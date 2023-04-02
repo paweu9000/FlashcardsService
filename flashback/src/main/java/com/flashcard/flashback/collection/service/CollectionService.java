@@ -11,14 +11,23 @@ import com.flashcard.flashback.exception.UnauthorizedDataCreateException;
 import com.flashcard.flashback.exception.UnauthorizedDataDeleteException;
 import com.flashcard.flashback.user.entity.UsersEntity;
 import com.flashcard.flashback.user.service.UserService;
+import org.apache.lucene.search.Query;
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.Search;
+import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class CollectionService{
+
+    @PersistenceContext
+    EntityManager entityManager;
 
     CollectionRepository collectionRepository;
     UserService userService;
@@ -102,5 +111,30 @@ public class CollectionService{
     public List<CollectionDao> findPersonalCollections(String username) {
         UsersEntity user = userService.findByEmailOrLogin(username);
         return user.getCollections().stream().map(this::toDao).toList();
+    }
+
+    public List<CollectionDao> searchByTitle(String title) {
+        FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
+
+        QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory()
+                .buildQueryBuilder()
+                .forEntity(CollectionEntity.class)
+                .get();
+        Query luceneQuery = buildLuceneQuery(queryBuilder, title);
+        List<CollectionEntity> collections = getCollectionListFromQuery(luceneQuery, fullTextEntityManager);
+        return collections.stream().map(this::toDao).toList();
+    }
+
+    private List<CollectionEntity> getCollectionListFromQuery(Query query, FullTextEntityManager textEntityManager) {
+        return textEntityManager.createFullTextQuery(query, CollectionEntity.class).getResultList();
+    }
+
+    private Query buildLuceneQuery(QueryBuilder queryBuilder, String title) {
+        return queryBuilder
+                .keyword()
+                .fuzzy()
+                .onField("title")
+                .matching(title)
+                .createQuery();
     }
 }
