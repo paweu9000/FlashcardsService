@@ -15,6 +15,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -80,6 +82,46 @@ public class UserControllerTests {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertEquals(401, response.statusCode());
+        assertEquals(body, response.body());
+    }
+
+    @Test
+    public void getUserDataTest() throws IOException, InterruptedException {
+        String body = objectMapper.writeValueAsString(userDao);
+
+        stubFor(get(urlEqualTo("/api/user"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withBody(body)));
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/user"))
+                .GET()
+                .build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(200, response.statusCode());
+        assertEquals(body, response.body());
+    }
+
+    @Test
+    public void searchUsersByUsername() throws IOException, InterruptedException {
+        String body = objectMapper.writeValueAsString(Arrays.asList(userDao));
+
+        stubFor(get(urlEqualTo("/api/user/search/username"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withBody(body)));
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/user/search/username"))
+                .GET()
+                .build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(200, response.statusCode());
         assertEquals(body, response.body());
     }
 }
