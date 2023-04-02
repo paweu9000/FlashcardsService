@@ -55,7 +55,6 @@ public record CollectionController(CollectionService collectionService) {
 
     @GetMapping("/search/{title}")
     public ResponseEntity<List<CollectionDao>> findCollectionsByTitle(@PathVariable String title) {
-        List<CollectionDao> collections = collectionService.findCollections(title);
-        return new ResponseEntity<>(collections, HttpStatus.OK);
+        return new ResponseEntity<>(collectionService.searchByTitle(title), HttpStatus.OK);
     }
 }
