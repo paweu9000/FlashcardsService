@@ -8,6 +8,6 @@ import java.util.List;
 public class UserDao {
     Long id;
     String username;
-    List<Long> collections;
+    List<UserDaoCollection> collections;
     List<Long> savedCollections;
 }

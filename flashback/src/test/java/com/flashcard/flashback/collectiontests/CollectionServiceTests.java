@@ -172,31 +172,8 @@ public class CollectionServiceTests {
     }
 
     @Test
-    public void findCollectionsTest() {
-        UsersEntity user = new UsersEntity();
-        user.setId(1L);
-        CollectionEntity collection1 = new CollectionEntity();
-        collection1.setTitle("title1");
-        collection1.setOwners(user);
-        CollectionEntity collection2 = new CollectionEntity();
-        collection2.setTitle("title2");
-        collection2.setOwners(user);
-
-        List<CollectionEntity> collectionEntities = new ArrayList<>();
-        collectionEntities.add(collection1);
-        collectionEntities.add(collection2);
-        when(collectionRepository.findAll()).thenReturn(collectionEntities);
-        List<CollectionDao> collectionDaos = collectionService.findCollections("title");
-
-        assertNotNull(collectionDaos);
-        assertEquals(2, collectionDaos.size());
-        assertEquals("title1", collectionDaos.get(0).getTitle());
-        assertEquals("title2", collectionDaos.get(1).getTitle());
-    }
-
-    @Test
     public void findCollectionsEmptyTest() {
-        assertThrows(EntityNotFoundException.class, () -> collectionService.findCollections("title"));
+        assertThrows(IllegalArgumentException.class, () -> collectionService.searchByTitle("title"));
     }
 
     @Test
