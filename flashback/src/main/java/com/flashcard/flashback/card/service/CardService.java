@@ -25,7 +25,7 @@ public class CardService {
     private CollectionService collectionService;
     private UserService userService;
 
-    CardService(CardRepository cardRepository, CollectionService collectionService, UserService userService) {
+    public CardService(CardRepository cardRepository, CollectionService collectionService, UserService userService) {
         this.cardRepository = cardRepository;
         this.collectionService = collectionService;
         this.userService = userService;

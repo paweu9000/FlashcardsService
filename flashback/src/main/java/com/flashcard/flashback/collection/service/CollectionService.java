@@ -32,7 +32,7 @@ public class CollectionService{
     CollectionRepository collectionRepository;
     UserService userService;
 
-    CollectionService(CollectionRepository collectionRepository, UserService userService) {
+    public CollectionService(CollectionRepository collectionRepository, UserService userService) {
         this.collectionRepository = collectionRepository;
         this.userService = userService;
     }
