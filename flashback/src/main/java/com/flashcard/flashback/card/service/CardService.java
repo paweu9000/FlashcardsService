@@ -21,9 +21,9 @@ import java.util.Optional;
 
 @Service
 public class CardService {
-    private final CardRepository cardRepository;
-    private CollectionService collectionService;
-    private UserService userService;
+    final CardRepository cardRepository;
+    CollectionService collectionService;
+    UserService userService;
 
     CardService(CardRepository cardRepository, CollectionService collectionService, UserService userService) {
         this.cardRepository = cardRepository;
