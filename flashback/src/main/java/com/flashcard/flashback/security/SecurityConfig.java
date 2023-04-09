@@ -22,7 +22,7 @@ import java.util.Collections;
 
 @Configuration
 @AllArgsConstructor
-public class SecurityConfig {
+class SecurityConfig {
 
     AuthenticationManager authenticationManager;
 
@@ -65,7 +65,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public static BCryptPasswordEncoder passwordEncoder() {
+    static BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
