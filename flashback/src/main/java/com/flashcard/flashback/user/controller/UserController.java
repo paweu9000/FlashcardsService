@@ -14,23 +14,23 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/user")
-public record UserController(UserService userService) {
+record UserController(UserService userService) {
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDao> getUserData(@PathVariable Long id,
+    ResponseEntity<UserDao> getUserData(@PathVariable Long id,
                                                @CurrentSecurityContext
                                                        (expression = "authentication?.name") String nameOrEmail) {
         return new ResponseEntity<>(userService.mapUserData(id, nameOrEmail), HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<UserDao> getCurrentUser(@CurrentSecurityContext
+    ResponseEntity<UserDao> getCurrentUser(@CurrentSecurityContext
                                                               (expression = "authentication?.name") String nameOrEmail) {
         return new ResponseEntity<>(userService.getCurrentUser(nameOrEmail), HttpStatus.OK);
     }
 
     @GetMapping("/search/{username}")
-    public ResponseEntity<List<UserDao>> findUsers(@PathVariable String username) {
+    ResponseEntity<List<UserDao>> findUsers(@PathVariable String username) {
         return new ResponseEntity<>(userService.searchByUsername(username), HttpStatus.OK);
     }
 }
