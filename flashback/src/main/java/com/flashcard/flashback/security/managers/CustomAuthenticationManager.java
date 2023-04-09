@@ -14,10 +14,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
-public class CustomAuthenticationManager implements AuthenticationManager {
+class CustomAuthenticationManager implements AuthenticationManager {
 
-    private UserService userService;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    UserService userService;
+    BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
