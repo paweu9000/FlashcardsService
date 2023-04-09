@@ -37,7 +37,7 @@ public class UserService{
     VerificationTokenService tokenService;
     EmailService emailService;
 
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
+    UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
                        VerificationTokenService tokenService, EmailService emailService) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
