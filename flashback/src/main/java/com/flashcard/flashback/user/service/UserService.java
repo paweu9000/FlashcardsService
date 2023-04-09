@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 public class UserService{
 
     @PersistenceContext
-    private EntityManager entityManager;
+    EntityManager entityManager;
 
     UserRepository userRepository;
     BCryptPasswordEncoder bCryptPasswordEncoder;
