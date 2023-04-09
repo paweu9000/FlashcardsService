@@ -15,23 +15,23 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/cards")
-public record CardController(CardService cardService) {
+record CardController(CardService cardService) {
 
     @GetMapping("/{id}")
-    public ResponseEntity<CardDao> getCard(@PathVariable Long id) {
+    ResponseEntity<CardDao> getCard(@PathVariable Long id) {
         CardEntity card = cardService.getCardById(id);
         return new ResponseEntity<>(cardService.toDao(card), HttpStatus.OK);
     }
 
     @PostMapping("/{collectionId}")
-    public ResponseEntity<CardDao> postCard(@PathVariable(name = "collectionId") Long collectionId,
+    ResponseEntity<CardDao> postCard(@PathVariable(name = "collectionId") Long collectionId,
                                                @Valid @RequestBody CardDto cardDto,
                                                @CurrentSecurityContext(expression = "authentication?.name") String name) {
         return new ResponseEntity<>(cardService.createCard(name, collectionId, cardDto), HttpStatus.CREATED);
     }
 
     @PostMapping("/{collectionId}/all")
-    public ResponseEntity<HttpStatus> postCards(@PathVariable(name = "collectionId") Long collectionId,
+    ResponseEntity<HttpStatus> postCards(@PathVariable(name = "collectionId") Long collectionId,
                                                @Valid @RequestBody List<CardDto> cardDto,
                                                @CurrentSecurityContext(expression = "authentication?.name") String name) {
         cardService.createCards(name, collectionId, cardDto);
@@ -39,13 +39,13 @@ public record CardController(CardService cardService) {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteCard(@PathVariable Long id, Authentication authentication) {
+    ResponseEntity<HttpStatus> deleteCard(@PathVariable Long id, Authentication authentication) {
         cardService.deleteIfAllowed(authentication, id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<HttpStatus> editCard(@PathVariable Long id,
+    ResponseEntity<HttpStatus> editCard(@PathVariable Long id,
                                                @RequestBody CardDao cardDao,
                                                @CurrentSecurityContext(expression = "authentication?.name") String name) {
         cardService.editCard(cardDao, name);
@@ -53,7 +53,7 @@ public record CardController(CardService cardService) {
     }
 
     @GetMapping("/all?={collectionId}")
-    public ResponseEntity<List<CardDao>> getAllCardsFromCollection(@PathVariable Long collectionId) {
+    ResponseEntity<List<CardDao>> getAllCardsFromCollection(@PathVariable Long collectionId) {
         List<CardDao> cards = cardService.getAllCards(collectionId);
         return new ResponseEntity<>(cards, HttpStatus.OK);
     }
