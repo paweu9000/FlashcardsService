@@ -13,23 +13,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ControllerAdvice
-public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
+class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({EntityNotFoundException.class})
-    public ResponseEntity<Object> handleEntityNotFoundException(RuntimeException e) {
+    ResponseEntity<Object> handleEntityNotFoundException(RuntimeException e) {
         ErrorResponse errorResponse = new ErrorResponse(List.of(e.getMessage()));
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler({UnauthorizedDataDeleteException.class, UnauthorizedDataCreateException.class,
             UnauthorizedDataAccessException.class, UnverifiedEmailException.class})
-    public ResponseEntity<Object> handleUnauthorizedDataActionException(RuntimeException e) {
+    ResponseEntity<Object> handleUnauthorizedDataActionException(RuntimeException e) {
         ErrorResponse errorResponse = new ErrorResponse(List.of(e.getMessage()));
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler({SavedCollectionDuplicateException.class})
-    public ResponseEntity<Object> handleSavedCollectionDuplicateException(RuntimeException e) {
+    ResponseEntity<Object> handleSavedCollectionDuplicateException(RuntimeException e) {
         ErrorResponse errorResponse = new ErrorResponse(List.of(e.getMessage()));
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }

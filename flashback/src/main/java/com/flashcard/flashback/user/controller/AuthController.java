@@ -16,10 +16,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("api/auth")
-public record AuthController (UserService userService, EmailService emailService) {
+record AuthController (UserService userService) {
 
     @PostMapping("/register")
-    public ResponseEntity<HttpStatus> registerUser(@Valid @RequestBody UserDto userDto) throws MessagingException {
+    ResponseEntity<HttpStatus> registerUser(@Valid @RequestBody UserDto userDto) throws MessagingException {
         userService.register(userDto);
         emailService.sendVerificationEmail(userDto.getEmail(), UUID.randomUUID().toString());
         return new ResponseEntity<>(HttpStatus.CREATED);
