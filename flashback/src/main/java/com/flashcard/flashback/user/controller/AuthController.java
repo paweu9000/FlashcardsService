@@ -14,10 +14,10 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("api/auth")
-public record AuthController (UserService userService) {
+record AuthController (UserService userService) {
 
     @PostMapping("/register")
-    public ResponseEntity<HttpStatus> registerUser(@Valid @RequestBody UserDto userDto) throws MessagingException {
+    ResponseEntity<HttpStatus> registerUser(@Valid @RequestBody UserDto userDto) throws MessagingException {
         userService.register(userDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
