@@ -1,6 +1,7 @@
 package com.flashcard.flashback.email;
 
 import com.flashcard.flashback.exception.EntityNotFoundException;
+import com.flashcard.flashback.user.UserService;
 import com.flashcard.flashback.user.UsersEntity;
 import org.springframework.stereotype.Service;
 
@@ -10,10 +11,12 @@ import java.util.UUID;
 @Service
 public class VerificationTokenService {
 
+    private final UserService userService;
     private VerificationTokenRepository repository;
 
-    public VerificationTokenService(VerificationTokenRepository repository) {
+    public VerificationTokenService(VerificationTokenRepository repository, UserService userService) {
         this.repository = repository;
+        this.userService = userService;
     }
 
     public void setRepository(VerificationTokenRepository repository) {
