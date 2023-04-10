@@ -4,20 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f3ae6f97-e2ca-4ca6-948b-612440f2f6e3" name="Changes" comment="refactor towards hexagonal architecture">
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/monolith/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/flashcard/flashback/authenticationtests/AuthControllerTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/flashcard/flashback/authenticationtests/RegisterTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/flashcard/flashback/cardtests/CardControllerTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/flashcard/flashback/cardtests/CardServiceTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/flashcard/flashback/collectiontests/CollectionControllerTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/flashcard/flashback/collectiontests/CollectionServiceTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/flashcard/flashback/emailtests/EmailServiceTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/flashcard/flashback/usertests/UserControllerTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/flashcard/flashback/usertests/UserServiceTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/flashcard/flashback/verificationtests/VerificationControllerTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/flashcard/flashback/verificationtests/VerificationTokenServiceTests.java" beforeDir="false" />
-    </list>
+    <list default="true" id="f3ae6f97-e2ca-4ca6-948b-612440f2f6e3" name="Changes" comment="refactor towards hexagonal architecture" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
