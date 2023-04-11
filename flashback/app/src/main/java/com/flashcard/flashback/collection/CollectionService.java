@@ -34,11 +34,11 @@ public class CollectionService{
         this.userService = userService;
     }
 
-    public void setUserService(UserService userService) {
+    void setUserService(UserService userService) {
         this.userService = userService;
     }
 
-    public CollectionDao toDao(CollectionEntity collection) {
+    CollectionDao toDao(CollectionEntity collection) {
         return CollectionMapper.INSTANCE.entityToDao(collection);
     }
 
@@ -46,7 +46,7 @@ public class CollectionService{
         return exists(collectionRepository.findById(id));
     }
 
-    public CollectionEntity exists(Optional<CollectionEntity> collection) {
+    CollectionEntity exists(Optional<CollectionEntity> collection) {
         if(collection.isPresent()) {
             return collection.get();
         } else {
@@ -54,11 +54,11 @@ public class CollectionService{
         }
     }
 
-    public void deleteCollectionById(Long id) {
+    void deleteCollectionById(Long id) {
         collectionRepository.deleteById(id);
     }
 
-    public void upvoteCollection(Long id, String emailOrLogin) {
+    void upvoteCollection(Long id, String emailOrLogin) {
         UsersEntity usersEntity = userService.findByEmailOrLogin(emailOrLogin);
         usersEntity.getSavedCollections().forEach(collection -> isUnique(id, collection));
         CollectionEntity collection = findById(id);
@@ -67,11 +67,11 @@ public class CollectionService{
         userService.save(usersEntity);
     }
 
-    public void isUnique(Long id, CollectionEntity collection) {
+    void isUnique(Long id, CollectionEntity collection) {
         if(Objects.equals(collection.getId(), id)) throw new SavedCollectionDuplicateException(id);
     }
 
-    public void deleteIfAllowed(String name, Long id) {
+    void deleteIfAllowed(String name, Long id) {
         CollectionEntity collection = findById(id);
         String email = collection.getOwners().getEmail();
         String login = collection.getOwners().getLogin();
@@ -79,7 +79,7 @@ public class CollectionService{
         else throw new UnauthorizedDataDeleteException(CollectionEntity.class);
     }
 
-    public String createCollection(String loginOrEmail, CollectionDto collectionDto) {
+    String createCollection(String loginOrEmail, CollectionDto collectionDto) {
         if(loginOrEmail == null)
             throw new UnauthorizedDataCreateException(CollectionEntity.class);
         UsersEntity usersEntity = userService.findByEmailOrLogin(loginOrEmail);
@@ -91,7 +91,7 @@ public class CollectionService{
         return collection.getId() + " " + usersEntity.getId();
     }
 
-    public CollectionEntity mapDto(CollectionDto collectionDto) {
+    CollectionEntity mapDto(CollectionDto collectionDto) {
         return CollectionMapper.INSTANCE.dtoToEntity(collectionDto);
     }
 
@@ -99,12 +99,12 @@ public class CollectionService{
         collectionRepository.save(collection);
     }
 
-    public List<CollectionDao> findPersonalCollections(String username) {
+    List<CollectionDao> findPersonalCollections(String username) {
         UsersEntity user = userService.findByEmailOrLogin(username);
         return user.getCollections().stream().map(this::toDao).toList();
     }
 
-    public List<CollectionDao> searchByTitle(String title) {
+    List<CollectionDao> searchByTitle(String title) {
         FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
 
         QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory()
