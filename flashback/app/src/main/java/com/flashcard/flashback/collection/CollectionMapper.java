@@ -12,7 +12,7 @@ import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
-public interface CollectionMapper {
+interface CollectionMapper {
 
     CollectionMapper INSTANCE = Mappers.getMapper(CollectionMapper.class);
 

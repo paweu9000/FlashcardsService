@@ -10,13 +10,10 @@ import java.util.UUID;
 
 @Service
 public class VerificationTokenService {
-
-    private final UserService userService;
     private VerificationTokenRepository repository;
 
-    public VerificationTokenService(VerificationTokenRepository repository, UserService userService) {
+    public VerificationTokenService(VerificationTokenRepository repository) {
         this.repository = repository;
-        this.userService = userService;
     }
 
     public void setRepository(VerificationTokenRepository repository) {
