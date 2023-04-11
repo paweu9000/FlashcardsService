@@ -65,7 +65,7 @@ public class UserService{
         else throw new EntityNotFoundException(UsersEntity.class);
     }
 
-    public boolean checkEmail(String email) {
+    boolean checkEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
                 "[a-zA-Z0-9_+&*-]+)*@" +
                 "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
@@ -98,15 +98,15 @@ public class UserService{
         emailService.sendVerificationEmail(userDto.getEmail(), token.getToken());
     }
 
-    public UserDao toDao(UsersEntity user) {
+    UserDao toDao(UsersEntity user) {
         return UserMapper.INSTANCE.entityToDao(user);
     }
 
-    public UsersEntity mapDto(UserDto userDto) {
+    UsersEntity mapDto(UserDto userDto) {
         return UserMapper.INSTANCE.dtoToEntity(userDto);
     }
 
-    public boolean exists(UserDto userDto) {
+    boolean exists(UserDto userDto) {
         if(userRepository.findByLogin(userDto.getLogin()).isPresent()) {
             return true;
         } else if(userRepository.findByEmail(userDto.getEmail()).isPresent()) {
@@ -114,13 +114,13 @@ public class UserService{
         } else return userRepository.findByUsername(userDto.getUsername()).isPresent();
     }
 
-    public UserDao mapUserData(Long id, String loginOrEmail) {
+    UserDao mapUserData(Long id, String loginOrEmail) {
         UsersEntity user = findById(id);
         if (loginOrEmail != null) return toDao(user);
         else throw new UnauthorizedDataAccessException(UserDao.class);
     }
 
-    public UserDao getCurrentUser(String loginOrEmail) {
+    UserDao getCurrentUser(String loginOrEmail) {
         UsersEntity user = findByEmailOrLogin(loginOrEmail);
         return toDao(user);
     }
@@ -131,7 +131,7 @@ public class UserService{
         save(user);
     }
 
-    public List<UserDao> searchByUsername(String username) {
+    List<UserDao> searchByUsername(String username) {
         FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
         QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory()
                 .buildQueryBuilder()
