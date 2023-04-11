@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CardService {
+class CardService {
     final CardRepository cardRepository;
     CollectionService collectionService;
     UserService userService;
@@ -28,15 +28,15 @@ public class CardService {
         this.userService = userService;
     }
 
-    public void setUserService(UserService userService) {
+    void setUserService(UserService userService) {
         this.userService = userService;
     }
 
-    public void setCollectionService(CollectionService collectionService) {
+    void setCollectionService(CollectionService collectionService) {
         this.collectionService = collectionService;
     }
 
-    public CardEntity getCardById(Long id) throws EntityNotFoundException{
+    CardEntity getCardById(Long id) throws EntityNotFoundException{
         Optional<CardEntity> card = cardRepository.findById(id);
         if (card.isPresent()) {
             return card.get();
@@ -45,22 +45,22 @@ public class CardService {
         }
     }
 
-    public CardDao toDao(CardEntity card) {
+    CardDao toDao(CardEntity card) {
         return CardMapper.INSTANCE.entityToDao(card);
     }
 
-    public CardEntity mapDto(CardDto cardDto) {
+    CardEntity mapDto(CardDto cardDto) {
         return CardMapper.INSTANCE.toCardEntity(cardDto, this.userService, this.collectionService);
     }
 
-    public void deleteCard(Long id) {
+    void deleteCard(Long id) {
         cardRepository.deleteById(id);
     }
 
-    private boolean editIfAllowed(String loginOrEmail, UsersEntity user) {
+    boolean editIfAllowed(String loginOrEmail, UsersEntity user) {
         return user.getEmail().equals(loginOrEmail) || user.getLogin().equals(loginOrEmail);
     }
-    public void editCard(CardDao cardDao, String loginOrEmail) {
+    void editCard(CardDao cardDao, String loginOrEmail) {
         CardEntity card = getCardById(cardDao.getId());
         if(editIfAllowed(loginOrEmail, card.getCreatedBy())) {
             card.setValue(cardDao.getValue());
@@ -71,7 +71,7 @@ public class CardService {
         }
     }
 
-    public void deleteIfAllowed(Authentication authentication, Long id) {
+    void deleteIfAllowed(Authentication authentication, Long id) {
         CardEntity card = getCardById(id);
         String loginOrEmail = authentication.getName();
         String login = card.getCreatedBy().getLogin();
@@ -80,7 +80,7 @@ public class CardService {
         else throw new UnauthorizedDataDeleteException(CardEntity.class);
     }
 
-    public CollectionEntity getCollectionIfActionIsAllowed(String loginOrEmail, Long collectionId) {
+    CollectionEntity getCollectionIfActionIsAllowed(String loginOrEmail, Long collectionId) {
         if(loginOrEmail == null)
             throw new UnauthorizedDataCreateException(CardEntity.class);
         CollectionEntity collection = collectionService.findById(collectionId);
@@ -91,7 +91,7 @@ public class CardService {
         return collection;
     }
 
-    public CardDao createCard(String loginOrEmail, Long collectionId, CardDto cardDto) {
+    CardDao createCard(String loginOrEmail, Long collectionId, CardDto cardDto) {
         CollectionEntity collection = getCollectionIfActionIsAllowed(loginOrEmail, collectionId);
         CardEntity card = mapDto(cardDto);
         card.setCollector(collection);
@@ -101,11 +101,11 @@ public class CardService {
         return toDao(card);
     }
 
-    public void createCards(String loginOrEmail, Long collectionId, List<CardDto> cards) {
+    void createCards(String loginOrEmail, Long collectionId, List<CardDto> cards) {
         cards.forEach(cardDto -> createCard(loginOrEmail, collectionId, cardDto));
     }
 
-    public List<CardDao> getAllCards(Long id) {
+    List<CardDao> getAllCards(Long id) {
         CollectionEntity collection = collectionService.findById(id);
         return collection.getCards().stream().map(this::toDao).toList();
     }

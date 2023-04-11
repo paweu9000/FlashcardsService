@@ -1,7 +1,6 @@
 package com.flashcard.flashback.email;
 
 import com.flashcard.flashback.exception.EntityNotFoundException;
-import com.flashcard.flashback.user.UserService;
 import com.flashcard.flashback.user.UsersEntity;
 import org.springframework.stereotype.Service;
 
@@ -10,16 +9,9 @@ import java.util.UUID;
 
 @Service
 public class VerificationTokenService {
+    private final VerificationTokenRepository repository;
 
-    private final UserService userService;
-    private VerificationTokenRepository repository;
-
-    public VerificationTokenService(VerificationTokenRepository repository, UserService userService) {
-        this.repository = repository;
-        this.userService = userService;
-    }
-
-    public void setRepository(VerificationTokenRepository repository) {
+    VerificationTokenService(VerificationTokenRepository repository) {
         this.repository = repository;
     }
 
@@ -29,16 +21,16 @@ public class VerificationTokenService {
         return repository.save(verificationToken);
     }
 
-    public VerificationToken getVerificationToken(String token) {
+    VerificationToken getVerificationToken(String token) {
         return unwrapVerificationToken(repository.findByToken(token));
     }
 
-    public VerificationToken unwrapVerificationToken(Optional<VerificationToken> token) {
+    VerificationToken unwrapVerificationToken(Optional<VerificationToken> token) {
         if (token.isPresent()) return token.get();
         else throw new EntityNotFoundException(VerificationToken.class);
     }
 
-    public VerificationToken mapToken(String token, UsersEntity usersEntity) {
+    VerificationToken mapToken(String token, UsersEntity usersEntity) {
         return TokenMapper.INSTANCE.mapToken(token, usersEntity);
     }
 }

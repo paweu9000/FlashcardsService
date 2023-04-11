@@ -6,7 +6,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
-public interface TokenMapper {
+interface TokenMapper {
 
     TokenMapper INSTANCE = Mappers.getMapper(TokenMapper.class);
 

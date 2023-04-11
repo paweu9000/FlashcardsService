@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/verify")
-public record VerificationController(VerificationTokenService tokenService, UserService userService) {
+record VerificationController(VerificationTokenService tokenService, UserService userService) {
 
     @PostMapping
     public ResponseEntity<?> verifyEmail(@RequestParam String token) {
