@@ -11,6 +11,9 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+import java.util.Set;
+
 @Mapper
 interface CollectionMapper {
 
@@ -19,8 +22,13 @@ interface CollectionMapper {
     CollectionEntity dtoToEntity(CollectionDto collectionDto);
 
     @Mapping(source = "owners", target = "owners", qualifiedByName = "userEntityToId")
-    @Mapping(source = "cards", target = "cards", qualifiedByName = "cardEntityToDao")
+    @Mapping(source = "cards", target = "cards", qualifiedByName = "cardEntitiesToDao")
     CollectionDao entityToDao(CollectionEntity collection);
+
+    @Named("cardEntitiesToDao")
+    default List<CardDao> cardEntitiesToDao(Set<CardEntity> cards) {
+        return cards.stream().map(this::cardEntityToDao).toList();
+    }
 
     @Named("cardEntityToDao")
     default CardDao cardEntityToDao(CardEntity card) {

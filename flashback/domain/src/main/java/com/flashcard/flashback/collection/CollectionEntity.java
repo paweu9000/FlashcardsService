@@ -6,12 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.search.annotations.*;
 import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -29,7 +29,7 @@ public class CollectionEntity {
     private String title;
     private Long likes;
     @OneToMany(mappedBy = "collector", cascade = CascadeType.ALL)
-    private List<CardEntity> cards = new ArrayList<>();
+    private Set<CardEntity> cards = new HashSet<>();
     @ManyToOne
     @JoinColumn(name = "users.id")
     private UsersEntity owners;

@@ -16,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.test.context.support.WithAnonymousUser;
 
 import java.util.Optional;
 
@@ -156,7 +155,6 @@ public class CollectionServiceTests {
     }
 
     @Test
-    @WithAnonymousUser
     public void createIfAllowedInvalidTest() {
         CollectionDto collectionDto = new CollectionDto();
         collectionDto.setLikes(21L);

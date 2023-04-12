@@ -17,8 +17,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
-import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import java.io.IOException;
 import java.net.URI;
@@ -37,16 +35,6 @@ public class CollectionControllerTests {
 
     @Mock
     CollectionRepository collectionRepository;
-
-    @Mock
-    UserRepository userRepository;
-
-    @InjectMocks
-    @Spy
-    UserService userService;
-
-    @InjectMocks
-    CollectionService collectionService;
     CollectionEntity collection;
     UsersEntity user;
     ObjectMapper objectMapper;
@@ -88,7 +76,6 @@ public class CollectionControllerTests {
     }
 
     @Test
-    @WithMockUser(username = "email@example.com")
     public void testPostCollectionRequestWithValidUser() throws IOException, InterruptedException {
         CollectionDto collectionDto = new CollectionDto();
         collectionDto.setTitle("Title");
@@ -111,7 +98,6 @@ public class CollectionControllerTests {
     }
 
     @Test
-    @WithAnonymousUser
     public void testPostCollectionRequestWithAnonymousUser() throws IOException, InterruptedException {
         CollectionDto collectionDto = new CollectionDto();
         collectionDto.setTitle("Title");
@@ -134,7 +120,6 @@ public class CollectionControllerTests {
     }
 
     @Test
-    @WithMockUser(username = "email@example.com")
     public void testDeleteCollectionRequestWithValidUser() throws IOException, InterruptedException {
 
         stubFor(delete(urlEqualTo("/api/collection/1"))
@@ -154,7 +139,6 @@ public class CollectionControllerTests {
     }
 
     @Test
-    @WithAnonymousUser
     public void testDeleteCollectionRequestWithAnonymousUser() throws IOException, InterruptedException {
 
         stubFor(delete(urlEqualTo("/api/collection/1"))
@@ -174,7 +158,6 @@ public class CollectionControllerTests {
     }
 
     @Test
-    @WithAnonymousUser
     public void testUpvoteCollectionRequestWithAnonymousUser() throws IOException, InterruptedException {
 
         stubFor(get(urlEqualTo("/api/collection/1/like"))
@@ -194,7 +177,6 @@ public class CollectionControllerTests {
     }
 
     @Test
-    @WithMockUser(username = "login")
     public void testUpvoteCollectionRequestWithValidUser() throws IOException, InterruptedException {
         stubFor(get(urlEqualTo("/api/collection/1/like"))
                 .willReturn(aResponse()
