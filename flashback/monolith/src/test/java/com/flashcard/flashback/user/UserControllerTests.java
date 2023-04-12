@@ -6,8 +6,6 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import java.io.IOException;
 import java.net.URI;
@@ -44,7 +42,6 @@ public class UserControllerTests {
     }
 
     @Test
-    @WithMockUser("login")
     public void getUserDataValidTest() throws IOException, InterruptedException {
         String body = objectMapper.writeValueAsString(userDao);
 
@@ -65,7 +62,6 @@ public class UserControllerTests {
     }
 
     @Test
-    @WithAnonymousUser
     public void getUserDataInvalidTest() throws IOException, InterruptedException {
         String body = "You are not authorized to view entity: " + UserDao.class.getSimpleName();
         stubFor(get(urlEqualTo("/api/user/1"))
