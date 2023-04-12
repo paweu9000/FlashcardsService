@@ -19,8 +19,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
-import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import java.io.IOException;
 import java.net.URI;
@@ -124,7 +122,6 @@ public class CardControllerTests {
     }
 
     @Test
-    @WithAnonymousUser
     public void testDeleteCardWithAnonymousUser() throws IOException {
         CardEntity card = new CardEntity(1L, "Side", "Value", collection, user);
         when(cardRepository.findById(1L)).thenReturn(Optional.of(card));
@@ -141,7 +138,6 @@ public class CardControllerTests {
     }
 
     @Test
-    @WithMockUser(username = "login")
     public void testDeleteCardWithValidUser() throws IOException {
         CardEntity card = new CardEntity(1L, "Side", "Value", collection, user);
         when(cardRepository.findById(1L)).thenReturn(Optional.of(card));
@@ -158,7 +154,6 @@ public class CardControllerTests {
     }
 
     @Test
-    @WithMockUser(username = "login")
     public void testPostCardWithValidUser() throws IOException, InterruptedException {
         CardDto cardDto = new CardDto();
         cardDto.setCollectionId(1L);
@@ -184,7 +179,6 @@ public class CardControllerTests {
     }
 
     @Test
-    @WithAnonymousUser
     public void testPostCardWithInvalidUser() throws IOException, InterruptedException {
         CardDto cardDto = new CardDto();
         cardDto.setCollectionId(1L);

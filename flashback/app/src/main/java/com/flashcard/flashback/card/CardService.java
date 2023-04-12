@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 class CardService {
@@ -105,8 +107,8 @@ class CardService {
         cards.forEach(cardDto -> createCard(loginOrEmail, collectionId, cardDto));
     }
 
-    List<CardDao> getAllCards(Long id) {
+    Set<CardDao> getAllCards(Long id) {
         CollectionEntity collection = collectionService.findById(id);
-        return collection.getCards().stream().map(this::toDao).toList();
+        return collection.getCards().stream().map(this::toDao).collect(Collectors.toSet());
     }
 }

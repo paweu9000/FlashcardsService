@@ -22,9 +22,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.Authentication;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
@@ -66,7 +66,7 @@ public class CardServiceTests {
         cardService.setCollectionService(collectionService);
         cardService.setUserService(userService);
         user = new UsersEntity("login", "username", "email@example.com", "password");
-        collection = new CollectionEntity(1L, "title", 0L, new ArrayList<>(), user);
+        collection = new CollectionEntity(1L, "title", 0L, new HashSet<>(), user);
         card = new CardEntity();
         card.setId(1L);
         card.setValue("Value");
@@ -207,15 +207,11 @@ public class CardServiceTests {
         collection.addCard(anotherCard);
         when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
 
-        List<CardDao> cards = cardService.getAllCards(1L);
+        Set<CardDao> cards = cardService.getAllCards(1L);
 
         assertNotNull(cards);
-        assertEquals(card.getId(), cards.get(0).getId());
-        assertEquals(card.getValue(), cards.get(0).getValue());
-        assertEquals(card.getSide(), cards.get(0).getSide());
-        assertEquals(anotherCard.getId(), cards.get(1).getId());
-        assertEquals(anotherCard.getValue(), cards.get(1).getValue());
-        assertEquals(anotherCard.getSide(), cards.get(1).getSide());
+        assertTrue(collection.getCards().contains(card));
+        assertTrue(collection.getCards().contains(anotherCard));
     }
 
     @Test

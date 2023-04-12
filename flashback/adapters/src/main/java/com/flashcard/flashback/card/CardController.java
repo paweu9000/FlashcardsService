@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("api/cards")
@@ -51,8 +52,8 @@ record CardController(CardService cardService) {
     }
 
     @GetMapping("/all?={collectionId}")
-    ResponseEntity<List<CardDao>> getAllCardsFromCollection(@PathVariable Long collectionId) {
-        List<CardDao> cards = cardService.getAllCards(collectionId);
+    ResponseEntity<Set<CardDao>> getAllCardsFromCollection(@PathVariable Long collectionId) {
+        Set<CardDao> cards = cardService.getAllCards(collectionId);
         return new ResponseEntity<>(cards, HttpStatus.OK);
     }
 }
