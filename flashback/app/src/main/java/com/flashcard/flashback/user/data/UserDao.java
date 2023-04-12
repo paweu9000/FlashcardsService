@@ -9,5 +9,5 @@ public class UserDao {
     Long id;
     String username;
     List<UserDaoCollection> collections;
-    List<Long> savedCollections;
+    List<UserDaoCollection> savedCollections;
 }

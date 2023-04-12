@@ -9,26 +9,26 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+import java.util.Set;
+
 @Mapper
 public interface UserMapper {
 
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-    @Mapping(target = "collections", source = "collections", qualifiedByName = "collectionEntityToUserDaoCollection")
-    @Mapping(target = "savedCollections", source = "savedCollections", qualifiedByName = "collectionEntityToId")
+    @Mapping(target = "collections", source = "collections", qualifiedByName = "collectionEntitiesToUserDaoCollection")
+    @Mapping(target = "savedCollections", source = "savedCollections", qualifiedByName = "collectionEntitiesToUserDaoCollection")
     UserDao entityToDao(UsersEntity entity);
 
-    @Named("collectionEntityToId")
-    default Long collectionEntityToId(CollectionEntity entity) {
-        return entity.getId();
+    @Named("collectionEntityToUserCollectionDao")
+    default UserDaoCollection collectionEntityToUserDaoCollection(CollectionEntity entity) {
+        return UserDaoCollection.builder().id(entity.getId()).title(entity.getTitle()).build();
     }
 
-    @Named("collectionEntityToUserDaoCollection")
-    default UserDaoCollection collectionEntityToUserDaoCollection(CollectionEntity entity) {
-        UserDaoCollection collection = new UserDaoCollection();
-        collection.setId(entity.getId());
-        collection.setTitle(entity.getTitle());
-        return collection;
+    @Named("collectionEntitiesToUserDaoCollection")
+    default List<UserDaoCollection> collectionEntitiesToUserDaoCollection(Set<CollectionEntity> entities) {
+        return entities.stream().map(this::collectionEntityToUserDaoCollection).toList();
     }
 
     UsersEntity dtoToEntity(UserDto userDto);

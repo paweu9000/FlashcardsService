@@ -120,7 +120,7 @@ public class CollectionServiceTests {
 
         assertThrows(SavedCollectionDuplicateException.class, () ->
                 collectionService.upvoteCollection(2L, "email@example.com"));
-        assertEquals(1, usersEntity.getSavedCollections().get(0).getLikes());
+        assertEquals(1, collection.getLikes());
     }
 
     @Test
@@ -151,7 +151,8 @@ public class CollectionServiceTests {
         when(userRepository.findByEmail("email@example.com")).thenReturn(Optional.of(usersEntity));
         collectionService.createCollection(authentication.getName(), collectionDto);
 
-        assertEquals(userService.findByEmailOrLogin("email@example.com").getCollections().get(0).getLikes(), 21L);
+        assertEquals(userService.findByEmailOrLogin("email@example.com")
+                .getCollections().stream().findFirst().get().getLikes(), 21L);
     }
 
     @Test

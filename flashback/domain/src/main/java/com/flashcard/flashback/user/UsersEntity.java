@@ -10,7 +10,9 @@ import org.hibernate.search.annotations.Index;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -35,13 +37,13 @@ public class UsersEntity {
     private String password;
     @Column
     @OneToMany(mappedBy = "owners", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<CollectionEntity> collections = new ArrayList<>();
+    private Set<CollectionEntity> collections = new HashSet<>();
     @Column
     @ElementCollection(targetClass = CollectionEntity.class)
-    private List<CollectionEntity> savedCollections = new ArrayList<>();
+    private Set<CollectionEntity> savedCollections = new HashSet<>();
     @Column
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<CardEntity> cards = new ArrayList<>();
+    private Set<CardEntity> cards = new HashSet<>();
     @Column
     private boolean isVerified = false;
 
