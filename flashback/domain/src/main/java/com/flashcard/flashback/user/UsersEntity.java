@@ -5,13 +5,11 @@ import com.flashcard.flashback.collection.CollectionEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.search.annotations.*;
 import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
