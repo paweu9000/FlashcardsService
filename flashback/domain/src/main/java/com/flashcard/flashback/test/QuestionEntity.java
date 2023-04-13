@@ -26,4 +26,8 @@ class QuestionEntity {
     @OneToOne
     @JoinColumn(name = "tests.id")
     private TestEntity test;
+
+    void addAnswer(String answer) {
+        this.answers.add(answer);
+    }
 }
