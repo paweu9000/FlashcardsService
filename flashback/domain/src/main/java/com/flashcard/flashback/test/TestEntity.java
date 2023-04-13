@@ -16,7 +16,7 @@ class TestEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToMany(mappedBy = "test")
+    @OneToMany(mappedBy = "test", cascade = CascadeType.ALL)
     private Set<QuestionEntity> questions;
     @Column
     private Long collectionId;
