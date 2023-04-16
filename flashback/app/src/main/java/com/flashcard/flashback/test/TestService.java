@@ -32,7 +32,12 @@ class TestService {
         return repository.save(test);
     }
 
+    private void deleteTest(Long testId) {
+        repository.deleteById(testId);
+    }
+
     void generateQuestions(TestEntity test, CollectionEntity collection) {
+        repository.save(test);
         String[] cardQuestions = new String[collection.getSize()];
         String[] cardAnswers = new String[collection.getSize()];
         List<CardEntity> cards = collection.getCards().stream().toList();
@@ -55,13 +60,14 @@ class TestService {
                     indexForLoop++;
                 }
                 else {
-                    int randomAnswerIndex = random.nextInt(cardAnswers.length+1);
+                    int randomAnswerIndex = random.nextInt(cardAnswers.length);
                     if (randomAnswerIndex != index) {
                         question.addAnswer(cardAnswers[randomAnswerIndex]);
                         indexForLoop++;
                     }
                 }
             }
+            question.setTest(test);
             questionEntities.add(question);
         }
         test.setQuestions(questionEntities);

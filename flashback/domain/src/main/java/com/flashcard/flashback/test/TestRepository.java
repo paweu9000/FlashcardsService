@@ -8,4 +8,5 @@ import java.util.Optional;
 @Repository
 interface TestRepository extends JpaRepository<TestEntity, Long> {
     Optional<TestEntity> findByCollectionId(Long id);
+    void deleteById(Long id);
 }
