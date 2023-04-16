@@ -28,7 +28,7 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler({SavedCollectionDuplicateException.class})
+    @ExceptionHandler({SavedCollectionDuplicateException.class, InsufficientQuestionsException.class})
     ResponseEntity<Object> handleSavedCollectionDuplicateException(RuntimeException e) {
         ErrorResponse errorResponse = new ErrorResponse(List.of(e.getMessage()));
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
