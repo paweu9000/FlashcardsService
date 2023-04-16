@@ -4,6 +4,8 @@ import com.flashcard.flashback.collection.CollectionEntity;
 import com.flashcard.flashback.collection.CollectionService;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 class TestService {
     final TestRepository repository;
@@ -12,6 +14,11 @@ class TestService {
     public TestService(TestRepository repository, CollectionService collectionService) {
         this.repository = repository;
         this.collectionService = collectionService;
+    }
+
+    TestEntity getTestEntityByCollectionId(Long collectionId) {
+        Optional<TestEntity> testEntity = repository.findByCollectionId(collectionId);
+        return testEntity.orElseGet(() -> createTestEntity(collectionId));
     }
 
     TestEntity createTestEntity(Long collectionId) {
