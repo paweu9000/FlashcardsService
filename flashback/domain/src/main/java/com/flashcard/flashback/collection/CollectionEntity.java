@@ -37,4 +37,8 @@ public class CollectionEntity {
     public void addCard(CardEntity card) {
         cards.add(card);
     }
+
+    public int getSize() {
+        return cards.size();
+    }
 }
