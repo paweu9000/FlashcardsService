@@ -2,6 +2,7 @@ package com.flashcard.flashback.test;
 
 import com.flashcard.flashback.collection.CollectionEntity;
 import com.flashcard.flashback.collection.CollectionService;
+import com.flashcard.flashback.exception.InsufficientQuestionsException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -23,6 +24,7 @@ class TestService {
 
     TestEntity createTestEntity(Long collectionId) {
         CollectionEntity collection = collectionService.findById(collectionId);
+        if (collection.getSize() < 4) throw new InsufficientQuestionsException(collectionId);
         return null;
     }
 }
