@@ -1,5 +1,6 @@
 package com.flashcard.flashback.test;
 
+import com.flashcard.flashback.test.data.TestDao;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 record TestController(TestService testService) {
 
     @GetMapping("/{collectionId}")
-    ResponseEntity<TestEntity> getTest(@PathVariable Long collectionId) {
-        return new ResponseEntity<>(testService.getTestEntityByCollectionId(collectionId), HttpStatus.OK);
+    ResponseEntity<TestDao> getTest(@PathVariable Long collectionId) {
+        return new ResponseEntity<>(testService.toDao(collectionId), HttpStatus.OK);
     }
 }
