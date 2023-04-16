@@ -4,6 +4,7 @@ import com.flashcard.flashback.card.CardEntity;
 import com.flashcard.flashback.collection.CollectionEntity;
 import com.flashcard.flashback.collection.CollectionService;
 import com.flashcard.flashback.exception.InsufficientQuestionsException;
+import com.flashcard.flashback.test.data.TestDao;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -21,6 +22,10 @@ class TestService {
     TestEntity getTestEntityByCollectionId(Long collectionId) {
         Optional<TestEntity> testEntity = repository.findByCollectionId(collectionId);
         return testEntity.orElseGet(() -> createTestEntity(collectionId));
+    }
+
+    TestDao toDao(Long collectionId) {
+        return TestMapper.INSTANCE.toDao(getTestEntityByCollectionId(collectionId));
     }
 
     TestEntity createTestEntity(Long collectionId) {

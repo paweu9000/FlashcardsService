@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -20,7 +21,7 @@ class QuestionEntity {
     @Column
     private String question;
     @ElementCollection
-    private Set<String> answers;
+    private Set<String> answers = new HashSet<>();
     @Column
     private String answer;
     @OneToOne
