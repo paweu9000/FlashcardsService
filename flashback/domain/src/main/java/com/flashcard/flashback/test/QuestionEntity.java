@@ -24,7 +24,7 @@ class QuestionEntity {
     private Set<String> answers = new HashSet<>();
     @Column
     private String answer;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "tests.id")
     private TestEntity test;
 
