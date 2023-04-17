@@ -37,8 +37,8 @@ class TestService {
         return repository.save(test);
     }
 
-    private void deleteTest(Long testId) {
-        repository.deleteById(testId);
+    private void deleteTest(Long collectionId) {
+        repository.deleteByCollectionId(collectionId);
     }
 
     void generateQuestions(TestEntity test, CollectionEntity collection) {
@@ -57,19 +57,11 @@ class TestService {
             QuestionEntity question = new QuestionEntity();
             question.setQuestion(cardQuestions[i]);
             question.setAnswer(cardAnswers[i]);
-            int index = random.nextInt(4);
-            int indexForLoop = 0;
+            question.addAnswer(question.getAnswer());
             while(question.getAnswers().size() < 4) {
-                if(indexForLoop == index) {
-                    question.addAnswer(question.getAnswer());
-                    indexForLoop++;
-                }
-                else {
-                    int randomAnswerIndex = random.nextInt(cardAnswers.length);
-                    if (randomAnswerIndex != index) {
-                        question.addAnswer(cardAnswers[randomAnswerIndex]);
-                        indexForLoop++;
-                    }
+                int randomAnswerIndex = random.nextInt(cardAnswers.length);
+                if (randomAnswerIndex != i) {
+                    question.addAnswer(cardAnswers[randomAnswerIndex]);
                 }
             }
             question.setTest(test);
