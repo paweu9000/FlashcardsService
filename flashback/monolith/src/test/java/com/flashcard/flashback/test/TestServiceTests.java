@@ -12,9 +12,11 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.HashSet;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TestServiceTests {
@@ -50,5 +52,14 @@ public class TestServiceTests {
         assertNotNull(user);
         assertNotNull(collection);
         assertEquals(10, collection.getSize());
+    }
+
+    @Test
+    public void getTestEntityByCollectionIdExistTest() {
+        TestEntity test = new TestEntity();
+        when(testRepository.findByCollectionId(1L)).thenReturn(Optional.of(test));
+        testService.getTestEntityByCollectionId(1L);
+        verify(testRepository, times(1)).findByCollectionId(1L);
+        verify(testRepository, times(0)).save(any(TestEntity.class));
     }
 }
