@@ -3,13 +3,16 @@ package com.flashcard.flashback.test;
 import com.flashcard.flashback.card.CardEntity;
 import com.flashcard.flashback.collection.CollectionEntity;
 import com.flashcard.flashback.collection.CollectionService;
+import com.flashcard.flashback.exception.EntityNotFoundException;
 import com.flashcard.flashback.exception.InsufficientQuestionsException;
 import com.flashcard.flashback.test.data.TestDao;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 @Service
+@Transactional
 class TestService {
     final TestRepository repository;
     final CollectionService collectionService;
@@ -37,8 +40,9 @@ class TestService {
         return repository.save(test);
     }
 
-    private void deleteTest(Long collectionId) {
-        repository.deleteByCollectionId(collectionId);
+    void deleteTest(Long collectionId) {
+        TestEntity test = unwrapTest(repository.findByCollectionId(collectionId));
+        repository.deleteById(test.getId());
     }
 
     void generateQuestions(TestEntity test, CollectionEntity collection) {
@@ -68,5 +72,10 @@ class TestService {
             questionEntities.add(question);
         }
         test.setQuestions(questionEntities);
+    }
+
+    TestEntity unwrapTest(Optional<TestEntity> test) {
+        if (test.isPresent()) return test.get();
+        else throw new EntityNotFoundException(TestEntity.class);
     }
 }
