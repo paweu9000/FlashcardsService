@@ -15,10 +15,14 @@ import java.util.*;
 @Transactional
 class TestService {
     final TestRepository repository;
-    final CollectionService collectionService;
+    CollectionService collectionService;
 
     public TestService(TestRepository repository, CollectionService collectionService) {
         this.repository = repository;
+        this.collectionService = collectionService;
+    }
+
+    void setCollectionService(CollectionService collectionService) {
         this.collectionService = collectionService;
     }
 
@@ -37,7 +41,8 @@ class TestService {
         TestEntity test = new TestEntity();
         test.setCollectionId(collectionId);
         generateQuestions(test, collection);
-        return repository.save(test);
+        repository.save(test);
+        return test;
     }
 
     void deleteTest(Long collectionId) {

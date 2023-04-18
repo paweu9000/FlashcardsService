@@ -2,6 +2,7 @@ package com.flashcard.flashback.test;
 
 import com.flashcard.flashback.card.CardEntity;
 import com.flashcard.flashback.collection.CollectionEntity;
+import com.flashcard.flashback.collection.CollectionRepository;
 import com.flashcard.flashback.collection.CollectionService;
 import com.flashcard.flashback.user.UsersEntity;
 import org.junit.Before;
@@ -9,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.HashSet;
@@ -22,6 +24,10 @@ import static org.mockito.Mockito.*;
 public class TestServiceTests {
 
     @Mock
+    CollectionRepository collectionRepository;
+
+    @Spy
+    @InjectMocks
     CollectionService collectionService;
 
     @Mock
@@ -34,6 +40,7 @@ public class TestServiceTests {
 
     @Before
     public void setup() {
+        testService.setCollectionService(collectionService);
         user = new UsersEntity();
         user.setId(1L);
         collection = new CollectionEntity(1L, "title", 1L, new HashSet<>(), user);
@@ -44,6 +51,7 @@ public class TestServiceTests {
 
     @Test
     public void notNullTest() {
+        assertNotNull(collectionRepository);
         assertNotNull(collectionService);
         assertNotNull(testRepository);
         assertNotNull(testService);
@@ -61,5 +69,15 @@ public class TestServiceTests {
         testService.getTestEntityByCollectionId(1L);
         verify(testRepository, times(1)).findByCollectionId(1L);
         verify(testRepository, times(0)).save(any(TestEntity.class));
+    }
+
+    @Test
+    public void getTestEntityByCollectionIdEmptyTest() {
+        when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
+        TestEntity test = testService.getTestEntityByCollectionId(1L);
+        verify(testRepository, times(1)).findByCollectionId(1L);
+        verify(testRepository, times(2)).save(any(TestEntity.class));
+        assertNotNull(test);
+        assertEquals(10, test.getQuestions().size());
     }
 }
