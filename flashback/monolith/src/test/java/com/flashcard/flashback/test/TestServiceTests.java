@@ -5,6 +5,7 @@ import com.flashcard.flashback.collection.CollectionEntity;
 import com.flashcard.flashback.collection.CollectionRepository;
 import com.flashcard.flashback.collection.CollectionService;
 import com.flashcard.flashback.exception.InsufficientQuestionsException;
+import com.flashcard.flashback.test.data.TestDao;
 import com.flashcard.flashback.user.UsersEntity;
 import org.junit.Before;
 import org.junit.Test;
@@ -87,5 +88,15 @@ public class TestServiceTests {
         when(collectionRepository.findById(2L)).thenReturn(Optional.of(collection1));
 
         assertThrows(InsufficientQuestionsException.class, () -> testService.getTestEntityByCollectionId(2L));
+    }
+
+    @Test
+    public void toDaoTest() {
+        when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
+        TestDao testDao = testService.toDao(1L);
+
+        assertEquals(collection.getId(), testDao.getCollectionId());
+        assertEquals(collection.getSize(), testDao.getQuestions().size());
+        testDao.getQuestions().stream().forEach(questionDao -> assertEquals(4, questionDao.getAnswers().size()));
     }
 }
