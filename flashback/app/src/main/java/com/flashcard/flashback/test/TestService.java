@@ -7,12 +7,10 @@ import com.flashcard.flashback.exception.EntityNotFoundException;
 import com.flashcard.flashback.exception.InsufficientQuestionsException;
 import com.flashcard.flashback.test.data.TestDao;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 @Service
-@Transactional
 class TestService {
     final TestRepository repository;
     CollectionService collectionService;
