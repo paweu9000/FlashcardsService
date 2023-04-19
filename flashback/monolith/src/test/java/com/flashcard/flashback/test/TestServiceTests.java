@@ -4,6 +4,7 @@ import com.flashcard.flashback.card.CardEntity;
 import com.flashcard.flashback.collection.CollectionEntity;
 import com.flashcard.flashback.collection.CollectionRepository;
 import com.flashcard.flashback.collection.CollectionService;
+import com.flashcard.flashback.exception.InsufficientQuestionsException;
 import com.flashcard.flashback.user.UsersEntity;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,8 +17,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.HashSet;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -79,5 +79,13 @@ public class TestServiceTests {
         verify(testRepository, times(2)).save(any(TestEntity.class));
         assertNotNull(test);
         assertEquals(10, test.getQuestions().size());
+    }
+
+    @Test
+    public void getTestEntityByCollectionIdExceptionTest() {
+        CollectionEntity collection1 = new CollectionEntity(2L, "title", 1L, new HashSet<>(), user);
+        when(collectionRepository.findById(2L)).thenReturn(Optional.of(collection1));
+
+        assertThrows(InsufficientQuestionsException.class, () -> testService.getTestEntityByCollectionId(2L));
     }
 }
