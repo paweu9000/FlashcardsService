@@ -4,6 +4,7 @@ import com.flashcard.flashback.card.CardEntity;
 import com.flashcard.flashback.collection.CollectionEntity;
 import com.flashcard.flashback.collection.CollectionRepository;
 import com.flashcard.flashback.collection.CollectionService;
+import com.flashcard.flashback.exception.EntityNotFoundException;
 import com.flashcard.flashback.exception.InsufficientQuestionsException;
 import com.flashcard.flashback.test.data.TestDao;
 import com.flashcard.flashback.user.UsersEntity;
@@ -98,5 +99,16 @@ public class TestServiceTests {
         assertEquals(collection.getId(), testDao.getCollectionId());
         assertEquals(collection.getSize(), testDao.getQuestions().size());
         testDao.getQuestions().stream().forEach(questionDao -> assertEquals(4, questionDao.getAnswers().size()));
+    }
+
+    @Test
+    public void testUnwrapValidTest() {
+        TestEntity test = new TestEntity();
+        assertEquals(test, testService.unwrapTest(Optional.of(test)));
+    }
+
+    @Test
+    public void testUnwrapInvalidTest() {
+        assertThrows(EntityNotFoundException.class, () -> testService.unwrapTest(Optional.empty()));
     }
 }
