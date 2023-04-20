@@ -132,4 +132,19 @@ public class TestServiceTests {
 
         verify(testRepository, times(1)).deleteById(1L);
     }
+
+    @Test
+    public void generateQuestionsTest() {
+        TestEntity test = new TestEntity();
+        test.setId(1L);
+        test.setCollectionId(1L);
+
+        testService.generateQuestions(test, collection);
+
+        assertNotNull(test);
+        assertEquals(1L, test.getId());
+        assertEquals(1L, test.getCollectionId());
+        assertEquals(10, test.getQuestions().size());
+        test.getQuestions().stream().forEach(question -> assertEquals(4, question.getAnswers().size()));
+    }
 }
