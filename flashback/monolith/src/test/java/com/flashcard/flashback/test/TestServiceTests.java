@@ -111,4 +111,14 @@ public class TestServiceTests {
     public void testUnwrapInvalidTest() {
         assertThrows(EntityNotFoundException.class, () -> testService.unwrapTest(Optional.empty()));
     }
+
+    @Test
+    public void createTestEntityTest() {
+        when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
+        TestEntity test = testService.createTestEntity(1L);
+
+        verify(testRepository, times(2)).save(test);
+        assertEquals(10, test.getQuestions().size());
+        test.getQuestions().stream().forEach(question -> assertEquals(4, question.getAnswers().size()));
+    }
 }
