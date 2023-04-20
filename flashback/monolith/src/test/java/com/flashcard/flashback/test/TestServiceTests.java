@@ -121,4 +121,15 @@ public class TestServiceTests {
         assertEquals(10, test.getQuestions().size());
         test.getQuestions().stream().forEach(question -> assertEquals(4, question.getAnswers().size()));
     }
+
+    @Test
+    public void deleteTestTest() {
+        TestEntity test = new TestEntity();
+        test.setId(1L);
+        when(testRepository.findByCollectionId(1L)).thenReturn(Optional.of(test));
+
+        testService.deleteTest(1L);
+
+        verify(testRepository, times(1)).deleteById(1L);
+    }
 }
