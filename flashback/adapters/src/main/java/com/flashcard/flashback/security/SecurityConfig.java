@@ -50,6 +50,7 @@ class SecurityConfig {
                 .antMatchers(HttpMethod.DELETE, SecurityConstants.USER_PATH).authenticated()
                 .antMatchers(HttpMethod.POST, SecurityConstants.USER_PATH).authenticated()
                 .antMatchers(HttpMethod.GET, SecurityConstants.USER_PATH).permitAll()
+                .antMatchers(HttpMethod.GET, SecurityConstants.TEST_PATH).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new ExceptionHandlerFilter(), AuthenticationFilter.class)

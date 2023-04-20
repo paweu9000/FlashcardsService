@@ -12,4 +12,5 @@ record SecurityConstants (){
     static final String USER_PATH = "/api/user/*";
     static final String SECRET_KEY = System.getenv("SECRET_KEY");
     static final String VERIFY_PATH = "/api/verify";
+    static final String TEST_PATH = "/api/test";
 }
