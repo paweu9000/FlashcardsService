@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
 
 import java.util.Optional;
@@ -35,6 +36,8 @@ public class CollectionServiceTests {
     @InjectMocks
     @Spy
     private UserService userService;
+    @Mock
+    ApplicationEventPublisher eventPublisher;
     @InjectMocks
     private CollectionService collectionService;
 
