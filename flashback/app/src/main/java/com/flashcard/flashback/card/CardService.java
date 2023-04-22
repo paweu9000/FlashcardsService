@@ -10,6 +10,7 @@ import com.flashcard.flashback.exception.UnauthorizedDataCreateException;
 import com.flashcard.flashback.exception.UnauthorizedDataDeleteException;
 import com.flashcard.flashback.user.UserService;
 import com.flashcard.flashback.user.UsersEntity;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +24,14 @@ class CardService {
     final CardRepository cardRepository;
     CollectionService collectionService;
     UserService userService;
+    ApplicationEventPublisher eventPublisher;
 
-    CardService(CardRepository cardRepository, CollectionService collectionService, UserService userService) {
+    CardService(CardRepository cardRepository, CollectionService collectionService,
+                UserService userService, ApplicationEventPublisher eventPublisher) {
         this.cardRepository = cardRepository;
         this.collectionService = collectionService;
         this.userService = userService;
+        this.eventPublisher = eventPublisher;
     }
 
     void setUserService(UserService userService) {
