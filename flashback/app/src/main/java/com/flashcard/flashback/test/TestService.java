@@ -2,16 +2,18 @@ package com.flashcard.flashback.test;
 
 import com.flashcard.flashback.card.CardEntity;
 import com.flashcard.flashback.collection.CollectionEntity;
+import com.flashcard.flashback.collection.CollectionObserver;
 import com.flashcard.flashback.collection.CollectionService;
 import com.flashcard.flashback.exception.EntityNotFoundException;
 import com.flashcard.flashback.exception.InsufficientQuestionsException;
 import com.flashcard.flashback.test.data.TestDao;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
-class TestService {
+class TestService implements ApplicationListener<CollectionObserver> {
     final TestRepository repository;
     CollectionService collectionService;
 
@@ -80,5 +82,10 @@ class TestService {
     TestEntity unwrapTest(Optional<TestEntity> test) {
         if (test.isPresent()) return test.get();
         else throw new EntityNotFoundException(TestEntity.class);
+    }
+
+    @Override
+    public void onApplicationEvent(CollectionObserver event) {
+        deleteTest(event.getCollectionId());
     }
 }
