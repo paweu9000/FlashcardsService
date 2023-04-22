@@ -2,6 +2,7 @@ package com.flashcard.flashback.test;
 
 import com.flashcard.flashback.card.CardEntity;
 import com.flashcard.flashback.collection.CollectionEntity;
+import com.flashcard.flashback.collection.CollectionObserver;
 import com.flashcard.flashback.collection.CollectionRepository;
 import com.flashcard.flashback.collection.CollectionService;
 import com.flashcard.flashback.exception.EntityNotFoundException;
@@ -15,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -27,6 +29,9 @@ public class TestServiceTests {
 
     @Mock
     CollectionRepository collectionRepository;
+
+    @Mock
+    ApplicationEventPublisher eventPublisher;
 
     @Spy
     @InjectMocks
@@ -146,5 +151,20 @@ public class TestServiceTests {
         assertEquals(1L, test.getCollectionId());
         assertEquals(10, test.getQuestions().size());
         test.getQuestions().stream().forEach(question -> assertEquals(4, question.getAnswers().size()));
+    }
+
+    @Test
+    public void collectionObserverDeleteTest() {
+        TestEntity test = new TestEntity();
+        test.setId(1L);
+        test.setCollectionId(1L);
+
+        when(testRepository.findByCollectionId(1L)).thenReturn(Optional.of(test));
+
+        CollectionObserver event = new CollectionObserver(this, 1L);
+
+        testService.onApplicationEvent(event);
+
+        verify(testRepository).deleteById(1L);
     }
 }
