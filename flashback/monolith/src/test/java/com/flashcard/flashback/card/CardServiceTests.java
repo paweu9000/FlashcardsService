@@ -20,6 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
 
 import java.util.HashSet;
@@ -41,6 +42,9 @@ public class CardServiceTests {
 
     @Mock
     private CollectionRepository collectionRepository;
+
+    @Mock
+    ApplicationEventPublisher eventPublisher;
 
     @InjectMocks
     @MockBean
@@ -151,6 +155,7 @@ public class CardServiceTests {
 
     @Test
     public void deleteIfAllowedValidTest() {
+        card.setCollector(collection);
         when(authentication.getName()).thenReturn("email@example.com");
         when(cardRepository.findById(1L)).thenReturn(Optional.of(card));
 
