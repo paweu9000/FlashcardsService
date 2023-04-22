@@ -12,6 +12,7 @@ import org.apache.lucene.search.Query;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.dsl.QueryBuilder;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -28,10 +29,12 @@ public class CollectionService{
 
     CollectionRepository collectionRepository;
     UserService userService;
+    ApplicationEventPublisher eventPublisher;
 
-    CollectionService(CollectionRepository collectionRepository, UserService userService) {
+    CollectionService(CollectionRepository collectionRepository, UserService userService, ApplicationEventPublisher eventPublisher) {
         this.collectionRepository = collectionRepository;
         this.userService = userService;
+        this.eventPublisher = eventPublisher;
     }
 
     void setUserService(UserService userService) {
@@ -56,6 +59,7 @@ public class CollectionService{
 
     void deleteCollectionById(Long id) {
         collectionRepository.deleteById(id);
+        eventPublisher.publishEvent(new CollectionObserver(this, id));
     }
 
     void upvoteCollection(Long id, String emailOrLogin) {
