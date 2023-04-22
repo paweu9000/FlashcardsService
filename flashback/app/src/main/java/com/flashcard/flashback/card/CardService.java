@@ -3,6 +3,7 @@ package com.flashcard.flashback.card;
 import com.flashcard.flashback.card.data.CardDao;
 import com.flashcard.flashback.card.data.CardDto;
 import com.flashcard.flashback.collection.CollectionEntity;
+import com.flashcard.flashback.collection.CollectionObserver;
 import com.flashcard.flashback.collection.CollectionService;
 import com.flashcard.flashback.exception.EntityNotFoundException;
 import com.flashcard.flashback.exception.UnauthorizedDataAccessException;
@@ -72,6 +73,7 @@ class CardService {
             card.setValue(cardDao.getValue());
             card.setSide(cardDao.getSide());
             cardRepository.save(card);
+            eventPublisher.publishEvent(new CollectionObserver(this, card.getCollector().getId()));
         } else {
             throw new UnauthorizedDataAccessException(CardEntity.class);
         }
@@ -82,7 +84,10 @@ class CardService {
         String loginOrEmail = authentication.getName();
         String login = card.getCreatedBy().getLogin();
         String email = card.getCreatedBy().getEmail();
-        if (login.equals(loginOrEmail) || email.equals(loginOrEmail)) deleteCard(id);
+        if (login.equals(loginOrEmail) || email.equals(loginOrEmail)) {
+            deleteCard(id);
+            eventPublisher.publishEvent(new CollectionObserver(this, card.getCollector().getId()));
+        }
         else throw new UnauthorizedDataDeleteException(CardEntity.class);
     }
 
@@ -99,6 +104,9 @@ class CardService {
 
     CardDao createCard(String loginOrEmail, Long collectionId, CardDto cardDto) {
         CollectionEntity collection = getCollectionIfActionIsAllowed(loginOrEmail, collectionId);
+        if (collection.getSize() != 0) {
+            eventPublisher.publishEvent(new CollectionObserver(this, collectionId));
+        }
         CardEntity card = mapDto(cardDto);
         card.setCollector(collection);
         card.setCreatedBy(collection.getOwners());
