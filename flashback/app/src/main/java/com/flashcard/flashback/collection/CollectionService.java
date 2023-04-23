@@ -1,5 +1,6 @@
 package com.flashcard.flashback.collection;
 
+import com.flashcard.flashback.card.data.CardDao;
 import com.flashcard.flashback.collection.data.CollectionDao;
 import com.flashcard.flashback.collection.data.CollectionDto;
 import com.flashcard.flashback.exception.EntityNotFoundException;
@@ -17,9 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CollectionService{
@@ -131,5 +130,23 @@ public class CollectionService{
                 .onField("title")
                 .matching(title)
                 .createQuery();
+    }
+
+    CollectionDao toSortedDao(CollectionEntity collection) {
+
+        CollectionDao collectionDao = toDao(collection);
+        Comparator<CardDao> compareCardId = new Comparator<CardDao>() {
+            @Override
+            public int compare(CardDao card1, CardDao card2) {
+                return Long.compare(card1.getId(), card2.getId());
+            }
+        };
+
+        List<CardDao> cards = new ArrayList<>(collectionDao.getCards());
+        Collections.sort(cards, compareCardId);
+
+        collectionDao.setCards(cards);
+
+        return collectionDao;
     }
 }
