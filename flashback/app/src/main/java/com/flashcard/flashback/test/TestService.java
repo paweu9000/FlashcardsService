@@ -6,6 +6,7 @@ import com.flashcard.flashback.collection.CollectionObserver;
 import com.flashcard.flashback.collection.CollectionService;
 import com.flashcard.flashback.exception.EntityNotFoundException;
 import com.flashcard.flashback.exception.InsufficientQuestionsException;
+import com.flashcard.flashback.test.data.QuestionDao;
 import com.flashcard.flashback.test.data.TestDao;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
@@ -82,6 +83,22 @@ class TestService implements ApplicationListener<CollectionObserver> {
     TestEntity unwrapTest(Optional<TestEntity> test) {
         if (test.isPresent()) return test.get();
         else throw new EntityNotFoundException(TestEntity.class);
+    }
+
+    TestDao toSortedDao(Long collectionId) {
+        TestDao test = toDao(collectionId);
+
+        Comparator<QuestionDao> idComparator = new Comparator<QuestionDao>() {
+            @Override
+            public int compare(QuestionDao question1, QuestionDao question2) {
+                return Long.compare(question1.getId(), question2.getId());
+            }
+        };
+
+        List<QuestionDao> questions = new ArrayList<>(test.getQuestions());
+        questions.sort(idComparator);
+        test.setQuestions(questions);
+        return test;
     }
 
     @Override

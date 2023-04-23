@@ -102,11 +102,13 @@ class CardService {
         return collection;
     }
 
+    CardDao addCard(String loginOrEmail, Long collectionId, CardDto cardDto) {
+        eventPublisher.publishEvent(new CollectionObserver(this, collectionId));
+        return createCard(loginOrEmail, collectionId, cardDto);
+    }
+
     CardDao createCard(String loginOrEmail, Long collectionId, CardDto cardDto) {
         CollectionEntity collection = getCollectionIfActionIsAllowed(loginOrEmail, collectionId);
-        if (collection.getSize() != 0) {
-            eventPublisher.publishEvent(new CollectionObserver(this, collectionId));
-        }
         CardEntity card = mapDto(cardDto);
         card.setCollector(collection);
         card.setCreatedBy(collection.getOwners());
