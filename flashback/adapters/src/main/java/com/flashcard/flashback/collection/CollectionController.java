@@ -15,9 +15,9 @@ import java.util.List;
 record CollectionController(CollectionService collectionService) {
 
     @GetMapping("/{id}")
-    ResponseEntity<CollectionDao> getCollection(@PathVariable Long id) {
+    ResponseEntity<CollectionDao> getSortedCollection(@PathVariable Long id) {
         CollectionEntity collection = collectionService.findById(id);
-        CollectionDao collectionDao = collectionService.toDao(collection);
+        CollectionDao collectionDao = collectionService.toSortedDao(collection);
         return new ResponseEntity<>(collectionDao, HttpStatus.OK);
     }
 
