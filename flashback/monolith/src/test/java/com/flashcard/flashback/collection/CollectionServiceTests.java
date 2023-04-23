@@ -1,5 +1,6 @@
 package com.flashcard.flashback.collection;
 
+import com.flashcard.flashback.card.CardEntity;
 import com.flashcard.flashback.collection.data.CollectionDao;
 import com.flashcard.flashback.collection.data.CollectionDto;
 import com.flashcard.flashback.exception.SavedCollectionDuplicateException;
@@ -68,6 +69,28 @@ public class CollectionServiceTests {
         assertNotNull(collectionDao);
         assertEquals(collection.getLikes(), collectionDao.getLikes());
         assertEquals(collection.getOwners().getId(), user.getId());
+    }
+
+    @Test
+    public void toSortedDaoTest() {
+        CollectionEntity collection = new CollectionEntity();
+        collection.setLikes(5L);
+        UsersEntity user = new UsersEntity();
+        user.setId(23L);
+        collection.setOwners(user);
+        for (int i = 1; i <= 10; i++) {
+            collection.addCard(new CardEntity(Long.valueOf(String.valueOf(i)), "side"+i, "value"+i, collection, user));
+        }
+        CollectionDao collectionDao = collectionService.toSortedDao(collection);
+
+        assertNotNull(collection);
+        assertNotNull(collectionDao);
+        assertEquals(collection.getLikes(), collectionDao.getLikes());
+        assertEquals(collection.getOwners().getId(), user.getId());
+        assertEquals(10, collectionDao.getCards().size());
+        for (int i = 1; i <= 10; i++) {
+            assertEquals(i, collectionDao.getCards().get(i-1).getId());
+        }
     }
 
     @Test
