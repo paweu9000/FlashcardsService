@@ -76,6 +76,20 @@ public class CollectionControllerTests {
     }
 
     @Test
+    public void testGetSortedCollectionRequest() throws IOException {
+        when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
+        stubFor(get(urlEqualTo("/api/collection/1/random"))
+                .willReturn(aResponse()
+                        .withStatus(200)));
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+        HttpGet request = new HttpGet("http://localhost:8080/api/collection/1/random");
+        CloseableHttpResponse response = client.execute(request);
+
+        assertEquals(200, response.getCode());
+        verify(getRequestedFor(urlEqualTo("/api/collection/1/random")));
+    }
+
+    @Test
     public void testPostCollectionRequestWithValidUser() throws IOException, InterruptedException {
         CollectionDto collectionDto = new CollectionDto();
         collectionDto.setTitle("Title");
