@@ -13,7 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 record TestController(TestService testService) {
 
     @GetMapping("/{collectionId}")
-    ResponseEntity<TestDao> getTest(@PathVariable Long collectionId) {
+    ResponseEntity<TestDao> getSortedOrderTest(@PathVariable Long collectionId) {
+        return new ResponseEntity<>(testService.toSortedDao(collectionId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{collectionId}/random")
+    ResponseEntity<TestDao> getRandomOrderTest(@PathVariable Long collectionId) {
         return new ResponseEntity<>(testService.toDao(collectionId), HttpStatus.OK);
     }
 }
