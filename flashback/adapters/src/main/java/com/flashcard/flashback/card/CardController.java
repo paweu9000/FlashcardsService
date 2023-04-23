@@ -26,7 +26,7 @@ record CardController(CardService cardService) {
     ResponseEntity<CardDao> postCard(@PathVariable(name = "collectionId") Long collectionId,
                                                @Valid @RequestBody CardDto cardDto,
                                                @CurrentSecurityContext(expression = "authentication?.name") String name) {
-        return new ResponseEntity<>(cardService.createCard(name, collectionId, cardDto), HttpStatus.CREATED);
+        return new ResponseEntity<>(cardService.addCard(name, collectionId, cardDto), HttpStatus.CREATED);
     }
 
     @PostMapping("/{collectionId}/all")
