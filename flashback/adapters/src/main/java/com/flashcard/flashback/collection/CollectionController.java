@@ -15,9 +15,16 @@ import java.util.List;
 record CollectionController(CollectionService collectionService) {
 
     @GetMapping("/{id}")
-    ResponseEntity<CollectionDao> getSortedCollection(@PathVariable Long id) {
+    ResponseEntity<CollectionDao> getSortedOrderCollection(@PathVariable Long id) {
         CollectionEntity collection = collectionService.findById(id);
         CollectionDao collectionDao = collectionService.toSortedDao(collection);
+        return new ResponseEntity<>(collectionDao, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/random")
+    ResponseEntity<CollectionDao> getRandomOrderCollection(@PathVariable Long id) {
+        CollectionEntity collection = collectionService.findById(id);
+        CollectionDao collectionDao = collectionService.toDao(collection);
         return new ResponseEntity<>(collectionDao, HttpStatus.OK);
     }
 
