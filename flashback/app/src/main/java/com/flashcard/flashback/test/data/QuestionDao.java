@@ -8,6 +8,7 @@ import java.util.List;
 @Data
 @Builder
 public class QuestionDao {
+    private Long id;
     private String question;
     private List<String> answers;
     private String answer;

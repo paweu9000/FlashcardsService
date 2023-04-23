@@ -26,6 +26,7 @@ interface TestMapper {
     @Named("questionEntityToDao")
     default QuestionDao questionEntityToDao(QuestionEntity question) {
         return QuestionDao.builder()
+                .id(question.getId())
                 .question(question.getQuestion())
                 .answer(question.getAnswer())
                 .answers(question.getAnswers().stream().toList())
