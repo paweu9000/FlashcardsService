@@ -39,7 +39,7 @@ public class TestControllerTests {
     }
 
     @Test
-    public void getTestValidTest() throws IOException, InterruptedException {
+    public void getTestSortedOrderTest() throws IOException, InterruptedException {
         String body = objectMapper.writeValueAsString(testDao);
 
         stubFor(get(urlEqualTo("/api/test/1"))
@@ -50,6 +50,26 @@ public class TestControllerTests {
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/api/test/1"))
+                .GET()
+                .build();
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(200, response.statusCode());
+        assertEquals(body, response.body());
+    }
+
+    @Test
+    public void getTestRandomOrderTest() throws IOException, InterruptedException {
+        String body = objectMapper.writeValueAsString(testDao);
+
+        stubFor(get(urlEqualTo("/api/test/1/random"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withBody(body)));
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/test/1/random"))
                 .GET()
                 .build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
