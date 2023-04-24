@@ -51,6 +51,8 @@ class SecurityConfig {
                 .antMatchers(HttpMethod.POST, SecurityConstants.USER_PATH).authenticated()
                 .antMatchers(HttpMethod.GET, SecurityConstants.USER_PATH).permitAll()
                 .antMatchers(HttpMethod.GET, SecurityConstants.TEST_PATH).permitAll()
+                .antMatchers(HttpMethod.GET, SecurityConstants.DOCUMENTATION_PATH).permitAll()
+                .antMatchers(HttpMethod.GET, "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new ExceptionHandlerFilter(), AuthenticationFilter.class)
