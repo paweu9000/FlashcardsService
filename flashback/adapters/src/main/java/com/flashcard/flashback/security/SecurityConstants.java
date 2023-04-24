@@ -10,6 +10,7 @@ record SecurityConstants (){
     static final String CARDS_PATH = "/api/cards/*";
     static final String COLLECTION_PATH = "/api/collection/*";
     static final String USER_PATH = "/api/user/*";
+    static final String DOCUMENTATION_PATH = "/api/documentation/*";
     static final String SECRET_KEY = System.getenv("SECRET_KEY");
     static final String VERIFY_PATH = "/api/verify";
     static final String TEST_PATH = "/api/test";
