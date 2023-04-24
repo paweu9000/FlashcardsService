@@ -20,6 +20,7 @@ import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -52,7 +53,7 @@ public class TestServiceTests {
         user.setId(1L);
         collection = new CollectionEntity(1L, "title", 1L, new HashSet<>(), user);
         for(int i = 1; i <= 10; i++) {
-            collection.addCard(new CardEntity(Long.valueOf(i+""), "side" + i, "value" + i, collection, user));
+            collection.addCard(new CardEntity(Long.valueOf(String.valueOf(i)), "side" + i, "value" + i, collection, user));
         }
     }
 
@@ -104,6 +105,26 @@ public class TestServiceTests {
         assertEquals(collection.getId(), testDao.getCollectionId());
         assertEquals(collection.getSize(), testDao.getQuestions().size());
         testDao.getQuestions().stream().forEach(questionDao -> assertEquals(4, questionDao.getAnswers().size()));
+    }
+
+    @Test
+    public void toSortedDaoTest() {
+        TestEntity test = new TestEntity();
+        test.setId(1L);
+        test.setCollectionId(1L);
+        testService.generateQuestions(test, collection);
+        AtomicLong id = new AtomicLong(1L);
+        test.getQuestions().forEach(question -> question.setId(id.getAndIncrement()));
+
+        when(testRepository.findByCollectionId(1L)).thenReturn(Optional.of(test));
+
+        TestDao testDao = testService.toSortedDao(1L);
+        assertEquals(collection.getId(), testDao.getCollectionId());
+        assertEquals(collection.getSize(), testDao.getQuestions().size());
+        for (int i = 0; i < 10; i++) {
+            assertEquals(4, testDao.getQuestions().get(i).getAnswers().size());
+            assertEquals(Long.valueOf(String.valueOf(i+1)), testDao.getQuestions().get(i).getId());
+        }
     }
 
     @Test
