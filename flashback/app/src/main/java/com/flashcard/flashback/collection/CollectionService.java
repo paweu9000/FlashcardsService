@@ -104,7 +104,7 @@ public class CollectionService{
 
     List<CollectionDao> findPersonalCollections(String username) {
         UsersEntity user = userService.findByEmailOrLogin(username);
-        return user.getCollections().stream().map(this::toDao).toList();
+        return toSortedCollectionListDao(new ArrayList<>(user.getCollections().stream().map(this::toDao).toList()));
     }
 
     List<CollectionDao> searchByTitle(String title) {
@@ -148,5 +148,18 @@ public class CollectionService{
         collectionDao.setCards(cards);
 
         return collectionDao;
+    }
+
+    List<CollectionDao> toSortedCollectionListDao(List<CollectionDao> collections) {
+
+        Comparator<CollectionDao> compareCollectionId = new Comparator<CollectionDao>() {
+            @Override
+            public int compare(CollectionDao collection1, CollectionDao collection2) {
+                return Long.compare(collection1.getId(), collection2.getId());
+            }
+        };
+
+        collections.sort(compareCollectionId);
+        return collections;
     }
 }
