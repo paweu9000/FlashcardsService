@@ -47,8 +47,7 @@ class TestService implements ApplicationListener<CollectionObserver> {
     }
 
     void deleteTest(Long collectionId) {
-        TestEntity test = unwrapTest(repository.findByCollectionId(collectionId));
-        repository.deleteById(test.getId());
+        repository.findByCollectionId(collectionId).ifPresent(test -> deleteTest(test.getCollectionId()));
     }
 
     void generateQuestions(TestEntity test, CollectionEntity collection) {
