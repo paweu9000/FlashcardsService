@@ -19,6 +19,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -204,5 +206,24 @@ public class CollectionServiceTests {
 
         assertEquals(entity.getLikes(), collectionDto.getLikes());
         assertEquals(entity.getTitle(), collectionDto.getTitle());
+    }
+
+    @Test
+    public void toSortedCollectionDaoTest() {
+        List<CollectionDao> list = new ArrayList<>();
+
+        for(int i = 10; i >= 1; i--) {
+            CollectionDao collectionDao = new CollectionDao();
+            collectionDao.setId(Long.parseLong(String.valueOf(i)));
+            list.add(collectionDao);
+        }
+
+        collectionService.toSortedCollectionListDao(list);
+
+        assertNotNull(list);
+        assertEquals(10, list.size());
+        for (int i = 0; i < list.size(); i++) {
+            assertEquals(Long.parseLong(String.valueOf(i+1)), list.get(i).getId());
+        }
     }
 }
