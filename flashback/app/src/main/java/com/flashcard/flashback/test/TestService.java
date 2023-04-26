@@ -42,7 +42,6 @@ class TestService implements ApplicationListener<CollectionObserver> {
         TestEntity test = new TestEntity();
         test.setCollectionId(collectionId);
         generateQuestions(test, collection);
-        repository.save(test);
         return test;
     }
 
