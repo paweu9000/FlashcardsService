@@ -188,4 +188,11 @@ public class TestServiceTests {
 
         verify(testRepository).deleteById(1L);
     }
+
+    @Test
+    public void deleteTestByIdTest() {
+        testService.deleteTestById(1L);
+
+        verify(testRepository).deleteById(1L);
+    }
 }
