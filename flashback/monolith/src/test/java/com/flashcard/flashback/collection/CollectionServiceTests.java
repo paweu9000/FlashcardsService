@@ -52,6 +52,8 @@ public class CollectionServiceTests {
         collectionService.setUserService(userService);
         userTest = new UsersEntity();
         userTest.setId(1L);
+        userTest.setLogin("login");
+        userTest.setEmail("email@example.com");
         userTest.setUsername("username");
         UsersEntity userTest2 = new UsersEntity();
         userTest2.setId(2L);
@@ -261,5 +263,18 @@ public class CollectionServiceTests {
         assertEquals(1, collectionDaos.size());
         assertEquals(2L, collectionDaos.get(0).getId());
         assertEquals("title2", collectionDaos.get(0).getTitle());
+    }
+
+    @Test
+    public void getPersonalCollectionsTest() {
+        when(userRepository.findByEmail("email@example.com")).thenReturn(Optional.of(userTest));
+        List<List<CollectionDao>> collectionDaos = collectionService.getPersonalCollectionData("email@example.com");
+
+        assertNotNull(collectionDaos);
+        assertEquals(2, collectionDaos.size());
+        assertEquals(1L, collectionDaos.get(0).get(0).getId());
+        assertEquals(2L, collectionDaos.get(1).get(0).getId());
+        assertEquals("title1", collectionDaos.get(0).get(0).getTitle());
+        assertEquals("title2", collectionDaos.get(1).get(0).getTitle());
     }
 }
