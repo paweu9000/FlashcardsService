@@ -29,9 +29,9 @@ record CollectionController(CollectionService collectionService) {
     }
 
     @GetMapping("/myCollections")
-    ResponseEntity<List<CollectionDao>> getPersonalCollections(@CurrentSecurityContext(expression = "authentication?.name")
+    ResponseEntity<List<List<CollectionDao>>> getPersonalCollections(@CurrentSecurityContext(expression = "authentication?.name")
                                                                           String username) {
-        List<CollectionDao> collections = collectionService.findPersonalCollections(username);
+        List<List<CollectionDao>> collections = collectionService.getPersonalCollectionData(username);
         return new ResponseEntity<>(collections, HttpStatus.OK);
     }
 
