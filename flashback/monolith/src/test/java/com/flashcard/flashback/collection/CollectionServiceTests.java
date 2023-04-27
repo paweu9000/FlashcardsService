@@ -20,6 +20,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,9 +45,24 @@ public class CollectionServiceTests {
     @InjectMocks
     private CollectionService collectionService;
 
+    private UsersEntity userTest;
+
     @Before
-    public void injectUserService() {
+    public void setup() {
         collectionService.setUserService(userService);
+        userTest = new UsersEntity();
+        userTest.setId(1L);
+        userTest.setUsername("username");
+        UsersEntity userTest2 = new UsersEntity();
+        userTest2.setId(2L);
+        userTest2.setUsername("username2");
+        CollectionEntity collection = new CollectionEntity(1L, "title1",
+                1L, new HashSet<>(), userTest);
+        collection.addCard(new CardEntity(1L, "side", "value", collection, userTest));
+        CollectionEntity collection1 = new CollectionEntity(2L, "title2",
+                2L, new HashSet<>(), userTest2);
+        userTest.addCollection(collection);
+        userTest.saveCollection(collection1);
     }
 
     @Test
@@ -225,5 +241,15 @@ public class CollectionServiceTests {
         for (int i = 0; i < list.size(); i++) {
             assertEquals(Long.parseLong(String.valueOf(i+1)), list.get(i).getId());
         }
+    }
+
+    @Test
+    public void findPersonalCollectionsTest() {
+        List<CollectionDao> collectionDaos = collectionService.findPersonalCollections(userTest);
+
+        assertNotNull(collectionDaos);
+        assertEquals(1, collectionDaos.size());
+        assertEquals(1L, collectionDaos.get(0).getId());
+        assertEquals("title1", collectionDaos.get(0).getTitle());
     }
 }
