@@ -252,4 +252,14 @@ public class CollectionServiceTests {
         assertEquals(1L, collectionDaos.get(0).getId());
         assertEquals("title1", collectionDaos.get(0).getTitle());
     }
+
+    @Test
+    public void findPersonalSavedCollectionsTest() {
+        List<CollectionDao> collectionDaos = collectionService.findPersonalSavedCollections(userTest);
+
+        assertNotNull(collectionDaos);
+        assertEquals(1, collectionDaos.size());
+        assertEquals(2L, collectionDaos.get(0).getId());
+        assertEquals("title2", collectionDaos.get(0).getTitle());
+    }
 }
