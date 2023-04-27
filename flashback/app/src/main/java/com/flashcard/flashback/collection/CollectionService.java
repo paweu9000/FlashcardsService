@@ -102,9 +102,20 @@ public class CollectionService{
         collectionRepository.save(collection);
     }
 
-    List<CollectionDao> findPersonalCollections(String username) {
-        UsersEntity user = userService.findByEmailOrLogin(username);
+    List<CollectionDao> findPersonalCollections(UsersEntity user) {
         return toSortedCollectionListDao(new ArrayList<>(user.getCollections().stream().map(this::toDao).toList()));
+    }
+
+    List<CollectionDao> findPersonalSavedCollections(UsersEntity user) {
+        return toSortedCollectionListDao(new ArrayList<>(user.getSavedCollections().stream().map(this::toDao).toList()));
+    }
+
+    List<List<CollectionDao>> getPersonalCollectionData(String username) {
+        UsersEntity user = userService.findByEmailOrLogin(username);
+        List<List<CollectionDao>> personalCollectionData = new ArrayList<>();
+        personalCollectionData.add(findPersonalCollections(user));
+        personalCollectionData.add(findPersonalSavedCollections(user));
+        return personalCollectionData;
     }
 
     List<CollectionDao> searchByTitle(String title) {
