@@ -76,10 +76,12 @@ public class CollectionService{
 
     void deleteIfAllowed(String name, Long id) {
         CollectionEntity collection = findById(id);
-        String email = collection.getOwners().getEmail();
-        String login = collection.getOwners().getLogin();
-        if(email.equals(name) || login.equals(name)) deleteCollectionById(id);
+        if(determineOwner(collection.getOwners(), name)) deleteCollectionById(id);
         else throw new UnauthorizedDataDeleteException(CollectionEntity.class);
+    }
+
+    boolean determineOwner(UsersEntity user, String owner) {
+        return user.getEmail().equals(owner) || user.getLogin().equals(owner);
     }
 
     String createCollection(String loginOrEmail, CollectionDto collectionDto) {
