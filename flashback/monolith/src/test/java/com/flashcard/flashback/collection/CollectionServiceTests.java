@@ -211,6 +211,14 @@ public class CollectionServiceTests {
     }
 
     @Test
+    public void determineOwnerTest() {
+        assertTrue(collectionService.determineOwner(userTest, "login"));
+        assertTrue(collectionService.determineOwner(userTest, "email@example.com"));
+        assertFalse(collectionService.determineOwner(userTest, "invalidemail@example.com"));
+        assertFalse(collectionService.determineOwner(userTest, "invalidLogin"));
+    }
+
+    @Test
     public void findCollectionsEmptyTest() {
         assertThrows(IllegalArgumentException.class, () -> collectionService.searchByTitle("title"));
     }
