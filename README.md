@@ -18,7 +18,6 @@ spring:
     driver-class-name=com: com.mysql.cj.jdbc.Driver
 
   jpa:
-    show-sql: true
     hibernate:
       ddl-auto: update
     properties:
