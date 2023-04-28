@@ -97,9 +97,7 @@ class CardService {
         if(loginOrEmail == null)
             throw new UnauthorizedDataCreateException(CardEntity.class);
         CollectionEntity collection = collectionService.findById(collectionId);
-        if(!collection.getOwners().getEmail()
-                .equals(loginOrEmail) &&  !collection
-                .getOwners().getLogin().equals(loginOrEmail))
+        if(!determineOwner(collection.getOwners(), loginOrEmail))
             throw new UnauthorizedDataCreateException(CardEntity.class);
         return collection;
     }
