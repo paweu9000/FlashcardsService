@@ -82,13 +82,15 @@ class CardService {
     void deleteIfAllowed(Authentication authentication, Long id) {
         CardEntity card = getCardById(id);
         String loginOrEmail = authentication.getName();
-        String login = card.getCreatedBy().getLogin();
-        String email = card.getCreatedBy().getEmail();
-        if (login.equals(loginOrEmail) || email.equals(loginOrEmail)) {
+        if (determineOwner(card.getCreatedBy(), loginOrEmail)) {
             deleteCard(id);
             eventPublisher.publishEvent(new CollectionObserver(this, card.getCollector().getId()));
         }
         else throw new UnauthorizedDataDeleteException(CardEntity.class);
+    }
+
+    boolean determineOwner(UsersEntity user, String owner) {
+        return user.getEmail().equals(owner) || user.getLogin().equals(owner);
     }
 
     CollectionEntity getCollectionIfActionIsAllowed(String loginOrEmail, Long collectionId) {
