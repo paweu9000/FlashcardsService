@@ -7,7 +7,9 @@ Once created the sets can be easily shared and accessed by other users.
 ## Installation
 (The Application will be fully dockerized in the future to skips all the steps below)
 1. Create ENV variable SECRET_KEY and put there key that can be generated here 'https://jwt.io/'
-2. Create resources package in monolith/src/main/java package and add there application.yml file with content shown below (Fill everything with your data)
+2. Create smtp mail, You can do it with gmail
+3. Create database
+4. Create resources package in monolith/src/main/java package and add there application.yml file with content shown below (Fill everything with your data)
 ```yml
 spring:
 
