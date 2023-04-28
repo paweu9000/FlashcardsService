@@ -173,6 +173,14 @@ public class CardServiceTests {
     }
 
     @Test
+    public void determineOwnerTest() {
+        assertTrue(cardService.determineOwner(user, "login"));
+        assertTrue(cardService.determineOwner(user, "email@example.com"));
+        assertFalse(cardService.determineOwner(user, "invalidemail@example.com"));
+        assertFalse(cardService.determineOwner(user, "invalidLogin"));
+    }
+
+    @Test
     public void getCollectionIfActionIsAllowedValidTest() {
         when(collectionRepository.findById(1L)).thenReturn(Optional.of(collection));
         CollectionEntity returned = cardService.getCollectionIfActionIsAllowed("login", 1L);
