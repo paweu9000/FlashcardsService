@@ -91,16 +91,9 @@ class TestService implements ApplicationListener<CollectionObserver> {
     TestDao toSortedDao(Long collectionId) {
         TestDao test = toDao(collectionId);
 
-        Comparator<QuestionDao> idComparator = new Comparator<QuestionDao>() {
-            @Override
-            public int compare(QuestionDao question1, QuestionDao question2) {
-                return Long.compare(question1.getId(), question2.getId());
-            }
-        };
+        test.setQuestions(test.getQuestions()
+                .stream().sorted(Comparator.comparingLong(QuestionDao::getId)).toList());
 
-        List<QuestionDao> questions = new ArrayList<>(test.getQuestions());
-        questions.sort(idComparator);
-        test.setQuestions(questions);
         return test;
     }
 
