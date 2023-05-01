@@ -149,18 +149,7 @@ public class CollectionService{
     CollectionDao toSortedDao(CollectionEntity collection) {
 
         CollectionDao collectionDao = toDao(collection);
-        Comparator<CardDao> compareCardId = new Comparator<CardDao>() {
-            @Override
-            public int compare(CardDao card1, CardDao card2) {
-                return Long.compare(card1.getId(), card2.getId());
-            }
-        };
-
-        List<CardDao> cards = new ArrayList<>(collectionDao.getCards());
-        Collections.sort(cards, compareCardId);
-
-        collectionDao.setCards(cards);
-
+        collectionDao.setCards(collectionDao.getCards().stream().sorted(Comparator.comparingLong(CardDao::getId)).toList());
         return collectionDao;
     }
 
