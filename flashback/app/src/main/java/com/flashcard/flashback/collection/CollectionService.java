@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CollectionService{
@@ -165,14 +166,6 @@ public class CollectionService{
 
     List<CollectionDao> toSortedCollectionListDao(List<CollectionDao> collections) {
 
-        Comparator<CollectionDao> compareCollectionId = new Comparator<CollectionDao>() {
-            @Override
-            public int compare(CollectionDao collection1, CollectionDao collection2) {
-                return Long.compare(collection1.getId(), collection2.getId());
-            }
-        };
-
-        collections.sort(compareCollectionId);
-        return collections;
+        return collections.stream().sorted(Comparator.comparingLong(CollectionDao::getId)).toList();
     }
 }
