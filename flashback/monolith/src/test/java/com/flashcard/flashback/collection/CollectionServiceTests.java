@@ -244,12 +244,12 @@ public class CollectionServiceTests {
             list.add(collectionDao);
         }
 
-        collectionService.toSortedCollectionListDao(list);
+        List<CollectionDao> sortedCollection = collectionService.toSortedCollectionListDao(list);
 
-        assertNotNull(list);
-        assertEquals(10, list.size());
+        assertNotNull(sortedCollection);
+        assertEquals(10, sortedCollection.size());
         for (int i = 0; i < list.size(); i++) {
-            assertEquals(Long.parseLong(String.valueOf(i+1)), list.get(i).getId());
+            assertEquals(Long.parseLong(String.valueOf(i+1)), sortedCollection.get(i).getId());
         }
     }
 
