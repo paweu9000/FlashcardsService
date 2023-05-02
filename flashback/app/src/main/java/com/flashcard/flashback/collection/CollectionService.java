@@ -50,11 +50,7 @@ public class CollectionService{
     }
 
     CollectionEntity exists(Optional<CollectionEntity> collection) {
-        if(collection.isPresent()) {
-            return collection.get();
-        } else {
-            throw new EntityNotFoundException(CollectionEntity.class);
-        }
+        return collection.orElseThrow(() -> new EntityNotFoundException(CollectionEntity.class));
     }
 
     void deleteCollectionById(Long id) {
