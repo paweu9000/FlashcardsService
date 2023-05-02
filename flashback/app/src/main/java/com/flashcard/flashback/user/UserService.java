@@ -48,11 +48,8 @@ public class UserService{
 
     public UsersEntity findByEmailOrLogin(String emailOrLogin) throws EntityNotFoundException {
         Optional<UsersEntity> user;
-        if(checkEmail(emailOrLogin)) {
-            user = userRepository.findByEmail(emailOrLogin);
-        } else {
-            user = userRepository.findByLogin(emailOrLogin);
-        }
+        user = checkEmail(emailOrLogin) ?
+                userRepository.findByEmail(emailOrLogin) : userRepository.findByLogin(emailOrLogin);
         return unwrapUser(user);
     }
 
@@ -61,8 +58,7 @@ public class UserService{
     }
 
     private UsersEntity unwrapUser(Optional<UsersEntity> user) {
-        if(user.isPresent()) return user.get();
-        else throw new EntityNotFoundException(UsersEntity.class);
+        return user.orElseThrow(() -> new EntityNotFoundException(UsersEntity.class));
     }
 
     boolean checkEmail(String email) {
