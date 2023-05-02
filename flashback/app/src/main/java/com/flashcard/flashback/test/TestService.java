@@ -84,8 +84,7 @@ class TestService implements ApplicationListener<CollectionObserver> {
     }
 
     TestEntity unwrapTest(Optional<TestEntity> test) {
-        if (test.isPresent()) return test.get();
-        else throw new EntityNotFoundException(TestEntity.class);
+        return test.orElseThrow(() -> new EntityNotFoundException(TestEntity.class));
     }
 
     TestDao toSortedDao(Long collectionId) {
