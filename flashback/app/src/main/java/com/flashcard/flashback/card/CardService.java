@@ -44,12 +44,7 @@ class CardService {
     }
 
     CardEntity getCardById(Long id) throws EntityNotFoundException{
-        Optional<CardEntity> card = cardRepository.findById(id);
-        if (card.isPresent()) {
-            return card.get();
-        } else {
-            throw new EntityNotFoundException(id, CardEntity.class);
-        }
+        return cardRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id, CardEntity.class));
     }
 
     CardDao toDao(CardEntity card) {
